@@ -1,0 +1,17 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+/.idea/
+/build/
+libs/
+release/
+src/main/java/com/crayonic/ambrosus/gateway/comm/nfc/
+src/main/java/com/crayonic/ambrosus/gateway/view/provisioning/
+src/main/java/com/crayonic/ambrosus/gateway/view/sub_l1/
+src/main/res/raw/

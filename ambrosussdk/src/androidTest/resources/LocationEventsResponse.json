@@ -1,0 +1,45 @@
+{
+  "content": {
+    "idData": {
+      "assetId": "0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae",
+      "createdBy": "0x8536eBc067457602FfC92B89B55501b54bcf5049",
+      "accessLevel": 0,
+      "timestamp": 1515077792,
+      "dataHash": "0x85c62376e4eb75830f3754f86af6523fd3ff7636ac9eae8ceabbc2f2651b2544"
+    },
+    "data": [
+      {
+        "type": "ambrosus.asset.arrived",
+        "name": "Arrived at Retailer",
+        "documents": {
+          "default": {
+            "url": "https://image.ibb.co/mUrgvH/HO.jpg"
+          }
+        }
+      },
+      {
+        "type": "ambrosus.event.location",
+        "location": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              51.5249003,
+              -0.1240547
+            ]
+          }
+        },
+        "name": "Waitrose, Brunswick Centre",
+        "city": "London",
+        "country": "UK",
+        "locationId": "809c578721b74cae1d56504594819285",
+        "GLN": 9501101530003
+      }
+    ],
+    "signature": "0xbdec71b1ef591e98f5d8fc081e5504413bbdd6466ba820a202521314ecfda1d82040dc238327cad346d3b72641f85b182ee33466cac45a81bcf5d40d017dacb71b"
+  },
+  "eventId": "0x4dafc4f7805b4040366666190156ac22f22efbddfb5eb0feca8134c8aa2f1fa1",
+  "metadata": {
+    "bundleId": "0x65a71ccd1c92778ab5412d47b2ddee9c11aee3081a1c5ebe65ce6373e3c42d02"
+  }
+}
