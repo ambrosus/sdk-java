@@ -17,27 +17,25 @@ import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.ambrosus.ambrosussdk.network.AMBNetwork
-import com.scandit.barcodepicker.*
-import com.scandit.recognition.Barcode
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.ResultPoint
+import com.journeyapps.barcodescanner.BarcodeCallback
+import com.journeyapps.barcodescanner.BarcodeResult
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import com.journeyapps.barcodescanner.DefaultDecoderFactory
+import java.util.*
 
 /**
  * Activities that contain this fragment must implement the [OnTopLevelFragmentInteractionListener]
  * interface to handle interaction events.
  */
-class ViewerFragment : Fragment(), OnScanListener {
+class ViewerFragment : Fragment(), BarcodeCallback {
     private val CAMERA_PERMISSION_REQUEST = 0
 
     // The main object for recognizing and displaying barcodes.
-    private var mBarcodePicker: BarcodePicker? = null
+    private var mBarcodePicker: DecoratedBarcodeView? = null
     private var mDeniedCameraAccess = false
     private var mPaused = true
-    private var mToast: Toast? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     private var rootView: ViewGroup? = null
 
@@ -59,16 +57,16 @@ class ViewerFragment : Fragment(), OnScanListener {
 
         // When the activity is in the background immediately stop the
         // scanning to save resources and free the camera.
-        mBarcodePicker!!.stopScanning()
+        mBarcodePicker!!.pause()
         mPaused = true
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden) {
-            mBarcodePicker!!.stopScanning()
+            mBarcodePicker!!.pause()
         } else {
-            mBarcodePicker!!.startScanning()
+            mBarcodePicker!!.resume()
         }
 
     }
@@ -84,7 +82,7 @@ class ViewerFragment : Fragment(), OnScanListener {
             }
         } else {
             // We already have the permission.
-            mBarcodePicker!!.startScanning()
+            mBarcodePicker!!.resume()
         }
     }
 
@@ -94,7 +92,7 @@ class ViewerFragment : Fragment(), OnScanListener {
             if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mDeniedCameraAccess = false
                 if (!mPaused) {
-                    mBarcodePicker!!.startScanning()
+                    mBarcodePicker!!.resume()
                 }
             } else {
                 mDeniedCameraAccess = true
@@ -113,7 +111,7 @@ class ViewerFragment : Fragment(), OnScanListener {
             grantCameraPermissionsThenStartScanning()
         } else {
             // Once the activity is in the foreground again, restart scanning.
-            mBarcodePicker!!.startScanning()
+            mBarcodePicker!!.resume()
         }
         //TODO: remove this
 //        IntentsUtil.runAssetActivity(this!!.activity!!)
@@ -127,121 +125,71 @@ class ViewerFragment : Fragment(), OnScanListener {
      * Initializes and starts the bar code scanning.
      */
     fun initializeAndStartBarcodeScanning() {
-        ScanditLicense.setAppKey(sScanditSdkAppKey)
-        // The scanning behavior of the barcode picker is configured through scan
-        // settings. We start with empty scan settings and enable a very generous
-        // set of symbologies. In your own apps, only enable the symbologies you
-        val settings = ScanSettings.create()
-        val symbologiesToEnable = intArrayOf(Barcode.SYMBOLOGY_EAN13, Barcode.SYMBOLOGY_EAN8, Barcode.SYMBOLOGY_UPCA, Barcode.SYMBOLOGY_DATA_MATRIX, Barcode.SYMBOLOGY_QR, Barcode.SYMBOLOGY_CODE39, Barcode.SYMBOLOGY_CODE128, Barcode.SYMBOLOGY_INTERLEAVED_2_OF_5, Barcode.SYMBOLOGY_UPCE)
-        for (sym in symbologiesToEnable) {
-            settings.setSymbologyEnabled(sym, true)
-        }
 
-        // Some 1d barcode symbologies allow you to encode variable-length data. By default, the
-        // Scandit BarcodeScanner SDK only scans barcodes in a certain length range. If your
-        // application requires scanning of one of these symbologies, and the length is falling
-        // outside the default range, you may need to adjust the "active symbol counts" for this
-        // symbology. This is shown in the following few lines of code.
-
-        val symSettings = settings.getSymbologySettings(Barcode.SYMBOLOGY_CODE39)
-        val activeSymbolCounts = shortArrayOf(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
-        symSettings.activeSymbolCounts = activeSymbolCounts
-        // For details on defaults and how to calculate the symbol counts for each symbology, take
-        // a look at http://docs.scandit.com/stable/c_api/symbologies.html.
-
-        // Prefer the back-facing camera, is there is any.
-        settings.cameraFacingPreference = ScanSettings.CAMERA_FACING_BACK
-
-        // Some Android 2.3+ devices do not support rotated camera feeds. On these devices, the
-        // barcode picker emulates portrait mode by rotating the scan UI.
-        val emulatePortraitMode = !BarcodePicker.canRunPortraitPicker()
-        if (emulatePortraitMode) {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }
-
-
-        val picker = BarcodePicker(activity, settings)
-        mBarcodePicker = picker
-        applyUISettings(activity!!, picker.overlayView)
-        mBarcodePicker?.setOnScanListener(this)
-
-        // Register listener, in order to be notified about relevant events
-        // (e.g. a successfully scanned bar code).
-        val wm = activity?.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
-        val display = wm!!.defaultDisplay
-
-        lParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        lParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
-        rootView?.findViewById<ViewGroup>(R.id.rl_content)?.addView(picker, lParams)
-
+        mBarcodePicker = rootView!!.findViewById(R.id.barcode_scanner)
+        val formats = Arrays.asList(BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.UPC_A, BarcodeFormat.DATA_MATRIX, BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39, BarcodeFormat.CODE_128, BarcodeFormat.ITF, BarcodeFormat.UPC_E)
+        mBarcodePicker!!.getBarcodeView().setDecoderFactory(DefaultDecoderFactory(formats))
+        mBarcodePicker!!.decodeContinuous(this)
     }
 
-    /**
-     * Called when a barcode has been decoded successfully.
-     */
-    override fun didScan(session: ScanSession) {
-        var message = ""
-        for (code in session.newlyRecognizedCodes) {
-            val data = code.data
-            // Truncate code to certain length.
-            if (onScanListener != null) {
-                if (code.symbology == Barcode.SYMBOLOGY_QR && data.startsWith("https://amb.to/0x")) {
-                    val assetId = data?.replace("https://amb.to/", "")!!
-                    onScanListener?.didScanAsset(assetId);
-                }
+
+    override fun barcodeResult(code: BarcodeResult) {
+        val data = code.text
+        // Truncate code to certain length.
+        if (onScanListener != null) {
+            if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
+                val assetId = data?.replace("https://amb.to/", "")!!
+                onScanListener?.didScanAsset(assetId);
+            }
+        } else {
+
+            mBarcodePicker!!.pause()
+            if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
+                val assetId = data?.replace("https://amb.to/", "")!!
+                AMBNetwork.instance.requestAsset(assetId,
+                        {
+                            if (it != null) {
+                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+
+                            } else {
+                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
+                            }
+                            mBarcodePicker!!.resume()
+                        })
+            } else if (code.barcodeFormat == BarcodeFormat.EAN_13) {
+                AMBNetwork.instance.requestAsset("data[identifiers.ean13]", data,
+                        {
+                            if (it != null) {
+                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+
+                            } else {
+                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
+                            }
+                            mBarcodePicker!!.resume()
+                        })
+            } else if (code.barcodeFormat == BarcodeFormat.EAN_8) {
+
+                AMBNetwork.instance.requestAsset("data[identifiers.ean8]", data,
+                        {
+                            if (it != null) {
+                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+
+                            } else {
+                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
+                            }
+                            mBarcodePicker!!.resume()
+                        })
             } else {
-
-                mBarcodePicker!!.pauseScanning()
-                if (code.symbology == Barcode.SYMBOLOGY_QR && data.startsWith("https://amb.to/0x")) {
-                    val assetId = data?.replace("https://amb.to/", "")!!
-                    AMBNetwork.instance.requestAsset(assetId,
-                            {
-                                if (it != null) {
-                                    IntentsUtil.runAssetActivity(this!!.activity!!, it)
-
-                                } else {
-                                    Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-                                }
-                                mBarcodePicker!!.resumeScanning()
-                            })
-                } else if (code.symbology == Barcode.SYMBOLOGY_EAN13) {
-                    AMBNetwork.instance.requestAsset("data[identifiers.ean13]", data,
-                            {
-                                if (it != null) {
-                                    IntentsUtil.runAssetActivity(this!!.activity!!, it)
-
-                                } else {
-                                    Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-                                }
-                                mBarcodePicker!!.resumeScanning()
-                            })
-                } else if (code.symbology == Barcode.SYMBOLOGY_EAN8) {
-
-                    AMBNetwork.instance.requestAsset("data[identifiers.ean8]", data,
-                            {
-                                if (it != null) {
-                                    IntentsUtil.runAssetActivity(this!!.activity!!, it)
-
-                                } else {
-                                    Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-                                }
-                                mBarcodePicker!!.resumeScanning()
-                            })
-                } else {
-                    mBarcodePicker!!.resumeScanning()
-                }
+                mBarcodePicker!!.resume()
             }
         }
+
     }
 
+    override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
 
     companion object {
         private val TAG: String = "ViewerFragment"
-
-        // In order to enable the scanner you need a key for Scandit SDK, you can  sign up
-        // for a 30 day Scandit trial here: https://ssl.scandit.com/customers/new?p=test
-        private const val sScanditSdkAppKey = "[YOUR SCANDIT KEY HERE]"
 
         /**
          * Use this factory method to create a new instance of
@@ -255,53 +203,6 @@ class ViewerFragment : Fragment(), OnScanListener {
             return fragment
         }
     }
-
-    fun applyUISettings(context: Context, overlay: ScanOverlay) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val viewfinder_val = Integer.valueOf(prefs.getString("viewfinder_style", "0"))
-        if (viewfinder_val == 0) {
-            overlay.setGuiStyle(ScanOverlay.GUI_STYLE_DEFAULT)
-        } else if (viewfinder_val == 1) {
-            overlay.setGuiStyle(ScanOverlay.GUI_STYLE_LASER)
-        } else if (viewfinder_val == 2) {
-            overlay.setGuiStyle(ScanOverlay.GUI_STYLE_NONE)
-        } else {
-            overlay.setGuiStyle(ScanOverlay.GUI_STYLE_LOCATIONS_ONLY)
-        }
-
-        overlay.setViewfinderDimension(
-                prefs.getInt("viewfinder_width", 65) / 100.0f,
-                prefs.getInt("viewfinder_height", 65) / 100.0f,
-                prefs.getInt("viewfinder_landscape_width", 65) / 100.0f,
-                prefs.getInt("viewfinder_landscape_height", 65) / 100.0f)
-
-        overlay.setBeepEnabled(prefs.getBoolean("beep_enabled", true))
-        overlay.setVibrateEnabled(prefs.getBoolean("vibrate_enabled", false))
-
-
-        overlay.setTorchEnabled(prefs.getBoolean("torch_enabled", true))
-        overlay.setTorchButtonMarginsAndSize(prefs.getInt("torch_button_x", 15),
-                prefs.getInt("torch_button_y", 15),
-                40, 40)
-
-        val cameraSwitchVisibility = getCameraSwitchVisibility(prefs)
-        overlay.setCameraSwitchVisibility(cameraSwitchVisibility)
-        overlay.setCameraSwitchButtonMarginsAndSize(prefs.getInt("camera_switch_button_x", 5),
-                prefs.getInt("camera_switch_button_y", 5),
-                40, 40)
-    }
-
-    private fun getCameraSwitchVisibility(prefs: SharedPreferences): Int {
-        val `val` = Integer.valueOf(prefs.getString("camera_switch_visibility", "0"))
-        var cameraSwitchVisibility = ScanOverlay.CAMERA_SWITCH_NEVER
-        if (`val` == 1) {
-            cameraSwitchVisibility = ScanOverlay.CAMERA_SWITCH_ON_TABLET
-        } else if (`val` == 2) {
-            cameraSwitchVisibility = ScanOverlay.CAMERA_SWITCH_ALWAYS
-        }
-        return cameraSwitchVisibility
-    }
-
 }
 
 interface OnScanCompleteListener {

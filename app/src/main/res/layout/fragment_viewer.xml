@@ -16,8 +16,9 @@
     <!--android:textStyle="bold" />-->
 
 
-    <RelativeLayout
-        android:id="@+id/rl_content"
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcode_scanner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+
 </LinearLayout>
