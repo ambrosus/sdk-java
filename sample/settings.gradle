@@ -1,2 +1,3 @@
-include ':app', ':ambsdk'
+include ':app', ':ambsdk', ':sdk'
 project(':ambsdk').projectDir = new File('ambrosussdk')
+project(':sdk').projectDir = new File('./../sdk')

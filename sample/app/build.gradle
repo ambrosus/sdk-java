@@ -68,6 +68,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // android part
 
+    implementation project(path: ':ambsdk')
+    implementation project(path: ':sdk')
+    //implementation project(':sdk')
+
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 
     implementation "com.android.support:appcompat-v7:$_supportLibVersion"
@@ -108,8 +112,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
-    implementation project(path: ':ambsdk')
-
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'
@@ -117,6 +119,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
 }
 repositories {
     mavenCentral()
