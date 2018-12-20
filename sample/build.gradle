@@ -38,14 +38,7 @@ allprojects {
 
     }
 }
-// Global settings
-subprojects {
-    repositories {
-        flatDir{
-            dirs '../ScanditSDK'
-        }
-    }
-}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
