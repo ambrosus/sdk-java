@@ -1,4 +1,4 @@
-package com.ambrosus;
+package com.ambrosus.sdk;
 
 import com.ambrosus.sdk.AMBNetwork;
 import com.ambrosus.sdk.AMBNetworkCall;
