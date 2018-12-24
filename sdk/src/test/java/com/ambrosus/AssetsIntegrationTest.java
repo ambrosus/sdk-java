@@ -2,7 +2,7 @@ package com.ambrosus;
 
 import com.ambrosus.sdk.AMBNetwork;
 import com.ambrosus.sdk.AMBNetworkCall;
-import com.ambrosus.sdk.Asset;
+import com.ambrosus.sdk.models.Asset;
 import com.ambrosus.sdk.AssetSearchParamsBuilder;
 import com.ambrosus.sdk.Identifiers;
 import com.ambrosus.sdk.SearchResult;
@@ -26,7 +26,7 @@ public class AssetsIntegrationTest {
         try {
             SearchResult<Asset> result = networkCall.execute();
             for (Asset asset : result.values) {
-                if(expectedAssetID.equals(asset.assetId))
+                if(expectedAssetID.equals(asset.getAssetId()))
                     return;
             }
             Assert.fail("Wasn't able to find assert with ID: ");

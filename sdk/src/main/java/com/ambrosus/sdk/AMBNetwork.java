@@ -1,5 +1,7 @@
 package com.ambrosus.sdk;
 
+import com.ambrosus.sdk.models.Asset;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
