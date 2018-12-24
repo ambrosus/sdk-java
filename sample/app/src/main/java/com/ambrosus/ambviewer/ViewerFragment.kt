@@ -16,7 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.Toast
-import com.ambrosus.TestFile
+//import com.ambrosus.TestFile
 import com.ambrosus.ambrosussdk.network.AMBNetwork
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
@@ -42,7 +42,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        TestFile.test()
+        //TestFile.test()
         // Inflate the layout for this fragment
         val inflated = inflater!!.inflate(R.layout.fragment_viewer, container, false)
 
