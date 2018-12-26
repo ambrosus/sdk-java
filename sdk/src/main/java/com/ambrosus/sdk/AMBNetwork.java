@@ -1,6 +1,7 @@
 package com.ambrosus.sdk;
 
 import com.ambrosus.sdk.models.Asset;
+import com.ambrosus.sdk.models.Event;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -37,4 +38,9 @@ public class AMBNetwork {
     public AMBNetworkCall<SearchResult<Asset>> findAssets(AssetSearchParams searchParams) {
         return new NetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
     }
+
+    public AMBNetworkCall<SearchResult<Event>> findEvents(EventSearchParams searchParams) {
+        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
+    }
+
 }
