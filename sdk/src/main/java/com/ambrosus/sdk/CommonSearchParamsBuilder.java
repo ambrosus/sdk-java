@@ -23,9 +23,4 @@ public class CommonSearchParamsBuilder {
         return this;
     }
 
-    public AssetSearchParams build(){
-        return new AssetSearchParams(queryParams);
-    }
-
-
 }

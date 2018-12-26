@@ -14,7 +14,7 @@ public class AssetsIntegrationTest {
 
         AMBNetwork ambNetwork = new AMBNetwork();
 
-        CommonSearchParamsBuilder searchParamsBuilder = new AssetSearchParamsBuilder().byEventIdentifier(Identifiers.GTIN, "39219898012908123");
+        AssetSearchParamsBuilder searchParamsBuilder = new AssetSearchParamsBuilder().byEventIdentifier(Identifiers.GTIN, "39219898012908123");
 
         AMBNetworkCall<SearchResult<Asset>> networkCall = ambNetwork.findAssets(searchParamsBuilder.build());
 
