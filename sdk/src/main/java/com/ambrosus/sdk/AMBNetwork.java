@@ -35,6 +35,6 @@ public class AMBNetwork {
     }
 
     public AMBNetworkCall<SearchResult<Asset>> findAssets(AssetSearchParams searchParams) {
-        return new NetworkCallWrapper<>(service.findAsset(searchParams.queryParams));
+        return new NetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
     }
 }
