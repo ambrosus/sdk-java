@@ -44,7 +44,7 @@ public class AMBNetwork {
     }
 
     public AMBNetworkCall<Asset> getAsset(String assetId) {
-        return new NetworkCallWrapper<>(service.getAsset(assetId));
+        return new NetworkCallWrapper<>(service.getAsset(assetId), new MissingEntityErrorHandler());
     }
 
 }

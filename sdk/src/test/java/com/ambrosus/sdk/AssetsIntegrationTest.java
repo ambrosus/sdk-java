@@ -47,4 +47,22 @@ public class AssetsIntegrationTest {
             throw new RuntimeException(t);
         }
     }
+
+    @Test
+    public void getAssetById_notFoundException(){
+        final String assetId = "notPossible";
+
+        AMBNetwork ambNetwork = new AMBNetwork();
+
+        AMBNetworkCall<Asset> networkCall = ambNetwork.getAsset(assetId);
+
+        try {
+            Asset asset = networkCall.execute();
+        } catch (EntityNotFoundException t) {
+            //it's expected
+            return;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

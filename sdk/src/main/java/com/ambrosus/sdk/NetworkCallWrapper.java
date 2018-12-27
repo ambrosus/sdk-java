@@ -6,18 +6,38 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.Stack;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
 
-
     private static final String TAG = NetworkCallWrapper.class.getName();
+
     private final Call<T> retrofitCall;
+    private final List<NetworkErrorHandler> errorHandlers;
 
     NetworkCallWrapper(Call<T> retrofitCall) {
+        this(retrofitCall, (NetworkErrorHandler) null);
+    }
+
+
+    NetworkCallWrapper(Call<T> retrofitCall, NetworkErrorHandler ... errorHandlers) {
         this.retrofitCall = retrofitCall;
+
+        this.errorHandlers = new ArrayList<>();
+
+        if(errorHandlers != null)
+            this.errorHandlers.addAll(Arrays.asList(errorHandlers));
+
+        this.errorHandlers.add(new CommonNetworkErrorHandler());
     }
 
     @Override
@@ -64,10 +84,13 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
         return new NetworkCallWrapper<>(retrofitCall.clone());
     }
 
-    private static <T> T getResponseResult(Response<T> response) throws Exception{
-        if(response.isSuccessful())
-            return response.body();
-        else {
+    <T> T getResponseResult(Response<T> response) throws Exception{
+        checkForNetworkError(response);
+        return response.body();
+    }
+
+    void checkForNetworkError(Response response) throws Exception {
+        if(!response.isSuccessful()) {
             String responseString =  response.errorBody().string();
 
             String message = null;
@@ -85,9 +108,11 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
                 Log.e(TAG, "Can't parse error response: " + responseString);
             }
 
-            throw new NetworkError(response.code(), message);
+            int code = response.code();
+
+            for (NetworkErrorHandler errorHandler : errorHandlers) {
+                errorHandler.handleNetworkError(code, message);
+            }
         }
     }
-
-
 }
