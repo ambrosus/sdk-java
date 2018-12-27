@@ -22,7 +22,7 @@ public class AssetsIntegrationTest {
         try {
             SearchResult<Asset> result = networkCall.execute();
             for (Asset asset : result.values) {
-                if(expectedAssetID.equals(asset.getAssetId()))
+                if(expectedAssetID.equals(asset.getSystemId()))
                     return;
             }
             Assert.fail("Wasn't able to find assert with ID: ");
@@ -42,7 +42,7 @@ public class AssetsIntegrationTest {
 
         try {
             Asset asset = networkCall.execute();
-            assertEquals(assetId, asset.getAssetId());
+            assertEquals(assetId, asset.getSystemId());
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

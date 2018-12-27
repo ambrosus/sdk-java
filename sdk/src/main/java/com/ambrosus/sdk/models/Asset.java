@@ -5,7 +5,7 @@ public class Asset {
     private String assetId;
     private String name;
 
-    public String getAssetId() {
+    public String getSystemId() {
         return assetId;
     }
 }

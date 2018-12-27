@@ -25,7 +25,7 @@ public class Event {
         }
     }
 
-    public String getEventId() {
+    public String getSystemId() {
         return eventId;
     }
 
