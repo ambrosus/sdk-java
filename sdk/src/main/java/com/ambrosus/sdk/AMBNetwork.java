@@ -43,4 +43,8 @@ public class AMBNetwork {
         return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
     }
 
+    public AMBNetworkCall<Asset> getAsset(String assetId) {
+        return new NetworkCallWrapper<>(service.getAsset(assetId));
+    }
+
 }

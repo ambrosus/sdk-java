@@ -3,6 +3,7 @@ package com.ambrosus.sdk;
 import com.ambrosus.sdk.models.Asset;
 
 import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -26,6 +27,22 @@ public class AssetsIntegrationTest {
             }
             Assert.fail("Wasn't able to find assert with ID: ");
 
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
+    @Test
+    public void getAssetById(){
+        final String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
+
+        AMBNetwork ambNetwork = new AMBNetwork();
+
+        AMBNetworkCall<Asset> networkCall = ambNetwork.getAsset(assetId);
+
+        try {
+            Asset asset = networkCall.execute();
+            assertEquals(assetId, asset.getAssetId());
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
