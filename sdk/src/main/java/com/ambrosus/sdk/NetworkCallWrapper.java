@@ -50,11 +50,14 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
         retrofitCall.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
+                T responseResult;
                 try {
-                    callback.onSuccess(NetworkCallWrapper.this, getResponseResult(response));
+                    responseResult = getResponseResult(response);
                 } catch (Exception e) {
                     onFailure(call, e);
+                    return;
                 }
+                callback.onSuccess(NetworkCallWrapper.this, responseResult);
             }
 
             @Override
