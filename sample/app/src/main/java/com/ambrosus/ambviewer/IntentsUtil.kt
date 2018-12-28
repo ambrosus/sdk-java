@@ -5,6 +5,7 @@ import android.content.Intent
 import com.ambrosus.ambrosussdk.model.AMBAsset
 import com.ambrosus.ambrosussdk.model.AMBEvent
 import com.ambrosus.ambviewer.MainActivity
+import com.ambrosus.sdk.models.Asset
 
 class IntentsUtil() {
     companion object {
@@ -23,7 +24,7 @@ class IntentsUtil() {
 
         }
 
-        fun runAssetActivity(activity: Activity, asset: AMBAsset) {
+        fun runAssetActivity(activity: Activity, asset: Asset) {
             val intent = Intent(activity, AssetActivity::class.java).apply {
                 putExtra("asset", asset)
             }

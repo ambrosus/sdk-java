@@ -16,8 +16,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.Toast
+import com.ambrosus.sdk.AMBNetwork
+import com.ambrosus.sdk.AMBNetworkCall
+import com.ambrosus.sdk.AMBNetworkCallback
+import com.ambrosus.sdk.models.Asset
 //import com.ambrosus.TestFile
-import com.ambrosus.ambrosussdk.network.AMBNetwork
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
@@ -68,7 +71,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
         if (hidden) {
             mBarcodePicker!!.pause()
         } else {
-            mBarcodePicker!!.resume()
+            resumeScanning()
         }
 
     }
@@ -84,7 +87,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
             }
         } else {
             // We already have the permission.
-            mBarcodePicker!!.resume()
+            resumeScanning()
         }
     }
 
@@ -94,7 +97,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
             if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mDeniedCameraAccess = false
                 if (!mPaused) {
-                    mBarcodePicker!!.resume()
+                    resumeScanning()
                 }
             } else {
                 mDeniedCameraAccess = true
@@ -113,7 +116,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
             grantCameraPermissionsThenStartScanning()
         } else {
             // Once the activity is in the foreground again, restart scanning.
-            mBarcodePicker!!.resume()
+            resumeScanning()
         }
         //TODO: remove this
 //        IntentsUtil.runAssetActivity(this!!.activity!!)
@@ -136,6 +139,9 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
 
     override fun barcodeResult(code: BarcodeResult) {
+
+        val network: AMBNetwork = AMBSampleApp.ambNetwork
+
         val data = code.text
         // Truncate code to certain length.
         if (onScanListener != null) {
@@ -148,44 +154,59 @@ class ViewerFragment : Fragment(), BarcodeCallback {
             mBarcodePicker!!.pause()
             if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
                 val assetId = data?.replace("https://amb.to/", "")!!
-                AMBNetwork.instance.requestAsset(assetId,
-                        {
-                            if (it != null) {
-                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+                network.getAsset(assetId).enqueue(object: AMBNetworkCallback<Asset> {
+                    override fun onSuccess(call: AMBNetworkCall<Asset>, result: Asset) {
+                        IntentsUtil.runAssetActivity(activity!!, result)
+                    }
 
-                            } else {
-                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-                            }
-                            mBarcodePicker!!.resume()
-                        })
+                    override fun onFailure(call: AMBNetworkCall<Asset>, t: Throwable) {
+                        AMBSampleApp.errorHandler.handleError(t)
+                        resumeScanning()
+                    }
+                })
+
+//                AMBNetwork.instance.requestAsset(assetId,
+//                        {
+//                            if (it != null) {
+//                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+//
+//                            } else {
+//                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
+//                            }
+//                            resumeScanning()
+//                        })
             } else if (code.barcodeFormat == BarcodeFormat.EAN_13) {
-                AMBNetwork.instance.requestAsset("data[identifiers.ean13]", data,
-                        {
-                            if (it != null) {
-                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
-
-                            } else {
-                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-                            }
-                            mBarcodePicker!!.resume()
-                        })
+//                AMBNetwork.instance.requestAsset("data[identifiers.ean13]", data,
+//                        {
+//                            if (it != null) {
+//                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+//
+//                            } else {
+//                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
+//                            }
+//                            mBarcodePicker!!.resume()
+//                        })
             } else if (code.barcodeFormat == BarcodeFormat.EAN_8) {
 
-                AMBNetwork.instance.requestAsset("data[identifiers.ean8]", data,
-                        {
-                            if (it != null) {
-                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
-
-                            } else {
-                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-                            }
-                            mBarcodePicker!!.resume()
-                        })
+//                AMBNetwork.instance.requestAsset("data[identifiers.ean8]", data,
+//                        {
+//                            if (it != null) {
+//                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
+//
+//                            } else {
+//                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
+//                            }
+//                            mBarcodePicker!!.resume()
+//                        })
             } else {
-                mBarcodePicker!!.resume()
+                resumeScanning()
             }
         }
 
+    }
+
+    private fun resumeScanning() {
+        mBarcodePicker!!.resume()
     }
 
     override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}

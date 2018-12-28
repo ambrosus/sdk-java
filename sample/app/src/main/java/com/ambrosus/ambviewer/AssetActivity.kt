@@ -11,7 +11,9 @@ import android.widget.Toast
 import com.ambrosus.ambrosussdk.model.AMBAsset
 import com.ambrosus.ambrosussdk.model.AMBEvent
 import com.ambrosus.ambrosussdk.utils.Section
+import com.ambrosus.sdk.models.Asset
 import kotlinx.android.synthetic.main.activity_asset.*
+import java.util.*
 
 
 class AssetActivity : AppCompatActivity() {
@@ -22,15 +24,15 @@ class AssetActivity : AppCompatActivity() {
     private var adapter: AssetRecyclerAdapter? = null
     private var barcodeType: Int? = null
 
-    private lateinit var asset: AMBAsset
+    private lateinit var asset: Asset
 
     private var events: List<AMBEvent> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset)
-        asset = intent.extras.getSerializable("asset") as AMBAsset
-        events = asset.events ?: ArrayList()
+        asset = intent.extras.getSerializable("asset") as Asset
+        //events = asset.events ?: ArrayList()
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar)
         toolbarImage = findViewById(R.id.toolbarImage)
 
@@ -45,15 +47,36 @@ class AssetActivity : AppCompatActivity() {
                     it)
         })
 
-        if (events.firstOrNull() != null) {
-            val imageUrl = asset.imageUrl
-            if (toolbarImage != null && imageUrl
-                    != null) {
-                GlideApp.with(this).load(imageUrl).placeholder(R.drawable.placeholder_logo).into(toolbarImage!!)
-            }
+//        if (events.firstOrNull() != null) {
+//            val imageUrl = asset.imageUrl
+//            if (toolbarImage != null && imageUrl
+//                    != null) {
+//                GlideApp.with(this).load(imageUrl).placeholder(R.drawable.placeholder_logo).into(toolbarImage!!)
+//            }
+//        }
+        collapsingToolbarLayout!!.title = asset.name ?: asset.systemId
+
+        val assetDisplayData = ArrayList<Section>()
+
+        val idDataItems = LinkedHashMap<String, Any>()
+        idDataItems.put("createdBy", asset.account)
+        idDataItems.put("timestamp", asset.timestamp)
+        idDataItems.put("sequenceNumber", asset.sequenceNumber)
+
+        asset.name?.let {
+            idDataItems.put("name", it)
         }
-        collapsingToolbarLayout!!.title = asset.name ?: asset.id
-        var dataset = asset.formattedSections?.toMutableList()
+
+        assetDisplayData.add(Section("idData", idDataItems));
+
+        val metaDataItems = LinkedHashMap<String, Any>()
+        metaDataItems.put("bundleTransactionHash", asset.metaData.bundleTransactionHash)
+        metaDataItems.put("bundleUploadTimestamp", asset.metaData.bundleUploadTimestamp)
+        metaDataItems.put("bundleID", asset.metaData.bundleId)
+
+        assetDisplayData.add(Section("metadata", metaDataItems));
+
+        var dataset = assetDisplayData
         val map: Map<String, Any> = hashMapOf("events" to events)
         dataset?.add(Section("events", map))
         adapter?.dataset = dataset

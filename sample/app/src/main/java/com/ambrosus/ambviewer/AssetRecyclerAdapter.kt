@@ -78,7 +78,7 @@ class AssetRecyclerAdapter(val eventClickListener: (event: AMBEvent) -> Unit) :
 
                     tempSubtitleTv = TextView(context)
                     if (key.toLowerCase() == "timestamp") {
-                        tempSubtitleTv.text = (value as Double).toLong().toString()
+                        tempSubtitleTv.text = (value as Long).toString()
                     } else {
                         tempSubtitleTv.text = value.toString()
                     }
