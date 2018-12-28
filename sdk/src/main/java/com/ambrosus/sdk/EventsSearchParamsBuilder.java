@@ -2,6 +2,8 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.models.Identifier;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +28,11 @@ public class EventsSearchParamsBuilder {
     public EventsSearchParamsBuilder createdBy(@NonNull String accountAddress) {
         QueryParamsHelper.addCreatedBy(queryParams, accountAddress);
         return this;
+    }
+
+    @NonNull
+    public EventsSearchParamsBuilder byDataObjectIdentifier(@NonNull Identifier identifier) {
+        return byDataObjectIdentifier(identifier.type, identifier.value);
     }
 
     @NonNull
