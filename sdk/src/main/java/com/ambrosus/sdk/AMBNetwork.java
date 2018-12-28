@@ -1,5 +1,7 @@
 package com.ambrosus.sdk;
 
+import android.support.annotation.NonNull;
+
 import com.ambrosus.sdk.models.Asset;
 import com.ambrosus.sdk.models.Event;
 
@@ -35,15 +37,18 @@ public class AMBNetwork {
         service = retrofit.create(Service.class);
     }
 
-    public AMBNetworkCall<SearchResult<Asset>> findAssets(AssetSearchParams searchParams) {
+    @NonNull
+    public AMBNetworkCall<SearchResult<Asset>> findAssets(@NonNull AssetSearchParams searchParams) {
         return new NetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
     }
 
-    public AMBNetworkCall<SearchResult<Event>> findEvents(EventSearchParams searchParams) {
+    @NonNull
+    public AMBNetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
         return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
     }
 
-    public AMBNetworkCall<Asset> getAsset(String assetId) {
+    @NonNull
+    public AMBNetworkCall<Asset> getAsset(@NonNull String assetId) {
         return new NetworkCallWrapper<>(service.getAsset(assetId), new MissingEntityErrorHandler());
     }
 
