@@ -2,9 +2,10 @@ package com.ambrosus.sdk.models;
 
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Event {
+public class Event implements Serializable {
 
     private String eventId;
 

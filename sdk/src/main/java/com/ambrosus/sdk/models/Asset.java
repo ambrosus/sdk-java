@@ -1,6 +1,8 @@
 package com.ambrosus.sdk.models;
 
-public class Asset {
+import java.io.Serializable;
+
+public class Asset implements Serializable {
 
     private String assetId;
     private String name;
