@@ -15,6 +15,10 @@ interface Service {
     @GET("assets/{assetId}")
     Call<Asset> getAsset(@Path("assetId") String assetId);
 
+    @GET("events/{eventId}")
+    Call<Event> getEvent(@Path("eventId") String assetId);
+
+
     @GET("assets")
     Call<SearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
 

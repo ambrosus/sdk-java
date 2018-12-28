@@ -92,7 +92,7 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
         return response.body();
     }
 
-    void checkForNetworkError(Response response) throws Exception {
+    private void checkForNetworkError(Response response) throws Exception {
         if(!response.isSuccessful()) {
             String responseString =  response.errorBody().string();
 

@@ -1,6 +1,7 @@
 package com.ambrosus.sdk;
 
 import com.ambrosus.sdk.models.Asset;
+import com.ambrosus.sdk.models.Identifier;
 
 import junit.framework.Assert;
 import static org.junit.Assert.*;
@@ -15,13 +16,13 @@ public class AssetsIntegrationTest {
 
         AMBNetwork ambNetwork = new AMBNetwork();
 
-        AssetSearchParamsBuilder searchParamsBuilder = new AssetSearchParamsBuilder().byEventIdentifier(Identifiers.GTIN, "39219898012908123");
+        AssetSearchParamsBuilder searchParamsBuilder = new AssetSearchParamsBuilder().byEventIdentifier(Identifier.GTIN, "39219898012908123");
 
         AMBNetworkCall<SearchResult<Asset>> networkCall = ambNetwork.findAssets(searchParamsBuilder.build());
 
         try {
             SearchResult<Asset> result = networkCall.execute();
-            for (Asset asset : result.values) {
+            for (Asset asset : result.getValues()) {
                 if(expectedAssetID.equals(asset.getSystemId()))
                     return;
             }

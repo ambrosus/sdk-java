@@ -52,4 +52,9 @@ public class AMBNetwork {
         return new NetworkCallWrapper<>(service.getAsset(assetId), new MissingEntityErrorHandler());
     }
 
+    @NonNull
+    public AMBNetworkCall<Event> getEvent(@NonNull String eventId) {
+        return new NetworkCallWrapper<>(service.getEvent(eventId), new MissingEntityErrorHandler());
+    }
+
 }
