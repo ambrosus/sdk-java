@@ -2,10 +2,8 @@ package com.ambrosus.ambviewer
 
 import android.app.Activity
 import android.content.Intent
-import com.ambrosus.ambrosussdk.model.AMBAsset
 import com.ambrosus.ambrosussdk.model.AMBEvent
-import com.ambrosus.ambviewer.MainActivity
-import com.ambrosus.sdk.models.Asset
+import com.ambrosus.sdk.Asset
 
 class IntentsUtil() {
     companion object {

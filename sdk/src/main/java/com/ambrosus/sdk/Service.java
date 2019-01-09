@@ -1,8 +1,5 @@
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.models.Asset;
-import com.ambrosus.sdk.models.Event;
-
 import java.util.Map;
 
 import retrofit2.Call;

@@ -1,8 +1,5 @@
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.models.Asset;
-import com.ambrosus.sdk.models.Identifier;
-
 import junit.framework.Assert;
 import static org.junit.Assert.*;
 

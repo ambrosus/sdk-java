@@ -1,8 +1,6 @@
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.models.Event;
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 
 import org.junit.Test;
 

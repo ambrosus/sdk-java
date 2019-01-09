@@ -1,4 +1,4 @@
-package com.ambrosus.sdk.models;
+package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

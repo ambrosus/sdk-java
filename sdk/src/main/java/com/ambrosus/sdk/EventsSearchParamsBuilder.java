@@ -2,8 +2,6 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.models.Identifier;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

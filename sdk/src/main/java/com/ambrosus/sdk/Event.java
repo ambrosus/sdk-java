@@ -1,4 +1,4 @@
-package com.ambrosus.sdk.models;
+package com.ambrosus.sdk;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

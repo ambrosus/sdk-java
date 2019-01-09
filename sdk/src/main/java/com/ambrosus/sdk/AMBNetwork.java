@@ -2,9 +2,6 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.models.Asset;
-import com.ambrosus.sdk.models.Event;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

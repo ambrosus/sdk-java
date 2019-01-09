@@ -8,10 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
 import android.widget.Toast
-import com.ambrosus.ambrosussdk.model.AMBAsset
 import com.ambrosus.ambrosussdk.model.AMBEvent
 import com.ambrosus.ambrosussdk.utils.Section
-import com.ambrosus.sdk.models.Asset
+import com.ambrosus.sdk.Asset
 import kotlinx.android.synthetic.main.activity_asset.*
 import java.util.*
 

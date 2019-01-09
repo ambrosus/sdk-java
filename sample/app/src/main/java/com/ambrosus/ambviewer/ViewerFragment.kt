@@ -2,24 +2,18 @@ package com.ambrosus.ambviewer
 
 import android.Manifest
 import android.annotation.TargetApi
-import android.content.Context
-import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.RelativeLayout
-import android.widget.Toast
 import com.ambrosus.sdk.AMBNetwork
 import com.ambrosus.sdk.AMBNetworkCall
 import com.ambrosus.sdk.AMBNetworkCallback
-import com.ambrosus.sdk.models.Asset
+import com.ambrosus.sdk.Asset
 //import com.ambrosus.TestFile
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
