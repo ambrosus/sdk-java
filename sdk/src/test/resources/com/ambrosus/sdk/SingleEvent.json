@@ -1,0 +1,52 @@
+{
+  "content": {
+    "idData": {
+      "assetId": "0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae",
+      "createdBy": "0x8536eBc067457602FfC92B89B55501b54bcf5049",
+      "accessLevel": 0,
+      "timestamp": 1507118532,
+      "dataHash": "0x53c801e8f43f02b96b5f422fe6ba7ee3d3cbef3f8ff0e77a98723e227299ff1a"
+    },
+    "data": [
+      {
+        "type": "ambrosus.asset.harvested",
+        "name": "Raw Cocoa Harvested",
+        "images": {
+          "default": {
+            "url": "http://www.madacamp.com/images/madagascar/thumb/Sambirano_101.jpg/600px-Sambirano_101.jpg"
+          }
+        },
+        "Harvest Information": {
+          "Total volume": "45 kg",
+          "Harvest Date": "03.01.2019"
+        }
+      },
+      {
+        "type": "ambrosus.event.location",
+        "location": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -13.7111508,
+              48.4937583
+            ]
+          }
+        },
+        "name": "Sambriano Valley",
+        "city": "Ambanja",
+        "country": "MG",
+        "locationId": "809c578721b74cae1d56504594819285",
+        "GLN": 9501101530003
+      }
+    ],
+    "signature": "0xf06c1a6a7353adbbee56e542c75b031f7b9a9aafd3b233d533f3977c912527fe17eee78ed4e7fb625fd5f68e5b1c00bc0ae3c87a63da05dcaab99807d24fc6271c"
+  },
+  "eventId": "0x199f53332bd94e5c452a91b1f95137b74722e34d9a9d4f95e7a1223324107290",
+  "metadata": {
+    "bundleTransactionHash": "0xa5dcaf1c4dccfff5b227d4bc06a02ece5f0b9c563d37ad59607ff96dc4c54d35",
+    "bundleUploadTimestamp": 1545084270,
+    "bundleId": "0x12d4cd03e1b568f4252213ee40e57b2e916f54b97cac224a3c14fbe81f256e4b",
+    "bundleProofBlock": 515823
+  }
+}

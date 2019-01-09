@@ -2,6 +2,8 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.GsonBuilder;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -25,9 +27,12 @@ public class AMBNetwork {
                 .addInterceptor(interceptor)
                 .build();
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Event.class, new EventDeserializer());
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gateway-test.ambrosus.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .client(client)
                 .build();
 

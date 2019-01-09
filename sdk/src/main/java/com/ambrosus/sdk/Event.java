@@ -1,76 +1,54 @@
 package com.ambrosus.sdk;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class Event implements Serializable {
+public class Event {
 
-    private String eventId;
+    private final String systemId;
+    private final String assetId;
+    private final String createdBy;
 
-    private Content content;
+    private final long timeStamp;
 
-    static class Content {
-        String signature;
-        private IdData idData;
-        private List<JsonObject> data;
+    private final MetaData metaData;
+    private final List<JsonObject> rawData;
 
-        static class IdData {
+    Event(String systemId, String assetId, String createdBy, long timeStamp, MetaData metaData, List<JsonObject> rawData) {
+        this.systemId = systemId;
+        this.assetId = assetId;
+        this.createdBy = createdBy;
+        this.timeStamp = timeStamp;
+        this.metaData = metaData;
+        this.rawData = rawData;
+    }
 
-            private String assetId;
-            private String createdBy;
-            private long accessLevel;
-            private long timestamp;
-
-        }
+    protected Event(Event source){
+        this(source.systemId, source.assetId, source.createdBy, source.timeStamp, source.metaData, source.rawData);
     }
 
     public String getSystemId() {
-        return eventId;
-    }
-
-    public List<Identifier> getAssetIdentifiers() {
-        List<Identifier> result = new ArrayList<>();
-        for (JsonObject dataObject : getData()) {
-            if(Identifier.TYPE_ASSET.equals(getDataType(dataObject))) {
-                result.addAll(getIdentifiersFrom(dataObject));
-            }
-        }
-        return result;
+        return systemId;
     }
 
     public String getAssetId() {
-        return content.idData.assetId;
+        return assetId;
     }
 
-    public List<JsonObject> getData() {
-        return content.data;
+    public String getAuthorId() {
+        return createdBy;
     }
 
-    private static String getDataType(JsonObject dataObject) {
-        return dataObject.get("type").getAsString();
+    public long getGMTTimeStamp() {
+        return timeStamp;
     }
 
-    private static List<Identifier> getIdentifiersFrom(JsonObject data) {
-        List<Identifier> result = new ArrayList<>();
-        JsonObject identifiers = data.get("identifiers").getAsJsonObject();
-        if (identifiers != null) {
-            for (Map.Entry<String, JsonElement> identifier : identifiers.entrySet()) {
-                if(identifier.getValue().isJsonArray()) {
-                    for (JsonElement identifierValue: identifier.getValue().getAsJsonArray()) {
-                        result.add(new Identifier(identifier.getKey(), identifierValue.getAsString()));
-                    }
-                } else {
-                   result.add(new Identifier(identifier.getKey(), identifier.getValue().getAsString()));
-                }
-            }
-        }
-        return result;
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public List<JsonObject> getRawData() {
+        return rawData;
     }
 }
-
-
