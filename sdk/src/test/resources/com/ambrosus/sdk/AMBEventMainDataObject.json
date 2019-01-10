@@ -1,0 +1,25 @@
+{
+  "type": "ambrosus.asset.shipped",
+  "name": "Raw Cocoa Shipped",
+  "images": {
+    "default": {
+      "url": "https://www.gtreview.com/wp-content/uploads/2015/01/Cocoa-Beans-Bag-1024x681.jpg"
+    }
+  },
+  "documents": {
+    "shipment-order": {
+      "url": "https://image.ibb.co/mUrgvH/HO.jpg"
+    }
+  },
+  "Test Results": {
+    "Sample Size": "10g",
+    "pH": "6.7",
+    "sugar-percent": "14",
+    "test-date": "5-NOV-2017",
+    "tester": "John Wagner",
+    "testing-company": "CocoTest Inc."
+  },
+  "transit-temperature-avg": "14.5",
+  "transit-temperature-min": "11.1",
+  "transit-temperature-max": "18.9"
+}
