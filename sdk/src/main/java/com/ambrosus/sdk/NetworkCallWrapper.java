@@ -6,13 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.Stack;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,22 +15,15 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
     private static final String TAG = NetworkCallWrapper.class.getName();
 
     private final Call<T> retrofitCall;
-    private final List<NetworkErrorHandler> errorHandlers;
+    private final NetworkErrorHandler[] errorHandlers;
 
     NetworkCallWrapper(Call<T> retrofitCall) {
-        this(retrofitCall, (NetworkErrorHandler) null);
+        this(retrofitCall, (NetworkErrorHandler[]) null);
     }
-
 
     NetworkCallWrapper(Call<T> retrofitCall, NetworkErrorHandler ... errorHandlers) {
         this.retrofitCall = retrofitCall;
-
-        this.errorHandlers = new ArrayList<>();
-
-        if(errorHandlers != null)
-            this.errorHandlers.addAll(Arrays.asList(errorHandlers));
-
-        this.errorHandlers.add(new CommonNetworkErrorHandler());
+        this.errorHandlers = errorHandlers;
     }
 
     @Override
@@ -84,7 +70,8 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
 
     @Override
     public AMBNetworkCall<T> clone() {
-        return new NetworkCallWrapper<>(retrofitCall.clone());
+        //TODO: need to check clone result with unit test, I did an error in its implementation
+        return new NetworkCallWrapper<>(retrofitCall.clone(), errorHandlers);
     }
 
     <T> T getResponseResult(Response<T> response) throws Exception{
@@ -113,9 +100,13 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
 
             int code = response.code();
 
-            for (NetworkErrorHandler errorHandler : errorHandlers) {
-                errorHandler.handleNetworkError(code, message);
+            if(errorHandlers != null) {
+                for (NetworkErrorHandler errorHandler : errorHandlers) {
+                    errorHandler.handleNetworkError(code, message);
+                }
             }
+
+            new CommonNetworkErrorHandler().handleNetworkError(code, message);
         }
     }
 }
