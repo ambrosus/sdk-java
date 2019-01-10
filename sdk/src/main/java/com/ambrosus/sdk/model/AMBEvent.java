@@ -40,17 +40,25 @@ public class AMBEvent extends Event {
     private final Map<String, JsonObject> documents;
     private final Map<String, JsonElement> attributes;
 
+    private final Location location;
+
     public AMBEvent(Event source){
         super(source);
 
-        JsonObject mainDataObject = Assert.assertNotNull(getMainDataObject(getRawData()), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
+        List<JsonObject> rawData = source.getRawData();
 
-        type = Event.getDataObjectType(mainDataObject);
+        type = Assert.assertNotNull(getAmbrosusEventType(rawData), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
+
+        JsonObject mainDataObject = getDataObject(type, rawData);
+
         name = getEventName(mainDataObject);
 
         images = getEntityMap(KEY_IMAGES_ATTR, mainDataObject);
         documents = getEntityMap(KEY_DOCUMENTS_ATTR, mainDataObject);
         attributes = getAttributesMap(mainDataObject);
+
+        JsonObject locationDataJson = getDataObject("ambrosus.event.location", rawData);
+        location = locationDataJson != null ? Location.createFrom(locationDataJson) : null;
     }
 
     @NonNull
@@ -58,24 +66,35 @@ public class AMBEvent extends Event {
         return type;
     }
 
+    @Nullable
     public String getName() {
         return name;
     }
 
-    public static boolean isValidAMBEvent(Event event){
-        return getMainDataObject(event.getRawData()) != null;
+    @Nullable
+    public Location getLocation() {
+        return location;
     }
 
-    private static boolean isMainDataObject(JsonObject dataObject) {
-        String dataObjectType = Event.getDataObjectType(dataObject);
-        return dataObjectType.startsWith(AMBROSUS_EVENT_TYPE_PREFIX)
-                && !AMBROSUS_SERVICE_EVENT_TYPES.contains(dataObjectType);
+    public static boolean isValidAMBEvent(Event event){
+        return getAmbrosusEventType(event.getRawData()) != null;
     }
 
     @Nullable
-    private static JsonObject getMainDataObject(List<JsonObject> rawData) {
+    private static String getAmbrosusEventType(List<JsonObject> rawData) {
         for (JsonObject dataObject : rawData) {
-           if(isMainDataObject(dataObject))
+            String dataObjectType = Event.getDataObjectType(dataObject);
+            if(dataObjectType.startsWith(AMBROSUS_EVENT_TYPE_PREFIX)
+                    && !AMBROSUS_SERVICE_EVENT_TYPES.contains(dataObjectType))
+                return dataObjectType;
+        }
+        return null;
+    }
+
+    @Nullable
+    private static JsonObject getDataObject(String type, List<JsonObject> rawData) {
+        for (JsonObject dataObject : rawData) {
+           if(type.equals(Event.getDataObjectType(dataObject)))
                return dataObject;
         }
         return null;
@@ -104,12 +123,10 @@ public class AMBEvent extends Event {
                 }
             }
         } catch(RuntimeException e) {
-            Platform.get().log(Platform.WARN, "Can't parse ambrosus event images", e);
+            Platform.get().log(Platform.WARN, "Can't parse Ambrosus event images", e);
         }
         return Collections.unmodifiableMap(result);
     }
-
-
 
     //package-local for tests
     static Map<String, JsonElement> getAttributesMap(JsonObject dataObject){

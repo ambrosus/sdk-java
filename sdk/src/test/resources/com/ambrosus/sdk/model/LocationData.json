@@ -1,0 +1,18 @@
+{
+  "type": "ambrosus.event.location",
+  "location": {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        51.5249003,
+        -0.1240547
+      ]
+    }
+  },
+  "name": "Waitrose, Brunswick Centre",
+  "city": "London",
+  "country": "UK",
+  "locationId": "809c578721b74cae1d56504594819285",
+  "GLN": 9501101530003
+}
