@@ -1,17 +1,19 @@
-package com.ambrosus.sdk;
+package com.ambrosus.sdk.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ambrosus.sdk.Event;
 import com.ambrosus.sdk.utils.Assert;
+import com.ambrosus.sdk.utils.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.internal.platform.Platform;
@@ -24,6 +26,7 @@ public class AMBEvent extends Event {
         {
             add("ambrosus.asset.redirection");
             add("ambrosus.asset.info");
+            add("ambrosus.asset.identifiers");
         }
     };
     private static final String KEY_IMAGES_ATTR = "images";
@@ -55,6 +58,10 @@ public class AMBEvent extends Event {
         return type;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static boolean isValidAMBEvent(Event event){
         return getMainDataObject(event.getRawData()) != null;
     }
@@ -72,6 +79,16 @@ public class AMBEvent extends Event {
                return dataObject;
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return Strings.defaultToString(this) + String.format(Locale.US, "(id: %s, type: %s, name: %s)", getSystemId(), getType(), getName());
+    }
+
+    private static String getEventName(JsonObject dataObject) {
+        JsonElement jsonElement = dataObject.get(KEY_NAME_ATTR);
+        return jsonElement != null ? jsonElement.getAsString() : null;
     }
 
     @NonNull
@@ -92,10 +109,7 @@ public class AMBEvent extends Event {
         return Collections.unmodifiableMap(result);
     }
 
-    private static String getEventName(JsonObject dataObject) {
-        JsonElement jsonElement = dataObject.get(KEY_NAME_ATTR);
-        return jsonElement != null ? jsonElement.getAsString() : null;
-    }
+
 
     //package-local for tests
     static Map<String, JsonElement> getAttributesMap(JsonObject dataObject){

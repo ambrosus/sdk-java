@@ -29,6 +29,12 @@ public class EventsSearchParamsBuilder {
     }
 
     @NonNull
+    public EventsSearchParamsBuilder forAsset(@NonNull String assetId) {
+        queryParams.put("assetId", assetId);
+        return this;
+    }
+
+    @NonNull
     public EventsSearchParamsBuilder byDataObjectIdentifier(@NonNull Identifier identifier) {
         return byDataObjectIdentifier(identifier.type, identifier.value);
     }

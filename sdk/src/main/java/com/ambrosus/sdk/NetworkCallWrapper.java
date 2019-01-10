@@ -10,33 +10,35 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
+class NetworkCallWrapper<I, O> implements AMBNetworkCall<O> {
 
     private static final String TAG = NetworkCallWrapper.class.getName();
 
-    private final Call<T> retrofitCall;
+    private final Call<I> retrofitCall;
     private final NetworkErrorHandler[] errorHandlers;
+    private final ResponseResultAdapter<I,O> resultAdapter;
 
-    NetworkCallWrapper(Call<T> retrofitCall) {
-        this(retrofitCall, (NetworkErrorHandler[]) null);
+    NetworkCallWrapper(Call<I> retrofitCall, ResponseResultAdapter<I,O> resultAdapter) {
+        this(retrofitCall, resultAdapter, (NetworkErrorHandler[]) null);
     }
 
-    NetworkCallWrapper(Call<T> retrofitCall, NetworkErrorHandler ... errorHandlers) {
+    NetworkCallWrapper(Call<I> retrofitCall, ResponseResultAdapter<I,O> resultAdapter, NetworkErrorHandler ... errorHandlers) {
         this.retrofitCall = retrofitCall;
+        this.resultAdapter = resultAdapter;
         this.errorHandlers = errorHandlers;
     }
 
     @Override
-    public T execute() throws Throwable {
+    public O execute() throws Throwable {
         return getResponseResult(retrofitCall.execute());
     }
 
     @Override
-    public void enqueue(final AMBNetworkCallback<T> callback) {
-        retrofitCall.enqueue(new Callback<T>() {
+    public void enqueue(final AMBNetworkCallback<O> callback) {
+        retrofitCall.enqueue(new Callback<I>() {
             @Override
-            public void onResponse(Call<T> call, Response<T> response) {
-                T responseResult;
+            public void onResponse(Call<I> call, Response<I> response) {
+                O responseResult;
                 try {
                     responseResult = getResponseResult(response);
                 } catch (Exception e) {
@@ -47,7 +49,7 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
             }
 
             @Override
-            public void onFailure(Call<T> call, Throwable t) {
+            public void onFailure(Call<I> call, Throwable t) {
                 callback.onFailure(NetworkCallWrapper.this, t);
             }
         });
@@ -69,14 +71,14 @@ class NetworkCallWrapper<T> implements AMBNetworkCall<T> {
     }
 
     @Override
-    public AMBNetworkCall<T> clone() {
+    public AMBNetworkCall<O> clone() {
         //TODO: need to check clone result with unit test, I did an error in its implementation
-        return new NetworkCallWrapper<>(retrofitCall.clone(), errorHandlers);
+        return new NetworkCallWrapper<>(retrofitCall.clone(), resultAdapter, errorHandlers);
     }
 
-    <T> T getResponseResult(Response<T> response) throws Exception{
+    O getResponseResult(Response<I> response) throws Exception{
         checkForNetworkError(response);
-        return response.body();
+        return resultAdapter.getResponseResult(response.body());
     }
 
     private void checkForNetworkError(Response response) throws Exception {

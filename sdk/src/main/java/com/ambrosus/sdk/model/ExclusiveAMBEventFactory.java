@@ -1,9 +1,12 @@
-package com.ambrosus.sdk;
+package com.ambrosus.sdk.model;
+
+import com.ambrosus.sdk.Event;
+import com.ambrosus.sdk.EventFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AMBEventFactory implements EventFactory<AMBEvent> {
+public class ExclusiveAMBEventFactory implements EventFactory<AMBEvent> {
 
     @Override
     public List<AMBEvent> processEvents(List<Event> sourceEvents) {

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class Event {
 
@@ -57,6 +58,11 @@ public class Event {
 
     public List<JsonObject> getRawData() {
         return rawData;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + String.format(Locale.US, "(%s)", getSystemId());
     }
 
     private static void ensureRawDataObjectTypes(List<JsonObject> rawData){
