@@ -32,7 +32,7 @@ class EventDeserializer implements JsonDeserializer<Event> {
                     eventJson.get("eventId").getAsString(),
                     idDataJson.get("assetId").getAsString(),
                     idDataJson.get("createdBy").getAsString(),
-                    idDataJson.get("timestamp").getAsLong(),
+                    idDataJson.get("timestamp").getAsLong()*1000,
                     metaData,
                     rawData
             );
