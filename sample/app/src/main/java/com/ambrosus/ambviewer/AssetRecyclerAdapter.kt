@@ -109,31 +109,13 @@ class AssetRecyclerAdapter(val eventClickListener: (event: AMBEvent) -> Unit) :
                     eventSubtitle = tempCard.findViewById<TextView>(R.id.eventSubTitle)
                     eventDate = tempCard.findViewById<TextView>(R.id.eventDate)
                     eventVisibility = tempCard.findViewById<TextView>(R.id.eventVisibility)
-                    line1 = tempCard.findViewById<View>(R.id.line1)
-                    line2 = tempCard.findViewById<View>(R.id.line2)
+
                     event = eventList[j]
                     eventTitle.setText(event.type ?: event.id)
                     val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy")
                     eventDate.setText(simpleDateFormat.format(Date(event.timestamp.toLong() * 1000)))
                     eventVisibility.setText(generatePrivacy())
                     eventSubtitle.setText(event.locationName ?: generateLocation())
-                    line1.bringToFront()
-                    line2.bringToFront()
-                    line1.visibility = View.GONE
-                    line2.visibility = View.GONE
-                    if (j == 0) {
-                        line1.visibility = View.INVISIBLE
-                        line2.visibility = View.VISIBLE
-                    } else if (j == 4) {
-                        line1.visibility = View.VISIBLE
-                        line2.visibility = View.INVISIBLE
-                    } else if (eventList.size == 1) {
-                        line1.visibility = View.INVISIBLE
-                        line2.visibility = View.INVISIBLE
-                    } else {
-                        line1.visibility = View.VISIBLE
-                        line2.visibility = View.VISIBLE
-                    }
                     tempCard.tag = event
                     tempCard.setOnClickListener {
                         eventClickListener(it.tag as AMBEvent)

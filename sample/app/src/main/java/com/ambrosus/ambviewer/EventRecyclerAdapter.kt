@@ -136,30 +136,11 @@ class EventRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     eventSubtitle = tempCard.findViewById(R.id.eventSubTitle)
                     eventDate = tempCard.findViewById(R.id.eventDate)
                     eventVisibility = tempCard.findViewById(R.id.eventVisibility)
-                    line1 = tempCard.findViewById<View>(R.id.line1)
-                    line2 = tempCard.findViewById<View>(R.id.line2)
                     event = eventList[j]
                     eventTitle.text = event.type ?: event.id
                     eventDate.text = event.date
                     eventVisibility.text = generatePrivacy()
                     eventSubtitle.text = event.locationName ?: generateLocation()
-                    line1.bringToFront()
-                    line2.bringToFront()
-                    line1.visibility = View.GONE
-                    line2.visibility = View.GONE
-                    if (j == 0) {
-                        line1.visibility = View.INVISIBLE
-                        line2.visibility = View.VISIBLE
-                    } else if (j == 4) {
-                        line1.visibility = View.VISIBLE
-                        line2.visibility = View.INVISIBLE
-                    } else if (eventList.size == 1) {
-                        line1.visibility = View.INVISIBLE
-                        line2.visibility = View.INVISIBLE
-                    } else {
-                        line1.visibility = View.VISIBLE
-                        line2.visibility = View.VISIBLE
-                    }
                     eventViewHolder.eventsContainer.addView(tempCard)
                 }
 
