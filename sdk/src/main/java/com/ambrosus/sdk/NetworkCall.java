@@ -2,7 +2,7 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-public interface AMBNetworkCall<T> extends Cloneable {
+public interface NetworkCall<T> extends Cloneable {
 
     @NonNull T execute() throws Throwable;
 
@@ -10,7 +10,7 @@ public interface AMBNetworkCall<T> extends Cloneable {
      * Asynchronously send the request and notify {@code callback} of its response or if an error
      * occurred talking to the server, creating the request, or processing the response.
      */
-    void enqueue(@NonNull AMBNetworkCallback<T> callback);
+    void enqueue(@NonNull NetworkCallback<T> callback);
 
     boolean isExecuted();
 
@@ -23,6 +23,7 @@ public interface AMBNetworkCall<T> extends Cloneable {
      * Create a new, identical call to this one which can be enqueued or executed even if this call
      * has already been.
      */
-    @NonNull AMBNetworkCall<T> clone();
+    @NonNull
+    NetworkCall<T> clone();
 }
 

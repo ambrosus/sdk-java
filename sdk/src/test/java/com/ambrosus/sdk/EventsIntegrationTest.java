@@ -14,11 +14,11 @@ import static org.junit.Assert.fail;
 
 public class EventsIntegrationTest {
 
-    private static AMBNetwork ambNetwork;
+    private static Network network;
 
     @BeforeClass
     public static void setUpNetwork(){
-        ambNetwork = new AMBNetwork();
+        network = new Network();
     }
 
     @Test
@@ -27,7 +27,7 @@ public class EventsIntegrationTest {
 
         EventsSearchParamsBuilder searchParamsBuilder = new EventsSearchParamsBuilder().byDataObjectIdentifier(Identifier.EAN13, "6942507312009");
 
-        AMBNetworkCall<SearchResult<Event>> networkCall = ambNetwork.findEvents(searchParamsBuilder.build());
+        NetworkCall<SearchResult<Event>> networkCall = network.findEvents(searchParamsBuilder.build());
 
         try {
             SearchResult<Event> result = networkCall.execute();
@@ -62,7 +62,7 @@ public class EventsIntegrationTest {
     public void getEventById_notFoundException(){
         final String eventID = "notPossible";
 
-        AMBNetworkCall<Event> networkCall = ambNetwork.getEvent(eventID);
+        NetworkCall<Event> networkCall = network.getEvent(eventID);
 
         try {
             networkCall.execute();
@@ -81,7 +81,7 @@ public class EventsIntegrationTest {
         EventsSearchParamsBuilder searchParamsBuilder = new EventsSearchParamsBuilder();
         searchParamsBuilder.forAsset("0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae");
 
-        AMBNetworkCall<List<AMBEvent>> networkCall = ambNetwork.findEvents(searchParamsBuilder.build(), new AMBEventFactory());
+        NetworkCall<List<AMBEvent>> networkCall = network.findEvents(searchParamsBuilder.build(), new AMBEventFactory());
 
         try {
             List<AMBEvent> ambEvents = networkCall.execute();

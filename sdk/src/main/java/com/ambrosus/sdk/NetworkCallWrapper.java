@@ -10,7 +10,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class NetworkCallWrapper<I, O> implements AMBNetworkCall<O> {
+class NetworkCallWrapper<I, O> implements NetworkCall<O> {
 
     private static final String TAG = NetworkCallWrapper.class.getName();
 
@@ -34,7 +34,7 @@ class NetworkCallWrapper<I, O> implements AMBNetworkCall<O> {
     }
 
     @Override
-    public void enqueue(final AMBNetworkCallback<O> callback) {
+    public void enqueue(final NetworkCallback<O> callback) {
         retrofitCall.enqueue(new Callback<I>() {
             @Override
             public void onResponse(Call<I> call, Response<I> response) {
@@ -71,7 +71,7 @@ class NetworkCallWrapper<I, O> implements AMBNetworkCall<O> {
     }
 
     @Override
-    public AMBNetworkCall<O> clone() {
+    public NetworkCall<O> clone() {
         //TODO: need to check clone result with unit test, I did an error in its implementation
         return new NetworkCallWrapper<>(retrofitCall.clone(), resultAdapter, errorHandlers);
     }

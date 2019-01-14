@@ -9,7 +9,7 @@ import com.ambrosus.sdk.Event
 
 class EventsListViewModel(
         private val assetId: String,
-        private val network: AMBNetwork
+        private val network: Network
 ) : ViewModel() {
 
     private val _eventsList = MutableLiveData<LoadResult<List<Event>>>()
@@ -20,13 +20,13 @@ class EventsListViewModel(
     fun refreshEventsList() {
         val searchParams = EventsSearchParamsBuilder().forAsset(assetId).build();
         network.findEvents(searchParams).enqueue(
-                object: AMBNetworkCallback<SearchResult<Event>> {
-                    override fun onSuccess(call: AMBNetworkCall<SearchResult<Event>>, result: SearchResult<Event>) {
+                object: NetworkCallback<SearchResult<Event>> {
+                    override fun onSuccess(call: NetworkCall<SearchResult<Event>>, result: SearchResult<Event>) {
                         //TODO: handle pagination here
                         _eventsList.value = LoadResult(result.values)
                     }
 
-                    override fun onFailure(call: AMBNetworkCall<SearchResult<Event>>, t: Throwable) {
+                    override fun onFailure(call: NetworkCall<SearchResult<Event>>, t: Throwable) {
                         _eventsList.value = LoadResult(t);
                     }
                 }

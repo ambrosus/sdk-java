@@ -1,6 +1,5 @@
 package com.ambrosus.ambviewer
 
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -9,8 +8,6 @@ import android.os.Bundle
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,15 +15,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.ambrosus.ambrosussdk.model.AMBEvent
-import com.ambrosus.ambrosussdk.utils.Section
 import com.ambrosus.ambviewer.utils.*
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Event
 import com.ambrosus.sdk.model.Location
 import kotlinx.android.synthetic.main.activity_asset.*
 import kotlinx.android.synthetic.main.loading_indicator.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -102,7 +96,7 @@ class AssetActivity : AppCompatActivity() {
     private fun getEventsViewModel(): EventsListViewModel {
         return ViewModelProviders.of(
                 this,
-                EventsListViewModelFactory(asset.systemId, AMBSampleApp.ambNetwork)
+                EventsListViewModelFactory(asset.systemId, AMBSampleApp.network)
         ).get(EventsListViewModel::class.java)
     }
 

@@ -10,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import com.ambrosus.sdk.AMBNetwork
-import com.ambrosus.sdk.AMBNetworkCall
-import com.ambrosus.sdk.AMBNetworkCallback
+import com.ambrosus.sdk.Network
+import com.ambrosus.sdk.NetworkCall
+import com.ambrosus.sdk.NetworkCallback
 import com.ambrosus.sdk.Asset
 //import com.ambrosus.TestFile
 import com.google.zxing.BarcodeFormat
@@ -134,7 +134,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
     override fun barcodeResult(code: BarcodeResult) {
 
-        val network: AMBNetwork = AMBSampleApp.ambNetwork
+        val network: Network = AMBSampleApp.network
 
         val data = code.text
         // Truncate code to certain length.
@@ -148,12 +148,12 @@ class ViewerFragment : Fragment(), BarcodeCallback {
             mBarcodePicker!!.pause()
             if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
                 val assetId = data?.replace("https://amb.to/", "")!!
-                network.getAsset(assetId).enqueue(object: AMBNetworkCallback<Asset> {
-                    override fun onSuccess(call: AMBNetworkCall<Asset>, result: Asset) {
+                network.getAsset(assetId).enqueue(object: NetworkCallback<Asset> {
+                    override fun onSuccess(call: NetworkCall<Asset>, result: Asset) {
                         IntentsUtil.runAssetActivity(activity!!, result)
                     }
 
-                    override fun onFailure(call: AMBNetworkCall<Asset>, t: Throwable) {
+                    override fun onFailure(call: NetworkCall<Asset>, t: Throwable) {
                         AMBSampleApp.errorHandler.handleError(t)
                         resumeScanning()
                     }

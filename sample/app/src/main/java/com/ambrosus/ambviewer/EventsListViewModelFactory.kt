@@ -3,13 +3,13 @@ package com.ambrosus.ambviewer
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.ambrosus.sdk.AMBNetwork
+import com.ambrosus.sdk.Network
 
-class EventsListViewModelFactory(private val assetId: String, private val ambNetwork: AMBNetwork) : ViewModelProvider.Factory {
+class EventsListViewModelFactory(private val assetId: String, private val network: Network) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return EventsListViewModel(assetId, ambNetwork) as T
+        return EventsListViewModel(assetId, network) as T
     }
 
 }

@@ -11,11 +11,11 @@ public class AssetsIntegrationTest {
     public void findAsset() {
         final String expectedAssetID = "0xa444489cf4c63adba081d3ba29d007e08517f1694e6a173cf6616e0fbb1d8882";
 
-        AMBNetwork ambNetwork = new AMBNetwork();
+        Network network = new Network();
 
         AssetSearchParamsBuilder searchParamsBuilder = new AssetSearchParamsBuilder().byEventIdentifier(Identifier.GTIN, "39219898012908123");
 
-        AMBNetworkCall<SearchResult<Asset>> networkCall = ambNetwork.findAssets(searchParamsBuilder.build());
+        NetworkCall<SearchResult<Asset>> networkCall = network.findAssets(searchParamsBuilder.build());
 
         try {
             SearchResult<Asset> result = networkCall.execute();
@@ -34,9 +34,9 @@ public class AssetsIntegrationTest {
     public void getAssetById(){
         final String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
 
-        AMBNetwork ambNetwork = new AMBNetwork();
+        Network network = new Network();
 
-        AMBNetworkCall<Asset> networkCall = ambNetwork.getAsset(assetId);
+        NetworkCall<Asset> networkCall = network.getAsset(assetId);
 
         try {
             Asset asset = networkCall.execute();
@@ -50,9 +50,9 @@ public class AssetsIntegrationTest {
     public void getAssetById_notFoundException(){
         final String assetId = "notPossible";
 
-        AMBNetwork ambNetwork = new AMBNetwork();
+        Network network = new Network();
 
-        AMBNetworkCall<Asset> networkCall = ambNetwork.getAsset(assetId);
+        NetworkCall<Asset> networkCall = network.getAsset(assetId);
 
         try {
             Asset asset = networkCall.execute();

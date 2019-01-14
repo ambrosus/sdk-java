@@ -1,26 +1,19 @@
 package com.ambrosus.sdk.model;
 
-import com.ambrosus.sdk.AMBNetwork;
-import com.ambrosus.sdk.AMBNetworkCall;
-import com.ambrosus.sdk.Event;
+import com.ambrosus.sdk.Network;
+import com.ambrosus.sdk.NetworkCall;
 import com.ambrosus.sdk.EventsSearchParamsBuilder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 public class AssetInfoIntegrationTest {
 
     @Test
     public void testAssetInfoIntegration(){
-        AMBNetwork ambNetwork = new AMBNetwork();
-        AMBNetworkCall<List<AMBAssetInfo>> networkCall = ambNetwork.findEvents(
+        Network network = new Network();
+        NetworkCall<List<AMBAssetInfo>> networkCall = network.findEvents(
                 new EventsSearchParamsBuilder()
                         .forAsset("0xf819897e45f102dcf2197e33d9d81c3c31354e36445ecb0eac1658e5b6a07c3e")
                         .build(),

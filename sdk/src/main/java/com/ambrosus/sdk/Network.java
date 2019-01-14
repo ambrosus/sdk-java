@@ -11,11 +11,11 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AMBNetwork {
+public class Network {
 
     private final Service service;
 
-    public AMBNetwork(){
+    public Network(){
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -42,26 +42,26 @@ public class AMBNetwork {
     }
 
     @NonNull
-    public AMBNetworkCall<SearchResult<Asset>> findAssets(@NonNull AssetSearchParams searchParams) {
+    public NetworkCall<SearchResult<Asset>> findAssets(@NonNull AssetSearchParams searchParams) {
         return new TransparentNetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
     }
 
     @NonNull
-    public AMBNetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
+    public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
         return new TransparentNetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
     }
 
-    public <T extends Event> AMBNetworkCall<List<T>> findEvents(@NonNull EventSearchParams searchParams, EventFactory<T> factory) {
+    public <T extends Event> NetworkCall<List<T>> findEvents(@NonNull EventSearchParams searchParams, EventFactory<T> factory) {
         return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams), new EventsSearchResultAdapter<>(factory));
     }
 
     @NonNull
-    public AMBNetworkCall<Asset> getAsset(@NonNull String assetId) {
+    public NetworkCall<Asset> getAsset(@NonNull String assetId) {
         return new TransparentNetworkCallWrapper<>(service.getAsset(assetId), new MissingEntityErrorHandler());
     }
 
     @NonNull
-    public AMBNetworkCall<Event> getEvent(@NonNull String eventId) {
+    public NetworkCall<Event> getEvent(@NonNull String eventId) {
         return new TransparentNetworkCallWrapper<>(service.getEvent(eventId), new MissingEntityErrorHandler());
     }
 
