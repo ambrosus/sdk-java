@@ -8,6 +8,6 @@ public interface EventFactory<T extends Event> {
 
     @NonNull
     List<T> processEvents(List<Event> sourceEvents);
-    boolean isValidEvent(Event event);
+    boolean isValidSourceEvent(Event event);
 
 }

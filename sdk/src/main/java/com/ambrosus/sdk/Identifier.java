@@ -1,8 +1,9 @@
 package com.ambrosus.sdk;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Identifier {
+public class Identifier implements Serializable {
 
     static final String TYPE_ASSET = "ambrosus.asset.identifiers";
     static final String TYPE_EVENTS = "ambrosus.event.identifiers";

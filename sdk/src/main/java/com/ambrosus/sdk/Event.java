@@ -1,11 +1,18 @@
 package com.ambrosus.sdk;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.ambrosus.sdk.utils.Assert;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class Event {
 
@@ -58,6 +65,25 @@ public class Event {
 
     public List<JsonObject> getRawData() {
         return rawData;
+    }
+
+    //we need to be sure about the order of dataTypes in some cases, so result is list
+    @NonNull
+    public List<String> getDataTypes() {
+        List<String> result = new ArrayList<>();
+        for (JsonObject dataObject : rawData) {
+            result.add(getDataObjectType(dataObject));
+        }
+        return result;
+    }
+
+    @Nullable
+    public JsonObject getDataObject(String type) {
+        for (JsonObject dataObject : getRawData()) {
+            if(type.equals(getDataObjectType(dataObject)))
+                return dataObject;
+        }
+        return null;
     }
 
     @Override

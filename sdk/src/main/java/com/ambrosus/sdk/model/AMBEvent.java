@@ -20,15 +20,6 @@ import okhttp3.internal.platform.Platform;
 
 public class AMBEvent extends Event {
 
-    private static final String AMBROSUS_EVENT_TYPE_PREFIX = "ambrosus.asset.";
-
-    private static final HashSet<String> AMBROSUS_SERVICE_EVENT_TYPES = new HashSet<String>(){
-        {
-            add("ambrosus.asset.redirection");
-            add("ambrosus.asset.info");
-            add("ambrosus.asset.identifiers");
-        }
-    };
     private static final String KEY_IMAGES_ATTR = "images";
     private static final String KEY_DOCUMENTS_ATTR = "documents";
     private static final String KEY_NAME_ATTR = "name";
@@ -42,22 +33,27 @@ public class AMBEvent extends Event {
 
     private final Location location;
 
+    /**
+     *
+     * @param source - any source event which contains at least one data object of "ambrosus" type (see AmbrosusData implementation)
+     */
     public AMBEvent(Event source){
         super(source);
 
-        List<JsonObject> rawData = source.getRawData();
+        List<String> ambrosusDataTypes = AmbrosusData.getAmbrosusDataTypes(source.getDataTypes());
 
-        type = Assert.assertNotNull(getAmbrosusEventType(rawData), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
+        Assert.assertTrue(!ambrosusDataTypes.isEmpty(), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
+        type = ambrosusDataTypes.get(0);
 
-        JsonObject mainDataObject = getDataObject(type, rawData);
+        JsonObject mainDataObject = getDataObject(type);
 
         name = getEventName(mainDataObject);
 
-        images = getEntityMap(KEY_IMAGES_ATTR, mainDataObject);
-        documents = getEntityMap(KEY_DOCUMENTS_ATTR, mainDataObject);
-        attributes = getAttributesMap(mainDataObject);
+        images = Collections.unmodifiableMap(getEntityMap(KEY_IMAGES_ATTR, mainDataObject));
+        documents = Collections.unmodifiableMap(getEntityMap(KEY_DOCUMENTS_ATTR, mainDataObject));
+        attributes = Collections.unmodifiableMap(getAttributesMap(mainDataObject));
 
-        JsonObject locationDataJson = getDataObject("ambrosus.event.location", rawData);
+        JsonObject locationDataJson = getDataObject("ambrosus.event.location");
         location = locationDataJson != null ? Location.createFrom(locationDataJson) : null;
     }
 
@@ -71,33 +67,13 @@ public class AMBEvent extends Event {
         return name;
     }
 
+    public Map<String, JsonElement> getAttributes() {
+        return attributes;
+    }
+
     @Nullable
     public Location getLocation() {
         return location;
-    }
-
-    public static boolean isValidAMBEvent(Event event){
-        return getAmbrosusEventType(event.getRawData()) != null;
-    }
-
-    @Nullable
-    private static String getAmbrosusEventType(List<JsonObject> rawData) {
-        for (JsonObject dataObject : rawData) {
-            String dataObjectType = Event.getDataObjectType(dataObject);
-            if(dataObjectType.startsWith(AMBROSUS_EVENT_TYPE_PREFIX)
-                    && !AMBROSUS_SERVICE_EVENT_TYPES.contains(dataObjectType))
-                return dataObjectType;
-        }
-        return null;
-    }
-
-    @Nullable
-    private static JsonObject getDataObject(String type, List<JsonObject> rawData) {
-        for (JsonObject dataObject : rawData) {
-           if(type.equals(Event.getDataObjectType(dataObject)))
-               return dataObject;
-        }
-        return null;
     }
 
     @Override
@@ -125,7 +101,7 @@ public class AMBEvent extends Event {
         } catch(RuntimeException e) {
             Platform.get().log(Platform.WARN, "Can't parse Ambrosus event images", e);
         }
-        return Collections.unmodifiableMap(result);
+        return result;
     }
 
     //package-local for tests
@@ -143,6 +119,6 @@ public class AMBEvent extends Event {
                 result.put(key, dataObject.get(key));
         }
 
-        return Collections.unmodifiableMap(result);
+        return result;
     }
 }
