@@ -20,9 +20,9 @@ import okhttp3.internal.platform.Platform;
 
 public class AMBEvent extends Event {
 
-    private static final String KEY_IMAGES_ATTR = "images";
-    private static final String KEY_DOCUMENTS_ATTR = "documents";
-    private static final String KEY_NAME_ATTR = "name";
+    private static final String ATTR_KEY_IMAGES = "images";
+    private static final String ATTR_KEY_DOCUMENTS = "documents";
+    private static final String ATTR_KEY_NAME = "name";
 
     private final String type;
     private final String name;
@@ -49,8 +49,8 @@ public class AMBEvent extends Event {
 
         name = getEventName(mainDataObject);
 
-        images = Collections.unmodifiableMap(getEntityMap(KEY_IMAGES_ATTR, mainDataObject));
-        documents = Collections.unmodifiableMap(getEntityMap(KEY_DOCUMENTS_ATTR, mainDataObject));
+        images = Collections.unmodifiableMap(getEntityMap(ATTR_KEY_IMAGES, mainDataObject));
+        documents = Collections.unmodifiableMap(getEntityMap(ATTR_KEY_DOCUMENTS, mainDataObject));
         attributes = Collections.unmodifiableMap(getAttributesMap(mainDataObject));
 
         JsonObject locationDataJson = getDataObject("ambrosus.event.location");
@@ -62,9 +62,9 @@ public class AMBEvent extends Event {
         return type;
     }
 
-    @Nullable
+    @NonNull
     public String getName() {
-        return name;
+        return name != null ? name : getSystemId();
     }
 
     public Map<String, JsonElement> getAttributes() {
@@ -78,11 +78,11 @@ public class AMBEvent extends Event {
 
     @Override
     public String toString() {
-        return Strings.defaultToString(this) + String.format(Locale.US, "(id: %s, type: %s, name: %s)", getSystemId(), getType(), getName());
+        return Strings.defaultToString(this) + String.format(Locale.US, "(name: %s, type: %s)", getName(), getType());
     }
 
     private static String getEventName(JsonObject dataObject) {
-        JsonElement jsonElement = dataObject.get(KEY_NAME_ATTR);
+        JsonElement jsonElement = dataObject.get(ATTR_KEY_NAME);
         return jsonElement != null ? jsonElement.getAsString() : null;
     }
 
@@ -91,11 +91,13 @@ public class AMBEvent extends Event {
     static Map<String, JsonObject> getEntityMap(String entityName, JsonObject dataObject){
         Map<String, JsonObject> result = new LinkedHashMap<>();
         try {
-            JsonObject imagesJson = dataObject.getAsJsonObject(entityName);
-            for (String imageKey : imagesJson.keySet()) {
-                JsonElement imageAttrsElement = imagesJson.get(imageKey);
-                if(imageAttrsElement.isJsonObject()) {
-                      result.put(imageKey, imageAttrsElement.getAsJsonObject());
+            JsonObject entityJson = dataObject.getAsJsonObject(entityName);
+            if(entityJson != null) { //if we have this section
+                for (String imageKey : entityJson.keySet()) {
+                    JsonElement imageAttrsElement = entityJson.get(imageKey);
+                    if(imageAttrsElement.isJsonObject()) {
+                        result.put(imageKey, imageAttrsElement.getAsJsonObject());
+                    }
                 }
             }
         } catch(RuntimeException e) {
@@ -108,10 +110,9 @@ public class AMBEvent extends Event {
     static Map<String, JsonElement> getAttributesMap(JsonObject dataObject){
         HashSet<String> reservedAttrs = new HashSet<>();
 
-        reservedAttrs.add(KEY_TYPE_ATTR);
-        reservedAttrs.add(KEY_NAME_ATTR);
-        reservedAttrs.add(KEY_IMAGES_ATTR);
-        reservedAttrs.add(KEY_DOCUMENTS_ATTR);
+        reservedAttrs.add(ATTR_KEY_TYPE);
+        reservedAttrs.add(ATTR_KEY_IMAGES);
+        reservedAttrs.add(ATTR_KEY_DOCUMENTS);
 
         Map<String, JsonElement> result = new LinkedHashMap<>();
         for (String key : dataObject.keySet()) {

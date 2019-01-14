@@ -8,15 +8,12 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public class Event {
 
-    protected static final String KEY_TYPE_ATTR = "type";
+    protected static final String ATTR_KEY_TYPE = "type";
 
     private final String systemId;
     private final String assetId;
@@ -98,8 +95,8 @@ public class Event {
     }
 
     public static String getDataObjectType(JsonObject dataObject) {
-        if(dataObject.has(KEY_TYPE_ATTR))
-            return dataObject.get(KEY_TYPE_ATTR).getAsString();
+        if(dataObject.has(ATTR_KEY_TYPE))
+            return dataObject.get(ATTR_KEY_TYPE).getAsString();
         throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing type key)");
     }
 }

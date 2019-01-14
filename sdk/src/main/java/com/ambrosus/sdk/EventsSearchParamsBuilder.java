@@ -51,6 +51,12 @@ public class EventsSearchParamsBuilder {
     }
 
     @NonNull
+    public EventsSearchParamsBuilder byDataObjectType(@NonNull String type) {
+        byDataObjectField("type", type);
+        return this;
+    }
+
+    @NonNull
     public EventSearchParams build(){
         return new EventSearchParams(queryParams);
     }

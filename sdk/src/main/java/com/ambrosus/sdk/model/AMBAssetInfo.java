@@ -19,8 +19,9 @@ import java.util.Set;
 
 public class AMBAssetInfo extends AMBEvent {
 
+    static final String DATA_OBJECT_TYPE_ASSET_INFO = "ambrosus.asset.info";
+
     private static final String DATA_OBJECT_TYPE_ASSET_IDENTIFIERS = "ambrosus.asset.identifiers";
-    private static final String DATA_OBJECT_TYPE_ASSET_INFO = "ambrosus.asset.info";
 
     private final Set<Identifier> identifiers;
 
@@ -38,11 +39,6 @@ public class AMBAssetInfo extends AMBEvent {
                         DATA_OBJECT_TYPE_ASSET_IDENTIFIERS)
         );
         identifiers = Collections.unmodifiableSet(extractIdentifiers());
-    }
-
-    public String getName(){
-        JsonElement name = getAttributes().get("name");
-        return name != null ? name.getAsString() : getAssetId();
     }
 
     public Set<Identifier> getIdentifiers() {
