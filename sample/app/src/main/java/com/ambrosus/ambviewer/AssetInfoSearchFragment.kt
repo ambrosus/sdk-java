@@ -2,22 +2,19 @@ package com.ambrosus.ambviewer
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.location.Criteria
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.Identifier
-import com.ambrosus.sdk.model.AMBAssetInfo
 import kotlinx.android.synthetic.main.fragment_asset_search.*
 import kotlinx.android.synthetic.main.loading_indicator_small.*
 import java.io.Serializable
 
-class AMBAssetSearchFragment : Fragment() {
+class AssetInfoSearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -44,27 +41,27 @@ class AMBAssetSearchFragment : Fragment() {
         getViewModel().refreshAssetsList()
     }
 
-    private fun getViewModel(): AMBAssetInfoSearchViewModel {
+    private fun getViewModel(): AssetInfoSearchViewModel {
         return ViewModelProviders.of(
                 this,
                 AMBAssetInfoSearchViewModelFactory(ARG_SEARCH_CRITERIA.get(this), AMBSampleApp.network)
-        ).get(AMBAssetInfoSearchViewModel::class.java)
+        ).get(AssetInfoSearchViewModel::class.java)
     }
 
     companion object {
 
         private val ARG_SEARCH_CRITERIA = BundleArgument<Serializable>("ARG_SEARCH_CRITERIA", Serializable::class.java)
 
-        fun createFor(assetID: String): AMBAssetSearchFragment {
+        fun createFor(assetID: String): AssetInfoSearchFragment {
             return createForSearchCriteria(assetID)
         }
 
-        fun createFor(identifier: Identifier): AMBAssetSearchFragment {
+        fun createFor(identifier: Identifier): AssetInfoSearchFragment {
             return createForSearchCriteria(identifier)
         }
 
-        private fun createForSearchCriteria(searchCriteria: Serializable): AMBAssetSearchFragment {
-            return ARG_SEARCH_CRITERIA.putTo(AMBAssetSearchFragment(), searchCriteria)
+        private fun createForSearchCriteria(searchCriteria: Serializable): AssetInfoSearchFragment {
+            return ARG_SEARCH_CRITERIA.putTo(AssetInfoSearchFragment(), searchCriteria)
         }
     }
 

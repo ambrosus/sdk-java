@@ -8,11 +8,9 @@ import com.ambrosus.sdk.*
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.AMBNetwork
 import com.ambrosus.sdk.utils.Assert
-import com.google.zxing.BarcodeFormat
 import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
-class AMBAssetInfoSearchViewModel(
+class AssetInfoSearchViewModel(
         private val assetSearchCriteria: Any,
         private val network: AMBNetwork
 ) : ViewModel() {
@@ -55,7 +53,7 @@ class AMBAssetInfoSearchViewModelFactory(private val searchCriteria: Any, privat
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return AMBAssetInfoSearchViewModel(searchCriteria, AMBSampleApp.network) as T
+        return AssetInfoSearchViewModel(searchCriteria, AMBSampleApp.network) as T
     }
 
 }

@@ -149,7 +149,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
             pauseScanning()
             if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
                 val assetId = data?.replace("https://amb.to/", "")!!
-                FragmentSwitchHelper.showNextFragment(this, AMBAssetSearchFragment.createFor(assetId))
+                FragmentSwitchHelper.showNextFragment(this, AssetInfoSearchFragment.createFor(assetId))
             } else if (code.barcodeFormat == BarcodeFormat.EAN_13 || code.barcodeFormat == BarcodeFormat.EAN_8) {
 
                 val identifierType =
@@ -160,7 +160,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
                         }
 
                 val assetIdentifier = Identifier(identifierType, data)
-                FragmentSwitchHelper.showNextFragment(this, AMBAssetSearchFragment.createFor(assetIdentifier));
+                FragmentSwitchHelper.showNextFragment(this, AssetInfoSearchFragment.createFor(assetIdentifier));
             } else {
                 resumeScanning()
             }
