@@ -10,10 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import com.ambrosus.sdk.Network
-import com.ambrosus.sdk.NetworkCall
-import com.ambrosus.sdk.NetworkCallback
-import com.ambrosus.sdk.Asset
+import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
+import com.ambrosus.sdk.*
 //import com.ambrosus.TestFile
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
@@ -21,6 +19,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
+import java.lang.IllegalStateException
 import java.util.*
 
 /**
@@ -56,14 +55,14 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
         // When the activity is in the background immediately stop the
         // scanning to save resources and free the camera.
-        mBarcodePicker!!.pause()
+        pauseScanning()
         mPaused = true
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden) {
-            mBarcodePicker!!.pause()
+            pauseScanning()
         } else {
             resumeScanning()
         }
@@ -144,59 +143,30 @@ class ViewerFragment : Fragment(), BarcodeCallback {
                 onScanListener?.didScanAsset(assetId);
             }
         } else {
-
-            mBarcodePicker!!.pause()
+            pauseScanning()
             if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
                 val assetId = data?.replace("https://amb.to/", "")!!
-                network.getAsset(assetId).enqueue(object: NetworkCallback<Asset> {
-                    override fun onSuccess(call: NetworkCall<Asset>, result: Asset) {
-                        IntentsUtil.runAssetActivity(activity!!, result)
-                    }
+                FragmentSwitchHelper.showNextFragment(this, AMBAssetSearchFragment.createFor(assetId))
+            } else if (code.barcodeFormat == BarcodeFormat.EAN_13 || code.barcodeFormat == BarcodeFormat.EAN_8) {
 
-                    override fun onFailure(call: NetworkCall<Asset>, t: Throwable) {
-                        AMBSampleApp.errorHandler.handleError(t)
-                        resumeScanning()
-                    }
-                })
+                val identifierType =
+                        when (code.barcodeFormat) {
+                            BarcodeFormat.EAN_13 -> Identifier.EAN13
+                            BarcodeFormat.EAN_8 -> Identifier.EAN8
+                            else -> throw IllegalStateException("shouldn't happen")
+                        }
 
-//                AMBNetwork.instance.requestAsset(assetId,
-//                        {
-//                            if (it != null) {
-//                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
-//
-//                            } else {
-//                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-//                            }
-//                            resumeScanning()
-//                        })
-            } else if (code.barcodeFormat == BarcodeFormat.EAN_13) {
-//                AMBNetwork.instance.requestAsset("data[identifiers.ean13]", data,
-//                        {
-//                            if (it != null) {
-//                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
-//
-//                            } else {
-//                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-//                            }
-//                            mBarcodePicker!!.resume()
-//                        })
-            } else if (code.barcodeFormat == BarcodeFormat.EAN_8) {
-
-//                AMBNetwork.instance.requestAsset("data[identifiers.ean8]", data,
-//                        {
-//                            if (it != null) {
-//                                IntentsUtil.runAssetActivity(this!!.activity!!, it)
-//
-//                            } else {
-//                                Toast.makeText(activity, "No data in server for this code", Toast.LENGTH_LONG).show()
-//                            }
-//                            mBarcodePicker!!.resume()
-//                        })
+                val assetIdentifier = Identifier(identifierType, data)
+                FragmentSwitchHelper.showNextFragment(this, AMBAssetSearchFragment.createFor(assetIdentifier));
             } else {
                 resumeScanning()
             }
         }
 
+    }
+
+    private fun pauseScanning() {
+        mBarcodePicker!!.pause()
     }
 
     private fun resumeScanning() {

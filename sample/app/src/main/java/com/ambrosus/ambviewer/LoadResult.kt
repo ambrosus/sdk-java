@@ -1,6 +1,7 @@
 package com.ambrosus.ambviewer
 
 import android.util.Log
+import com.ambrosus.sdk.utils.Strings
 import java.lang.IllegalStateException
 import java.lang.NullPointerException
 
@@ -20,4 +21,8 @@ class LoadResult<T:Any> {
     val error get() = if (result is Throwable) result else throw IllegalStateException("has a successful result")
 
     fun isSuccessful() = result !is Throwable
+
+    override fun toString(): String {
+        return "${Strings.defaultToString(this)} : $result}"
+    }
 }
