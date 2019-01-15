@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class Event {
 
-    protected static final String ATTR_KEY_TYPE = "type";
+    public static final String DATA_OBJECT_ATTR_TYPE = "type";
 
     private final String systemId;
     private final String assetId;
@@ -95,8 +95,8 @@ public class Event {
     }
 
     public static String getDataObjectType(JsonObject dataObject) {
-        if(dataObject.has(ATTR_KEY_TYPE))
-            return dataObject.get(ATTR_KEY_TYPE).getAsString();
+        if(dataObject.has(DATA_OBJECT_ATTR_TYPE))
+            return dataObject.get(DATA_OBJECT_ATTR_TYPE).getAsString();
         throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing type key)");
     }
 }

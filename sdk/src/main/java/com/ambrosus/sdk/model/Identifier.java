@@ -1,12 +1,12 @@
-package com.ambrosus.sdk;
+package com.ambrosus.sdk.model;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Identifier implements Serializable {
 
-    static final String TYPE_ASSET = "ambrosus.asset.identifiers";
-    static final String TYPE_EVENTS = "ambrosus.event.identifiers";
+    static final String DATA_OBJECT_TYPE_ASSET_IDENTIFIERS = "ambrosus.asset.identifiers";
+    //static final String TYPE_EVENTS = "ambrosus.event.identifiers";
 
     public static final String GTIN = "gtin";
     public static final String EAN13 = "ean13";

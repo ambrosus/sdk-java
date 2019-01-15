@@ -2,6 +2,7 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.model.Identifier;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
@@ -42,20 +43,6 @@ public class Network {
     }
 
     @NonNull
-    public NetworkCall<SearchResult<Asset>> findAssets(@NonNull AssetSearchParams searchParams) {
-        return new TransparentNetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
-    }
-
-    @NonNull
-    public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
-        return new TransparentNetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
-    }
-
-    public <T extends Event> NetworkCall<List<T>> findEvents(@NonNull EventSearchParams searchParams, EventFactory<T> factory) {
-        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams), new EventsSearchResultAdapter<>(factory));
-    }
-
-    @NonNull
     public NetworkCall<Asset> getAsset(@NonNull String assetId) {
         return new TransparentNetworkCallWrapper<>(service.getAsset(assetId), new MissingEntityErrorHandler());
     }
@@ -65,4 +52,18 @@ public class Network {
         return new TransparentNetworkCallWrapper<>(service.getEvent(eventId), new MissingEntityErrorHandler());
     }
 
+    @NonNull
+    public NetworkCall<SearchResult<Asset>> findAssets(@NonNull AssetSearchParams searchParams) {
+        return new TransparentNetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
+    }
+
+    @NonNull
+    public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
+        return new TransparentNetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
+    }
+
+    //TODO return SearchResult when pagination will be ready
+    public <T extends Event> NetworkCall<List<T>> findEvents(@NonNull EventSearchParams searchParams, EventFactory<T> factory) {
+        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams), new EventsSearchResultAdapter<>(factory));
+    }
 }

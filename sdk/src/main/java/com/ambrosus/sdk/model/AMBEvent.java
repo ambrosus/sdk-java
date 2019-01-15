@@ -20,9 +20,9 @@ import okhttp3.internal.platform.Platform;
 
 public class AMBEvent extends Event {
 
-    private static final String ATTR_KEY_IMAGES = "images";
-    private static final String ATTR_KEY_DOCUMENTS = "documents";
-    private static final String ATTR_KEY_NAME = "name";
+    private static final String DATA_OBJECT_ATTR_IMAGES = "images";
+    private static final String DATA_OBJECT_ATTR_DOCUMENTS = "documents";
+    private static final String DATA_OBJECT_ATTR_NAME = "name";
 
     private final String type;
     private final String name;
@@ -49,8 +49,8 @@ public class AMBEvent extends Event {
 
         name = getEventName(mainDataObject);
 
-        images = Collections.unmodifiableMap(getEntityMap(ATTR_KEY_IMAGES, mainDataObject));
-        documents = Collections.unmodifiableMap(getEntityMap(ATTR_KEY_DOCUMENTS, mainDataObject));
+        images = Collections.unmodifiableMap(getEntityMap(DATA_OBJECT_ATTR_IMAGES, mainDataObject));
+        documents = Collections.unmodifiableMap(getEntityMap(DATA_OBJECT_ATTR_DOCUMENTS, mainDataObject));
         attributes = Collections.unmodifiableMap(getAttributesMap(mainDataObject));
 
         JsonObject locationDataJson = getDataObject("ambrosus.event.location");
@@ -82,7 +82,7 @@ public class AMBEvent extends Event {
     }
 
     private static String getEventName(JsonObject dataObject) {
-        JsonElement jsonElement = dataObject.get(ATTR_KEY_NAME);
+        JsonElement jsonElement = dataObject.get(DATA_OBJECT_ATTR_NAME);
         return jsonElement != null ? jsonElement.getAsString() : null;
     }
 
@@ -110,9 +110,9 @@ public class AMBEvent extends Event {
     static Map<String, JsonElement> getAttributesMap(JsonObject dataObject){
         HashSet<String> reservedAttrs = new HashSet<>();
 
-        reservedAttrs.add(ATTR_KEY_TYPE);
-        reservedAttrs.add(ATTR_KEY_IMAGES);
-        reservedAttrs.add(ATTR_KEY_DOCUMENTS);
+        reservedAttrs.add(DATA_OBJECT_ATTR_TYPE);
+        reservedAttrs.add(DATA_OBJECT_ATTR_IMAGES);
+        reservedAttrs.add(DATA_OBJECT_ATTR_DOCUMENTS);
 
         Map<String, JsonElement> result = new LinkedHashMap<>();
         for (String key : dataObject.keySet()) {

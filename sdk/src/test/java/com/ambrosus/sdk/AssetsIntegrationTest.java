@@ -1,5 +1,7 @@
 package com.ambrosus.sdk;
 
+import com.ambrosus.sdk.model.Identifier;
+
 import junit.framework.Assert;
 import static org.junit.Assert.*;
 
