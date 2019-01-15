@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
+import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.*
 //import com.ambrosus.TestFile
 import com.google.zxing.BarcodeFormat
@@ -102,6 +103,8 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
     override fun onResume() {
         super.onResume()
+
+        TitleHelper.ensureTitle(this, "Scanner")
 
         mPaused = false
         // Handle permissions for Marshmallow and onwards...
