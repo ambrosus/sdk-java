@@ -33,4 +33,9 @@ public class Identifier implements Serializable {
     public int hashCode() {
         return Objects.hash(type, value);
     }
+
+    @Override
+    public String toString() {
+        return type + ": " + value;
+    }
 }
