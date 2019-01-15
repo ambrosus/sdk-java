@@ -10,9 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.BundleArgument
+import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.Identifier
 import com.ambrosus.sdk.model.AMBAssetInfo
 import kotlinx.android.synthetic.main.fragment_asset_search.*
+import kotlinx.android.synthetic.main.loading_indicator_small.*
 import java.io.Serializable
 
 class AMBAssetSearchFragment : Fragment() {
@@ -20,13 +22,9 @@ class AMBAssetSearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().assetsList.observe(this, Observer {
+            loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
-                if(it.isSuccessful()) {
-//                    val resultList = it.data;
-//                    if(resultList.isEmpty())
-                } else {
-                    AMBSampleApp.errorHandler.handleError(it.error);
-                }
+                message.text = if(it.isSuccessful()) "${it.data}" else AMBSampleApp.errorHandler.getErrorMessage(it.error)
             }
         });
     }
@@ -42,6 +40,7 @@ class AMBAssetSearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        TitleHelper.ensureTitle(this, "Search")
         getViewModel().refreshAssetsList()
     }
 
