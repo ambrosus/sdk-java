@@ -18,7 +18,7 @@ class EventsListViewModel(
         get() = _eventsList
 
     fun refreshEventsList() {
-        val searchParams = EventsSearchParamsBuilder().forAsset(assetId).build();
+        val searchParams = EventSearchParamsBuilder().forAsset(assetId).build();
         network.findEvents(searchParams).enqueue(
                 object: NetworkCallback<SearchResult<Event>> {
                     override fun onSuccess(call: NetworkCall<SearchResult<Event>>, result: SearchResult<Event>) {

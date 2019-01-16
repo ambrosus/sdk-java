@@ -1,8 +1,6 @@
 package com.ambrosus.sdk.model;
 
-import com.ambrosus.sdk.Network;
 import com.ambrosus.sdk.NetworkCall;
-import com.ambrosus.sdk.EventsSearchParamsBuilder;
 
 import org.junit.Test;
 

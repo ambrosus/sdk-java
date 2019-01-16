@@ -2,7 +2,6 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.model.Identifier;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
@@ -64,6 +63,6 @@ public class Network {
 
     //TODO return SearchResult when pagination will be ready
     public <T extends Event> NetworkCall<List<T>> findEvents(@NonNull EventSearchParams searchParams, EventFactory<T> factory) {
-        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams), new EventsSearchResultAdapter<>(factory));
+        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams), new EventSearchResultAdapter<>(factory));
     }
 }

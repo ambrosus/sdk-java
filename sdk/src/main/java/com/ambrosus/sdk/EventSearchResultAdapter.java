@@ -1,12 +1,11 @@
 package com.ambrosus.sdk;
 
 import java.util.List;
-//TODO rename to Event_SearchResultAdapter
-class EventsSearchResultAdapter<T extends Event> implements ResponseResultAdapter<SearchResult<Event>, List<T>> {
+class EventSearchResultAdapter<T extends Event> implements ResponseResultAdapter<SearchResult<Event>, List<T>> {
 
     private final EventFactory<T> eventFactory;
 
-    EventsSearchResultAdapter(EventFactory<T> eventFactory) {
+    EventSearchResultAdapter(EventFactory<T> eventFactory) {
         this.eventFactory = eventFactory;
     }
 

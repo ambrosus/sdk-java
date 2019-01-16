@@ -2,7 +2,6 @@ package com.ambrosus.sdk;
 
 import com.ambrosus.sdk.model.AMBEvent;
 import com.ambrosus.sdk.model.AMBEventFactory;
-import com.ambrosus.sdk.model.Identifier;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,7 +59,7 @@ public class EventsIntegrationTest {
     @Test
     public void findAmbrosusEventsTest(){
 
-        EventsSearchParamsBuilder searchParamsBuilder = new EventsSearchParamsBuilder();
+        EventSearchParamsBuilder searchParamsBuilder = new EventSearchParamsBuilder();
         searchParamsBuilder.forAsset("0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae");
 
         NetworkCall<List<AMBEvent>> networkCall = network.findEvents(searchParamsBuilder.build(), new AMBEventFactory());
