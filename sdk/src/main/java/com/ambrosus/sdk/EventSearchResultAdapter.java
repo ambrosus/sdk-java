@@ -1,7 +1,7 @@
 package com.ambrosus.sdk;
 
 import java.util.List;
-class EventSearchResultAdapter<T extends Event> implements ResponseResultAdapter<SearchResult<Event>, List<T>> {
+class EventSearchResultAdapter<T extends Event> implements NetworkResultAdapter<SearchResult<Event>, List<T>> {
 
     private final EventFactory<T> eventFactory;
 
@@ -10,7 +10,7 @@ class EventSearchResultAdapter<T extends Event> implements ResponseResultAdapter
     }
 
     @Override
-    public List<T> getResponseResult(SearchResult<Event> result) {
+    public List<T> convert(SearchResult<Event> result) {
         return eventFactory.processEvents(result.getValues());
     }
 }

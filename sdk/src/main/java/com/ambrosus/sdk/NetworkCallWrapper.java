@@ -10,35 +10,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class NetworkCallWrapper<I, O> implements NetworkCall<O> {
+class NetworkCallWrapper<T> implements NetworkCall<T> {
 
     private static final String TAG = NetworkCallWrapper.class.getName();
 
-    private final Call<I> retrofitCall;
+    private final Call<T> retrofitCall;
     private final NetworkErrorHandler[] errorHandlers;
-    private final ResponseResultAdapter<I,O> resultAdapter;
 
-    NetworkCallWrapper(Call<I> retrofitCall, ResponseResultAdapter<I,O> resultAdapter) {
-        this(retrofitCall, resultAdapter, (NetworkErrorHandler[]) null);
+    NetworkCallWrapper(Call<T> retrofitCall) {
+        this(retrofitCall, (NetworkErrorHandler[]) null);
     }
 
-    NetworkCallWrapper(Call<I> retrofitCall, ResponseResultAdapter<I,O> resultAdapter, NetworkErrorHandler ... errorHandlers) {
+    NetworkCallWrapper(Call<T> retrofitCall, NetworkErrorHandler ... errorHandlers) {
         this.retrofitCall = retrofitCall;
-        this.resultAdapter = resultAdapter;
         this.errorHandlers = errorHandlers;
     }
 
     @Override
-    public O execute() throws Throwable {
+    public T execute() throws Throwable {
         return getResponseResult(retrofitCall.execute());
     }
 
     @Override
-    public void enqueue(final NetworkCallback<O> callback) {
-        retrofitCall.enqueue(new Callback<I>() {
+    public void enqueue(final NetworkCallback<T> callback) {
+        retrofitCall.enqueue(new Callback<T>() {
             @Override
-            public void onResponse(Call<I> call, Response<I> response) {
-                O responseResult;
+            public void onResponse(Call<T> call, Response<T> response) {
+                T responseResult;
                 try {
                     responseResult = getResponseResult(response);
                 } catch (Exception e) {
@@ -49,7 +47,7 @@ class NetworkCallWrapper<I, O> implements NetworkCall<O> {
             }
 
             @Override
-            public void onFailure(Call<I> call, Throwable t) {
+            public void onFailure(Call<T> call, Throwable t) {
                 callback.onFailure(NetworkCallWrapper.this, t);
             }
         });
@@ -71,14 +69,14 @@ class NetworkCallWrapper<I, O> implements NetworkCall<O> {
     }
 
     @Override
-    public NetworkCall<O> clone() {
+    public NetworkCall<T> clone() {
         //TODO: need to check clone result with unit test, I did an error in its implementation
-        return new NetworkCallWrapper<>(retrofitCall.clone(), resultAdapter, errorHandlers);
+        return new NetworkCallWrapper<>(retrofitCall.clone(), errorHandlers);
     }
 
-    O getResponseResult(Response<I> response) throws Exception{
+    T getResponseResult(Response<T> response) throws Exception{
         checkForNetworkError(response);
-        return resultAdapter.getResponseResult(response.body());
+        return response.body();
     }
 
     private void checkForNetworkError(Response response) throws Exception {
