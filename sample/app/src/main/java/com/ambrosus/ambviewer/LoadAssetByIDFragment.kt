@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.TitleHelper
+import com.ambrosus.sdk.EntityNotFoundException
 import com.ambrosus.sdk.model.Identifier
 import kotlinx.android.synthetic.main.fragment_asset_search.*
 import kotlinx.android.synthetic.main.loading_indicator_small.*
@@ -21,7 +22,14 @@ class LoadAssetByIDFragment : Fragment() {
         getViewModel().asset.observe(this, Observer {
             loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
-                message.text = if(it.isSuccessful()) "${it.data}" else AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                if(it.isSuccessful())
+                    message.text = "${it.data}"
+                else {
+                    if(it.error is EntityNotFoundException)
+                        message.text = "Can't find any asset with id: ${getAssetId()}"
+                    else
+                        message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                }
             }
         });
     }
@@ -32,7 +40,7 @@ class LoadAssetByIDFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        message.text = "Loading Asset ${ARG_ID.get(this)}"
+        message.text = "Loading Asset ${getAssetId()}"
     }
 
     override fun onResume() {
@@ -43,9 +51,11 @@ class LoadAssetByIDFragment : Fragment() {
     private fun getViewModel(): AssetViewModel {
         return ViewModelProviders.of(
                 this,
-                AssetViewModelFactory(ARG_ID.get(this), AMBSampleApp.network)
+                AssetViewModelFactory(getAssetId(), AMBSampleApp.network)
         ).get(AssetViewModel::class.java)
     }
+
+    private fun getAssetId() = ARG_ID.get(this)
 
     companion object {
 
