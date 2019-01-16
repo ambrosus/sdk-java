@@ -2,6 +2,8 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.utils.Assert;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,28 +27,28 @@ public class GenericEventSearchParamsBuilder<T extends GenericEventSearchParamsB
 
     @NonNull
     public T createdBy(@NonNull String accountAddress) {
-        QueryParamsHelper.addCreatedBy(queryParams, accountAddress);
+        QueryParamsHelper.addCreatedBy(queryParams, Assert.assertNotNull(accountAddress, "accountAddress == null"));
         return (T) this;
     }
 
     @NonNull
     public T forAsset(@NonNull String assetId) {
-        queryParams.put("assetId", assetId);
+        queryParams.put("assetId", Assert.assertNotNull(assetId, "assetId == null"));
         return (T) this;
     }
 
 
     @NonNull
-    public T byDataObjectField(@NonNull String fieldName, String fieldValue) {
+    public T byDataObjectField(@NonNull String fieldName, @NonNull String fieldValue) {
         
-        String queryKey = String.format(Locale.US, "data[%s]", fieldName);
+        String queryKey = String.format(Locale.US, "data[%s]", Assert.assertNotNull(fieldName, "fieldName == null"));
         
         //TODO add integration unit test to ensure that sever still doesn't allow to search for several values in the same field name
         String existingValue = queryParams.get(queryKey);
         if(existingValue != null)             
             throw new IllegalStateException(String.format(Locale.US, "You have already specified value for field %s (%s)", fieldName, existingValue));
         
-        queryParams.put(queryKey, fieldValue);
+        queryParams.put(queryKey, Assert.assertNotNull(fieldValue, "fieldValue == null"));
         return (T) this;
     }
 

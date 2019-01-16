@@ -24,7 +24,7 @@ public class AMBNetwork extends Network {
 
     //TODO think about making converter public and converting from NetworkCall<List<AMBAssetInfo>> to NetworkCall<AMBAssetInfo>
     @NonNull
-    public NetworkCall<List<AMBAssetInfo>> getAssetInfo(String assetID){
+    public NetworkCall<List<AMBAssetInfo>> getAssetInfo(@NonNull String assetID){
         NetworkCall<SearchResult<Event>> networkCall = findEvents(
                 new EventSearchParamsBuilder()
                         .forAsset(assetID)
