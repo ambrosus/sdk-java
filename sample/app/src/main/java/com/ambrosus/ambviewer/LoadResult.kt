@@ -1,5 +1,7 @@
 package com.ambrosus.ambviewer
 
+import android.arch.lifecycle.ComputableLiveData
+import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.ambrosus.sdk.utils.Strings
 import java.lang.IllegalStateException
@@ -24,5 +26,17 @@ class LoadResult<T:Any> {
 
     override fun toString(): String {
         return "${Strings.defaultToString(this)} : $result}"
+    }
+
+    companion object {
+
+        fun <T:Any> passResult(liveData: MutableLiveData<LoadResult<T>>, result: T) {
+            liveData.value = LoadResult(result)
+        }
+
+        fun <T:Any> passError(liveData: MutableLiveData<LoadResult<T>>, t: Throwable) {
+            liveData.value = LoadResult(t)
+        }
+
     }
 }

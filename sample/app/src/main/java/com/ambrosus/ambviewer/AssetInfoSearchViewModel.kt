@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProvider
 import com.ambrosus.sdk.*
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.AMBNetwork
+import com.ambrosus.sdk.model.Identifier
 import com.ambrosus.sdk.utils.Assert
 import java.lang.IllegalArgumentException
 
@@ -23,6 +24,7 @@ class AssetInfoSearchViewModel(
                 IllegalArgumentException::class.java,
                 "assetSearchCriteria must be instance of String or Identifier"
         );
+        refreshAssetsList()
     }
 
     val assetsList: LiveData<LoadResult<List<AMBAssetInfo>>>

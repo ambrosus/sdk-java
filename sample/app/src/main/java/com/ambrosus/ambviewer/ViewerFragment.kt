@@ -13,7 +13,7 @@ import android.widget.RelativeLayout
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
 import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.*
-//import com.ambrosus.TestFile
+import com.ambrosus.sdk.model.Identifier
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
@@ -178,21 +178,7 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
     override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
 
-    companion object {
-        private val TAG: String = "ViewerFragment"
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment GWMainFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(): ViewerFragment {
-            val fragment = ViewerFragment()
-            return fragment
-        }
-    }
 }
 
 interface OnScanCompleteListener {

@@ -4,6 +4,7 @@ package com.ambrosus.ambviewer
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import com.ambrosus.sdk.*
 import com.ambrosus.sdk.Event
 
@@ -23,14 +24,23 @@ class EventsListViewModel(
                 object: NetworkCallback<SearchResult<Event>> {
                     override fun onSuccess(call: NetworkCall<SearchResult<Event>>, result: SearchResult<Event>) {
                         //TODO: handle pagination here
-                        _eventsList.value = LoadResult(result.values)
+                        LoadResult.passResult(_eventsList, result.values)
                     }
 
                     override fun onFailure(call: NetworkCall<SearchResult<Event>>, t: Throwable) {
-                        _eventsList.value = LoadResult(t);
+                        LoadResult.passError(_eventsList, t)
                     }
                 }
         )
+    }
+
+}
+
+class EventsListViewModelFactory(private val assetId: String, private val network: Network) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return EventsListViewModel(assetId, network) as T
     }
 
 }

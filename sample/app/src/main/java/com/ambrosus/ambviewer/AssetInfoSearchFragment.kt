@@ -8,8 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.BundleArgument
+import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
 import com.ambrosus.ambviewer.utils.TitleHelper
-import com.ambrosus.sdk.Identifier
+import com.ambrosus.sdk.model.Identifier
 import kotlinx.android.synthetic.main.fragment_asset_search.*
 import kotlinx.android.synthetic.main.loading_indicator_small.*
 import java.io.Serializable
@@ -21,7 +22,17 @@ class AssetInfoSearchFragment : Fragment() {
         getViewModel().assetsList.observe(this, Observer {
             loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
-                message.text = if(it.isSuccessful()) "${it.data}" else AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                if(it.isSuccessful()) {
+                    if(it.data.isEmpty()) {
+                        val searchCriteria = ARG_SEARCH_CRITERIA.get(this)
+                        when(searchCriteria) {
+                            is String -> FragmentSwitchHelper.showNextFragment(this, LoadAssetByIDFragment.createFor(searchCriteria))
+                            is Identifier ->  message.text = "${it.data}" // run asset ids load
+                        }
+                    } else
+                        message.text = "${it.data}" //display
+                } else
+                    message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
             }
         });
     }
@@ -37,8 +48,7 @@ class AssetInfoSearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        TitleHelper.ensureTitle(this, "Search")
-        getViewModel().refreshAssetsList()
+        TitleHelper.ensureTitle(this, "Searching for AMBAssetInfo")
     }
 
     private fun getViewModel(): AssetInfoSearchViewModel {
@@ -64,45 +74,5 @@ class AssetInfoSearchFragment : Fragment() {
             return ARG_SEARCH_CRITERIA.putTo(AssetInfoSearchFragment(), searchCriteria)
         }
     }
-
-//    network.getAsset(assetId).enqueue(
-//    object: NetworkCallback<Asset> {
-//        override fun onSuccess(call: NetworkCall<Asset>, result: Asset) {
-//            IntentsUtil.runAssetActivity(activity!!, result)
-//        }
-//
-//        override fun onFailure(call: NetworkCall<Asset>, t: Throwable) {
-//            handleAPICallFailure(call, this, t);
-//        }
-//    }
-//    )
-
-
-//    AMBSampleApp.ambNetwork.findEvents(eventSearchParams).enqueue(
-//    object: AMBNetworkCallback<SearchResult<Event>> {
-//        override fun onSuccess(call: AMBNetworkCall<SearchResult<Event>>, result: SearchResult<Event>) {
-//            for(event in result.values) {
-////                                    if(event.assetIdentifiers.contains(assetIdentifier)) {
-////                                        AMBSampleApp.ambNetwork.getAsset(event.assetId).enqueue(
-////                                            object: AMBNetworkCallback<Asset> {
-////                                                override fun onSuccess(call: AMBNetworkCall<Asset>, result: Asset) {
-////                                                    IntentsUtil.runAssetActivity(activity!!, result)
-////                                                }
-////
-////                                                override fun onFailure(call: AMBNetworkCall<Asset>, t: Throwable) {
-////                                                    handleAPICallFailure(call, this, t);
-////                                                }
-////                                            }
-////                                        )
-////                                        return
-////                                    }
-//            }
-//            resumeScanning()
-//        }
-//
-//        override fun onFailure(call: AMBNetworkCall<SearchResult<Event>>, t: Throwable) {
-//            handleAPICallFailure(call, this, t);
-//        }
-//    }
 
 }
