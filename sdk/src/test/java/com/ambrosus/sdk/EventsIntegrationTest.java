@@ -1,15 +1,8 @@
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.model.AMBEvent;
-import com.ambrosus.sdk.model.AMBEventFactory;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class EventsIntegrationTest {
@@ -56,20 +49,6 @@ public class EventsIntegrationTest {
         }
     }
 
-    @Test
-    public void findAmbrosusEventsTest(){
 
-        EventSearchParamsBuilder searchParamsBuilder = new EventSearchParamsBuilder();
-        searchParamsBuilder.forAsset("0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae");
-
-        NetworkCall<List<AMBEvent>> networkCall = network.findEvents(searchParamsBuilder.build(), new AMBEventFactory());
-
-        try {
-            List<AMBEvent> ambEvents = networkCall.execute();
-            assertEquals(9, ambEvents.size());
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

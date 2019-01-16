@@ -61,10 +61,4 @@ public class Network {
     public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
         return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
     }
-
-    //TODO return SearchResult when pagination will be ready
-    public <T extends Event> NetworkCall<List<T>> findEvents(@NonNull EventSearchParams searchParams, EventFactory<T> factory) {
-        Call<SearchResult<Event>> retrofitCall = service.findEvents(searchParams.queryParams);
-        return new NetworkCallAdapter<>(new NetworkCallWrapper<>(retrofitCall), new EventSearchResultAdapter<>(factory));
-    }
 }
