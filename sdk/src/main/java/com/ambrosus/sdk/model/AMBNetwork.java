@@ -44,4 +44,15 @@ public class AMBNetwork extends Network {
         );
         return new NetworkCallAdapter<>(networkCall, new AssetInfoAdapter());
     }
+
+    @NonNull
+    public NetworkCall<List<String>> getAssetIDs(Identifier identifier){
+        NetworkCall<SearchResult<Event>> networkCall = findEvents(
+                new AMBEventSearchParamsBuilder()
+                        .byDataObjectType(Identifier.DATA_OBJECT_TYPE_ASSET_IDENTIFIERS)
+                        .byDataObjectIdentifier(identifier)
+                        .build()
+        );
+        return new NetworkCallAdapter<>(networkCall, new AssetIDAdapter());
+    }
 }
