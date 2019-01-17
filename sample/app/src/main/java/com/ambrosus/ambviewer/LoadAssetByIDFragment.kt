@@ -45,7 +45,7 @@ class LoadAssetByIDFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        TitleHelper.ensureTitle(this, "Loading")
+        TitleHelper.ensureTitle(this, "Loading...")
     }
 
     private fun getViewModel(): AssetViewModel {

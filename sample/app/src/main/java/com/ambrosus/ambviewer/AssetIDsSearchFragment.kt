@@ -24,7 +24,7 @@ class AssetIDsSearchFragment : Fragment() {
                     if(it.data.isEmpty()) {
                         message.text = "Can't find any asset with ${identifier()}"
                     } else {
-                        FragmentSwitchHelper.showNextFragment(this, LoadAssetByIDFragment.createFor(it.data[0]))
+                        FragmentSwitchHelper.replaceFragment(this, LoadAssetByIDFragment.createFor(it.data[0]), false)
                     }
                 } else
                     message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
@@ -43,7 +43,7 @@ class AssetIDsSearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        TitleHelper.ensureTitle(this, "Searching")
+        TitleHelper.ensureTitle(this, "Searching for IDs...")
     }
 
     private fun getViewModel(): AssetIDsSearchViewModel {

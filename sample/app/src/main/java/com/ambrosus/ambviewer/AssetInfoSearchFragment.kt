@@ -26,8 +26,8 @@ class AssetInfoSearchFragment : Fragment() {
                     if(it.data.isEmpty()) {
                         val searchCriteria = getSearchCriteria()
                         when(searchCriteria) {
-                            is String -> FragmentSwitchHelper.showNextFragment(this, LoadAssetByIDFragment.createFor(searchCriteria))
-                            is Identifier ->  FragmentSwitchHelper.showNextFragment(this, AssetIDsSearchFragment.createFor(searchCriteria))
+                            is String -> FragmentSwitchHelper.replaceFragment(this, LoadAssetByIDFragment.createFor(searchCriteria), false)
+                            is Identifier ->  FragmentSwitchHelper.replaceFragment(this, AssetIDsSearchFragment.createFor(searchCriteria), false)
                         }
                     } else
                         message.text = "${it.data}" //display
@@ -48,7 +48,7 @@ class AssetInfoSearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        TitleHelper.ensureTitle(this, "Searching for AMBAssetInfo")
+        TitleHelper.ensureTitle(this, "Searching for Info...")
     }
 
     private fun getViewModel(): AssetInfoSearchViewModel {
@@ -64,17 +64,19 @@ class AssetInfoSearchFragment : Fragment() {
 
         private val ARG_SEARCH_CRITERIA = BundleArgument<Serializable>("ARG_SEARCH_CRITERIA", Serializable::class.java)
 
-        fun createFor(assetID: String): AssetInfoSearchFragment {
-            return createForSearchCriteria(assetID)
+        fun getArguments(assetID: String): Bundle {
+            return getArgumentsByCriteria(assetID)
         }
 
-        fun createFor(identifier: Identifier): AssetInfoSearchFragment {
-            return createForSearchCriteria(identifier)
+        fun getArguments(identifier: Identifier): Bundle {
+            return getArgumentsByCriteria(identifier)
         }
 
-        private fun createForSearchCriteria(searchCriteria: Serializable): AssetInfoSearchFragment {
-            return ARG_SEARCH_CRITERIA.putTo(AssetInfoSearchFragment(), searchCriteria)
+        private fun getArgumentsByCriteria(searchCriteria: Serializable): Bundle {
+            return ARG_SEARCH_CRITERIA.put(Bundle(), searchCriteria)
         }
+
+
     }
 
 }

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
+import com.ambrosus.ambviewer.utils.TaskFragment
 import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.*
 import com.ambrosus.sdk.model.Identifier
@@ -20,6 +21,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
+import java.io.Serializable
 import java.lang.IllegalStateException
 import java.util.*
 
@@ -138,18 +140,17 @@ class ViewerFragment : Fragment(), BarcodeCallback {
 
         val network: Network = AMBSampleApp.network
 
-        val data = code.text
         // Truncate code to certain length.
         if (onScanListener != null) {
-            if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
-                val assetId = data?.replace("https://amb.to/", "")!!
+            if (code.barcodeFormat == BarcodeFormat.QR_CODE && code.text.startsWith("https://amb.to/0x")) {
+                val assetId = code.text.replace("https://amb.to/", "")
                 onScanListener?.didScanAsset(assetId);
             }
         } else {
             pauseScanning()
-            if (code.barcodeFormat == BarcodeFormat.QR_CODE && data.startsWith("https://amb.to/0x")) {
-                val assetId = data?.replace("https://amb.to/", "")!!
-                FragmentSwitchHelper.showNextFragment(this, AssetInfoSearchFragment.createFor(assetId))
+            var assetSearchArguments: Bundle? = null
+            if (code.barcodeFormat == BarcodeFormat.QR_CODE && code.text.startsWith("https://amb.to/0x")) {
+                assetSearchArguments = AssetInfoSearchFragment.getArguments(code.text.replace("https://amb.to/", ""))
             } else if (code.barcodeFormat == BarcodeFormat.EAN_13 || code.barcodeFormat == BarcodeFormat.EAN_8) {
 
                 val identifierType =
@@ -159,8 +160,11 @@ class ViewerFragment : Fragment(), BarcodeCallback {
                             else -> throw IllegalStateException("shouldn't happen")
                         }
 
-                val assetIdentifier = Identifier(identifierType, data)
-                FragmentSwitchHelper.showNextFragment(this, AssetInfoSearchFragment.createFor(assetIdentifier));
+                assetSearchArguments = AssetInfoSearchFragment.getArguments(Identifier(identifierType, code.text))
+            }
+
+            if(assetSearchArguments != null) {
+                FragmentSwitchHelper.showNextFragment(this, TaskFragment.create(AssetInfoSearchFragment::class.java, assetSearchArguments))
             } else {
                 resumeScanning()
             }

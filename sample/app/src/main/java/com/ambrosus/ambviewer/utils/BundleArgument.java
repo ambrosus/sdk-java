@@ -62,7 +62,7 @@ public class BundleArgument<T> {
         return fragment;
     }
 
-    public void put(Bundle args, T value){
+    public Bundle put(Bundle args, T value){
         if(value != null) {
             //TODO-2x It should be better try Parcelable in the first order, but don't have time to check it
             if(value instanceof Serializable) {
@@ -71,6 +71,7 @@ public class BundleArgument<T> {
                 args.putParcelable(key, (Parcelable) value);
             }
         }
+        return args;
     }
 
 }
