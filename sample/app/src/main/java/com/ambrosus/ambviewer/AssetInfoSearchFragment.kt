@@ -27,7 +27,7 @@ class AssetInfoSearchFragment : Fragment() {
                         val searchCriteria = getSearchCriteria()
                         when(searchCriteria) {
                             is String -> FragmentSwitchHelper.showNextFragment(this, LoadAssetByIDFragment.createFor(searchCriteria))
-                            is Identifier ->  FragmentSwitchHelper.showNextFragment(this, SearchForAssetIDsFragment.createFor(searchCriteria))
+                            is Identifier ->  FragmentSwitchHelper.showNextFragment(this, AssetIDsSearchFragment.createFor(searchCriteria))
                         }
                     } else
                         message.text = "${it.data}" //display

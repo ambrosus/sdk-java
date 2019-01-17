@@ -13,7 +13,7 @@ import com.ambrosus.sdk.model.Identifier
 import kotlinx.android.synthetic.main.fragment_asset_search.*
 import kotlinx.android.synthetic.main.loading_indicator_small.*
 
-class SearchForAssetIDsFragment : Fragment() {
+class AssetIDsSearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -57,8 +57,8 @@ class SearchForAssetIDsFragment : Fragment() {
 
     companion object {
 
-        fun createFor(identifier: Identifier): SearchForAssetIDsFragment {
-            return ARG_IDENTIFIER.putTo(SearchForAssetIDsFragment(), identifier)
+        fun createFor(identifier: Identifier): AssetIDsSearchFragment {
+            return ARG_IDENTIFIER.putTo(AssetIDsSearchFragment(), identifier)
         }
 
     }
