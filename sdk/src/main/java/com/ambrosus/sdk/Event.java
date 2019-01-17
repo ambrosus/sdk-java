@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class Event implements Serializable {
+public class Event {
 
     public static final String DATA_OBJECT_ATTR_TYPE = "type";
 

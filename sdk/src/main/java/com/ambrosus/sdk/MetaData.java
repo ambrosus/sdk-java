@@ -2,6 +2,8 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 public class MetaData {
 
     private String bundleTransactionHash;

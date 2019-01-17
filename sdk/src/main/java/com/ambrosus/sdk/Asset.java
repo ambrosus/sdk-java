@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.io.Serializable;
 
-public class Asset implements Serializable {
+public class Asset {
 
     private String assetId;
 
