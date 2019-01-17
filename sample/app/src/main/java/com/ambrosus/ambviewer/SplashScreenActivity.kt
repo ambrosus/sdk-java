@@ -58,6 +58,7 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     private fun openNextActivity(): Boolean {
+        mHideHandler.removeCallbacks(mNextActivityRunnable)
         IntentsUtil.runMainActivity(this);
         finish()
         return false
