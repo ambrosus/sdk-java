@@ -3,6 +3,7 @@ package com.ambrosus.ambviewer
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.CollapsingToolbarLayout
@@ -18,34 +19,41 @@ import android.widget.Toast
 import com.ambrosus.ambviewer.utils.*
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Event
+import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Location
 import kotlinx.android.synthetic.main.activity_asset.*
 import kotlinx.android.synthetic.main.loading_indicator.*
+import java.io.Serializable
 import java.util.*
 
 
 class AssetActivity : AppCompatActivity() {
-
-    private var collapsingToolbarLayout: CollapsingToolbarLayout? = null
     private var toolbarImage: ImageView? = null
 
     private lateinit var asset: Asset
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_asset)
-        asset = intent.extras.getSerializable("asset") as Asset
-        //events = asset.events ?: ArrayList()
-        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar)
-        toolbarImage = findViewById(R.id.toolbarImage)
+
+        rvAssetList.layoutManager = LinearLayoutManager(this)
 
         assetToolbar.setTitleTextColor(resources.getColor(R.color.colorTextPrimary))
         setSupportActionBar(assetToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true);
 
-        collapsingToolbarLayout!!.title = asset.name ?: asset.systemId
+        val assetData = ARG_ASSET_DATA.get(intent.extras)
 
-        rvAssetList.layoutManager = LinearLayoutManager(this)
+        when(assetData) {
+            is Asset -> displayAsset(assetData)
+            is AMBAssetInfo -> displayAssetInfo(assetData)
+            else -> throw IllegalArgumentException("This activity can display only Asset or AssetInfo but got ${assetData.javaClass.name}")
+        }
+
+
+
+
 
 
 //        {
@@ -62,35 +70,59 @@ class AssetActivity : AppCompatActivity() {
 //            }
 //        }
 
-        getEventsViewModel().eventsList.observe(
-                this,
-                Observer {
-                    if (it!!.isSuccessful()) {
-                        loadingIndicator.visibility = View.INVISIBLE;
+//        getEventsViewModel().eventsList.observe(
+//                this,
+//                Observer {
+//                    if (it!!.isSuccessful()) {
+//                        loadingIndicator.visibility = View.INVISIBLE;
+//
+//                        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
+//
+//                        dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
+//
+//                        val assetSection = LinkedHashMap<String, Any>()
+//                        assetSection.put("assetId", asset.systemId)
+//                        assetSection.put("createdBy", asset.account)
+//                        assetSection.put("timestamp", asset.timestamp)
+//
+//                        dataSetBuilder.add(assetSection, SectionRepresentation.factory)
+//                        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
+//
+//                        for (event in it.data) {
+//                            dataSetBuilder.add(event, ShortEventRepresentation.factory)
+//                        }
+//
+//                        rvAssetList.adapter = dataSetBuilder.createAdapter(this)
+//
+//                    } else {
+//                        AMBSampleApp.errorHandler.handleError(it.error);
+//                    }
+//                }
+//        )
+    }
 
-                        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
+    private fun displayAsset(asset: Asset) {
+        loadingIndicator.visibility = View.INVISIBLE;
 
-                        dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
+        collapsing_toolbar.title = asset.systemId
 
-                        val assetSection = LinkedHashMap<String, Any>()
-                        assetSection.put("assetId", asset.systemId)
-                        assetSection.put("createdBy", asset.account)
-                        assetSection.put("timestamp", asset.timestamp)
+        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
 
-                        dataSetBuilder.add(assetSection, SectionRepresentation.factory)
-                        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
+        dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
 
-                        for (event in it.data) {
-                            dataSetBuilder.add(event, ShortEventRepresentation.factory)
-                        }
+        val assetSection = LinkedHashMap<String, Any>()
+        assetSection.put("assetId", asset.systemId)
+        assetSection.put("createdBy", asset.account)
+        assetSection.put("timestamp", asset.timestamp)
 
-                        rvAssetList.adapter = dataSetBuilder.createAdapter(this)
+        dataSetBuilder.add(assetSection, SectionRepresentation.factory)
+        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
 
-                    } else {
-                        AMBSampleApp.errorHandler.handleError(it.error);
-                    }
-                }
-        )
+        rvAssetList.adapter = dataSetBuilder.createAdapter(this)
+    }
+
+    private fun displayAssetInfo(assetInfo: AMBAssetInfo){
+
     }
 
     private fun getEventsViewModel(): EventsListViewModel {
@@ -107,7 +139,32 @@ class AssetActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        getEventsViewModel().refreshEventsList()
+        //getEventsViewModel().refreshEventsList()
+    }
+
+    companion object {
+
+        private val ARG_ASSET_DATA = BundleArgument<Serializable>("KEY_ASSET_DATA", Serializable::class.java)
+
+
+        fun startFor(asset: Asset, context: Context) {
+            start(asset, context)
+        }
+
+        fun startFor(assetInfo: AMBAssetInfo, context: Context) {
+            start(assetInfo, context)
+        }
+
+        private fun start(data: Serializable, context: Context) {
+            context.startActivity(
+                    Intent(context, AssetActivity::class.java).putExtras(createArguments(data))
+            )
+        }
+
+        private fun createArguments(data: Serializable): Bundle {
+            return ARG_ASSET_DATA.put(Bundle(), data)
+        }
+
     }
 }
 
@@ -137,18 +194,14 @@ class SectionTitleRepresentation(inflater: LayoutInflater, parent: ViewGroup) : 
     }
 
     companion object {
-        val factory = SectionTitleRepresentationFactory()
+        val factory = object : RepresentationFactory<String>() {
+            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<String> {
+                return SectionTitleRepresentation(inflater, parent)
+            }
+        }
     }
 
 }
-
-class SectionTitleRepresentationFactory : RepresentationFactory<String>() {
-
-    override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<String> {
-        return SectionTitleRepresentation(inflater, parent)
-    }
-}
-
 
 class SectionRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Map<String, Any>>(R.layout.item_section, inflater, parent) {
 
@@ -193,15 +246,13 @@ class SectionRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Repre
     }
 
     companion object {
-        val factory = SectionRepresentationFactory()
+        val factory = object : RepresentationFactory<Map<String, Any>>() {
+            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Map<String, Any>> {
+                return SectionRepresentation(inflater, parent)
+            }
+        }
     }
 
-}
-
-class SectionRepresentationFactory : RepresentationFactory<Map<String, Any>>() {
-    override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Map<String, Any>> {
-        return SectionRepresentation(inflater, parent)
-    }
 }
 
 class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.single_event_view, inflater, parent) {
@@ -234,12 +285,12 @@ class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Re
 
 
     companion object {
-        val factory = ShortEventRepresentationFactory()
+        val factory = object : RepresentationFactory<Event>() {
+            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Event> {
+                return ShortEventRepresentation(inflater, parent)
+            }
+        }
     }
 }
 
-class ShortEventRepresentationFactory : RepresentationFactory<Event>() {
-    override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Event> {
-        return ShortEventRepresentation(inflater, parent)
-    }
-}
+

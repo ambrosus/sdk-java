@@ -19,9 +19,10 @@ class LoadAssetFragment : Fragment() {
         getViewModel().asset.observe(this, Observer {
             loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
-                if(it.isSuccessful())
-                    message.text = "${it.data}"
-                else {
+                if(it.isSuccessful()) {
+                    AssetActivity.startFor(it.data, activity!!)
+                    activity!!.onBackPressed()
+                } else {
                     if(it.error is EntityNotFoundException)
                         message.text = "Can't find any asset with id: ${getAssetId()}"
                     else
