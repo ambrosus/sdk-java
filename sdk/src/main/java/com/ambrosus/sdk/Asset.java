@@ -17,11 +17,6 @@ public class Asset implements Serializable {
         return assetId;
     }
 
-    @Nullable
-    public String getName() {
-        return content.idData.name;
-    }
-
     @NonNull
     public String getAccount() {
         return content.idData.createdBy;
@@ -49,7 +44,6 @@ public class Asset implements Serializable {
 
     private static class IDData implements Serializable {
 
-        private String name;
         private String createdBy;
         private long timestamp;
         private long sequenceNumber;
