@@ -24,10 +24,10 @@ class AssetInfoSearchFragment : Fragment() {
             if(it != null) {
                 if(it.isSuccessful()) {
                     if(it.data.isEmpty()) {
-                        val searchCriteria = ARG_SEARCH_CRITERIA.get(this)
+                        val searchCriteria = getSearchCriteria()
                         when(searchCriteria) {
                             is String -> FragmentSwitchHelper.showNextFragment(this, LoadAssetByIDFragment.createFor(searchCriteria))
-                            is Identifier ->  message.text = "${it.data}" // run asset ids load
+                            is Identifier ->  FragmentSwitchHelper.showNextFragment(this, SearchForAssetIDsFragment.createFor(searchCriteria))
                         }
                     } else
                         message.text = "${it.data}" //display
@@ -43,7 +43,7 @@ class AssetInfoSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        message.text = "Searching for AMBAssetInfo ${ARG_SEARCH_CRITERIA.get(this)}"
+        message.text = "Searching for AMBAssetInfo ${getSearchCriteria()}"
     }
 
     override fun onResume() {
@@ -54,9 +54,11 @@ class AssetInfoSearchFragment : Fragment() {
     private fun getViewModel(): AssetInfoSearchViewModel {
         return ViewModelProviders.of(
                 this,
-                AMBAssetInfoSearchViewModelFactory(ARG_SEARCH_CRITERIA.get(this), AMBSampleApp.network)
+                AMBAssetInfoSearchViewModelFactory(getSearchCriteria(), AMBSampleApp.network)
         ).get(AssetInfoSearchViewModel::class.java)
     }
+
+    private fun getSearchCriteria() = ARG_SEARCH_CRITERIA.get(this)
 
     companion object {
 
