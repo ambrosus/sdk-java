@@ -7,15 +7,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.EntityNotFoundException
-import com.ambrosus.sdk.model.Identifier
 import kotlinx.android.synthetic.main.fragment_asset_search.*
 import kotlinx.android.synthetic.main.loading_indicator_small.*
-import java.io.Serializable
 
-class LoadAssetByIDFragment : Fragment() {
+class LoadAssetFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,8 +56,8 @@ class LoadAssetByIDFragment : Fragment() {
 
     companion object {
 
-        fun createFor(assetID: String): LoadAssetByIDFragment {
-            return ARG_ID.putTo(LoadAssetByIDFragment(), assetID)
+        fun createFor(assetID: String): LoadAssetFragment {
+            return ARG_ID.putTo(LoadAssetFragment(), assetID)
         }
 
     }

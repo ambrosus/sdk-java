@@ -24,7 +24,7 @@ class AssetIDsSearchFragment : Fragment() {
                     if(it.data.isEmpty()) {
                         message.text = "Can't find any asset with ${identifier()}"
                     } else {
-                        FragmentSwitchHelper.replaceFragment(this, LoadAssetByIDFragment.createFor(it.data[0]), false)
+                        FragmentSwitchHelper.replaceFragment(this, LoadAssetFragment.createFor(it.data[0]), false)
                     }
                 } else
                     message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)

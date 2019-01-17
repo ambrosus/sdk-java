@@ -26,7 +26,7 @@ class AssetInfoSearchFragment : Fragment() {
                     if(it.data.isEmpty()) {
                         val searchCriteria = getSearchCriteria()
                         when(searchCriteria) {
-                            is String -> FragmentSwitchHelper.replaceFragment(this, LoadAssetByIDFragment.createFor(searchCriteria), false)
+                            is String -> FragmentSwitchHelper.replaceFragment(this, LoadAssetFragment.createFor(searchCriteria), false)
                             is Identifier ->  FragmentSwitchHelper.replaceFragment(this, AssetIDsSearchFragment.createFor(searchCriteria), false)
                         }
                     } else
