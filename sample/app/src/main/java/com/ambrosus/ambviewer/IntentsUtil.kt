@@ -22,12 +22,12 @@ class IntentsUtil() {
 
         }
 
-        fun runAssetActivity(activity: Activity, asset: Asset) {
-            val intent = Intent(activity, AssetActivity::class.java).apply {
-                putExtra("asset", asset)
-            }
-            activity.startActivity(intent)
-        }
+//        fun runAssetActivity(activity: Activity, asset: Asset) {
+//            val intent = Intent(activity, AssetActivity::class.java).apply {
+//                putExtra("asset", asset)
+//            }
+//            activity.startActivity(intent)
+//        }
     }
 }
 

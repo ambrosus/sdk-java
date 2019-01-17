@@ -4,31 +4,36 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
-import com.ambrosus.sdk.utils.Assert;
-
 import java.io.Serializable;
 
 public class BundleArgument<T> {
 
     private final String key;
-    private final Class<T> valueClass;
+    private final Class valueClass;
 
     public BundleArgument(String bundleKey, Class<T> valueClass) {
-        Assert.assertTrue(
-                Serializable.class.isAssignableFrom(valueClass) || Parcelable.class.isAssignableFrom(valueClass),
-                IllegalArgumentException.class,
-                "you can use only serializable or parcelable type for bundle arguments"
-        );
         this.key = bundleKey;
         this.valueClass = valueClass;
     }
 
+    private boolean needToUseWrapper(){
+        return !(Serializable.class.isAssignableFrom(valueClass) || Parcelable.class.isAssignableFrom(valueClass));
+    }
+
+    private Class<?> getClassForStoredValue(){
+        return needToUseWrapper() ? ParcelableAdapter.class : valueClass;
+    }
+
+    private T convertStoredValue(Object storedValue){
+        return storedValue instanceof ParcelableAdapter ? ((ParcelableAdapter<T>) storedValue).getData() : (T) storedValue;
+    }
+
     public T get(Bundle args, T defaultValue) {
-        return BundleUtils.extractBundleValueIfExists(args, key, valueClass, defaultValue);
+        return convertStoredValue(BundleUtils.extractBundleValueIfExists(args, key, Object.class, defaultValue));
     }
 
     public T get(Bundle args){
-        return BundleUtils.extractBundleValue(args, key, valueClass);
+        return convertStoredValue(BundleUtils.extractBundleValue(args, key, getClassForStoredValue()));
     }
 
     public T get(Fragment fragment){
@@ -64,11 +69,12 @@ public class BundleArgument<T> {
 
     public Bundle put(Bundle args, T value){
         if(value != null) {
-            //TODO-2x It should be better try Parcelable in the first order, but don't have time to check it
-            if(value instanceof Serializable) {
+            if(value instanceof Parcelable) {
+                args.putParcelable(key, (Parcelable) value);
+            } else if(value instanceof Serializable){
                 args.putSerializable(key, (Serializable) value);
             } else {
-                args.putParcelable(key, (Parcelable) value);
+                args.putParcelable(key, new ParcelableAdapter<T>(value));
             }
         }
         return args;

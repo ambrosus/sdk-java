@@ -144,7 +144,7 @@ class AssetActivity : AppCompatActivity() {
 
     companion object {
 
-        private val ARG_ASSET_DATA = BundleArgument<Serializable>("KEY_ASSET_DATA", Serializable::class.java)
+        private val ARG_ASSET_DATA = BundleArgument<Any>("KEY_ASSET_DATA", Any::class.java)
 
 
         fun startFor(asset: Asset, context: Context) {
@@ -155,13 +155,13 @@ class AssetActivity : AppCompatActivity() {
             start(assetInfo, context)
         }
 
-        private fun start(data: Serializable, context: Context) {
+        private fun start(data: Any, context: Context) {
             context.startActivity(
                     Intent(context, AssetActivity::class.java).putExtras(createArguments(data))
             )
         }
 
-        private fun createArguments(data: Serializable): Bundle {
+        private fun createArguments(data: Any): Bundle {
             return ARG_ASSET_DATA.put(Bundle(), data)
         }
 
