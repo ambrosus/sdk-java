@@ -6,12 +6,13 @@ import android.support.annotation.Nullable;
 import com.ambrosus.sdk.utils.Assert;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class Event {
+public class Event implements Serializable {
 
     public static final String DATA_OBJECT_ATTR_TYPE = "type";
 
