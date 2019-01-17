@@ -22,10 +22,11 @@ class EventDeserializer implements JsonDeserializer<Event> {
             JsonObject idDataJson = eventContentJson.getAsJsonObject("idData");
 
             JsonArray rawDataJsonArray = eventContentJson.getAsJsonArray("data");
-            List<JsonObject> rawData = new ArrayList<>(rawDataJsonArray.size());
-            for (JsonElement jsonElement : rawDataJsonArray) {
-                rawData.add(jsonElement.getAsJsonObject());
-            }
+            List<JsonObject> rawData = new ArrayList<>(rawDataJsonArray != null ? rawDataJsonArray.size() : 0);
+            if(rawDataJsonArray != null)
+                for (JsonElement jsonElement : rawDataJsonArray) {
+                    rawData.add(jsonElement.getAsJsonObject());
+                }
 
             MetaData metaData = context.deserialize(eventJson.get("metadata"), MetaData.class);
             return new Event(

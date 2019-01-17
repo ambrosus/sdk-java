@@ -1,0 +1,19 @@
+{
+  "content": {
+    "idData": {
+      "assetId": "0x66ffd67e85fb8b96f360d5719348f6f72a963dbe3d2b88674087dfb50847d590",
+      "createdBy": "0x9A3Db936c94523ceb1CcC6C90461bc34a46E9dfE",
+      "accessLevel": 1,
+      "timestamp": 1504524923,
+      "dataHash": "0xc980670e264766bcc0c53e875792c67c9bd94b133122bed02ff1e24625166f62"
+    },
+    "signature": "0x82124a169da04ffa808e555adc35c3a151cdffd3be76372d2d22ea02beb5cf964e93b4848082f9ca790bfe84199d0b321ae87619f746178230941ba407cea9871b"
+  },
+  "eventId": "0x48d3d149174b7a09c0df5ba8a5fb055cb83c80a207a35f1d412489e96ccb375b",
+  "metadata": {
+    "bundleTransactionHash": "0xa5dcaf1c4dccfff5b227d4bc06a02ece5f0b9c563d37ad59607ff96dc4c54d35",
+    "bundleUploadTimestamp": 1545084270,
+    "bundleId": "0x12d4cd03e1b568f4252213ee40e57b2e916f54b97cac224a3c14fbe81f256e4b",
+    "bundleProofBlock": 515823
+  }
+}
