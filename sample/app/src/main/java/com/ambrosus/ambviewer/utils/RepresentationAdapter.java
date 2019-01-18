@@ -85,7 +85,7 @@ public class RepresentationAdapter extends RecyclerView.Adapter {
             return this;
         }
 
-        public <T> DataSetBuilder add(SelfRepresentingItem item){
+        public DataSetBuilder add(SelfRepresentingItem item){
            items.addAll(getItems(item));
            return this;
         }

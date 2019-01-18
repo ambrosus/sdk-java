@@ -52,23 +52,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/root"
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvAssetList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
 
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvAssetList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <include layout="@layout/loading_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </FrameLayout>
+        android:layout_below="@id/toolbar"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -35,16 +35,16 @@ class AssetRecyclerAdapter(val eventClickListener: (event: AMBEvent) -> Unit) :
         when (viewType) {
             DEFAULT_TYPE -> {
                 v = LayoutInflater.from(context)
-                        .inflate(R.layout.asset_row_item, viewGroup, false)
+                        .inflate(R.layout.item_asset, viewGroup, false)
             }
             EVENT_TYPE -> {
                 v = LayoutInflater.from(context)
-                        .inflate(R.layout.asset_row_event, viewGroup, false)
+                        .inflate(R.layout.item_asset_event, viewGroup, false)
                 return EventViewHolder(v)
             }
             else -> {
                 v = LayoutInflater.from(context)
-                        .inflate(R.layout.asset_row_item, viewGroup, false)
+                        .inflate(R.layout.item_asset, viewGroup, false)
             }
         }
         return DefaultViewHolder(v)
@@ -104,7 +104,7 @@ class AssetRecyclerAdapter(val eventClickListener: (event: AMBEvent) -> Unit) :
                 val eventList = (dataset?.get(i)?.items?.get("events") as
                         List<AMBEvent>)
                 for (j in eventList.indices) {
-                    tempCard = LayoutInflater.from(context).inflate(R.layout.single_event_view, null)
+                    tempCard = LayoutInflater.from(context).inflate(R.layout.item_event, null)
                     eventTitle = tempCard.findViewById<TextView>(R.id.eventTitle)
                     eventSubtitle = tempCard.findViewById<TextView>(R.id.eventSubTitle)
                     eventDate = tempCard.findViewById<TextView>(R.id.eventDate)

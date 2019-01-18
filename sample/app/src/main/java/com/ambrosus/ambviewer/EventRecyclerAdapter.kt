@@ -36,11 +36,11 @@ class EventRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (viewType) {
             DEFAULT_TYPE -> {
                 v = LayoutInflater.from(context)
-                        .inflate(R.layout.asset_row_item, viewGroup, false)
+                        .inflate(R.layout.item_asset, viewGroup, false)
             }
             EVENT_TYPE -> {
                 v = LayoutInflater.from(context)
-                        .inflate(R.layout.asset_row_event, viewGroup, false)
+                        .inflate(R.layout.item_asset_event, viewGroup, false)
                 return EventViewHolder(v)
             }
             MAP_TYPE -> {
@@ -51,7 +51,7 @@ class EventRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             else -> {
                 v = LayoutInflater.from(context)
-                        .inflate(R.layout.asset_row_item, viewGroup, false)
+                        .inflate(R.layout.item_asset, viewGroup, false)
             }
         }
         return DefaultViewHolder(v)
@@ -131,7 +131,7 @@ class EventRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val eventList: List<AMBEvent> = (dataset?.get(i)?.items?.get
                 ("events") as List<AMBEvent>)
                 for (j in eventList.indices) {
-                    tempCard = LayoutInflater.from(context).inflate(R.layout.single_event_view, null)
+                    tempCard = LayoutInflater.from(context).inflate(R.layout.item_event, null)
                     eventTitle = tempCard.findViewById(R.id.eventTitle)
                     eventSubtitle = tempCard.findViewById(R.id.eventSubTitle)
                     eventDate = tempCard.findViewById(R.id.eventDate)

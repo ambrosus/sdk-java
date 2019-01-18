@@ -3,11 +3,9 @@ package com.ambrosus.ambviewer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +19,6 @@ import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Location
 import kotlinx.android.synthetic.main.activity_asset.*
 import kotlinx.android.synthetic.main.loading_indicator.*
-import java.io.Serializable
 import java.util.*
 
 
@@ -38,18 +35,7 @@ class AssetActivity : AppCompatActivity() {
         setSupportActionBar(assetToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true);
 
-        val assetData = ARG_ASSET_DATA.get(intent.extras)
-
-        when(assetData) {
-            is Asset -> displayAsset(assetData)
-            is AMBAssetInfo -> displayAssetInfo(assetData)
-            else -> throw IllegalArgumentException("This activity can display only Asset or AssetInfo but got ${assetData.javaClass.name}")
-        }
-
-
-
-
-
+        displayData(null);
 
 //        {
 //            //            IntentsUtil.runEventActivity(this,
@@ -96,13 +82,7 @@ class AssetActivity : AppCompatActivity() {
 //        )
     }
 
-    private fun displayAsset(asset: Asset) {
-        loadingIndicator.visibility = View.INVISIBLE;
-
-        collapsing_toolbar.title = asset.systemId
-
-        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
-
+    private fun addRepresentationOf(asset: Asset, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
         dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
 
         val assetSection = LinkedHashMap<String, Any>()
@@ -112,26 +92,9 @@ class AssetActivity : AppCompatActivity() {
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
 
         dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
-
-        rvAssetList.adapter = dataSetBuilder.createAdapter(this)
     }
 
-    private fun displayAssetInfo(assetInfo: AMBAssetInfo){
-        loadingIndicator.visibility = View.INVISIBLE;
-
-        collapsing_toolbar.title = assetInfo.name
-
-        if(!assetInfo.images.isEmpty()) {
-            GlideApp.with(this)
-                    //TODO add Image type to SDK
-                    .load(assetInfo.images.entries.iterator().next().value.get("url").asString)
-                    .placeholder(R.drawable.placeholder_logo)
-                    .into(toolbarImage)
-        }
-
-
-        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
-
+    private fun addRepresentationOf(assetInfo: AMBAssetInfo, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
         //identifiers title
         dataSetBuilder.add("Identifiers", SectionTitleRepresentation.factory)
 
@@ -174,6 +137,49 @@ class AssetActivity : AppCompatActivity() {
 
         //events title
         dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
+    }
+
+    private fun addRepresentationOf(eventsLoadResult: LoadResult<List<Event>>?, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
+        if(eventsLoadResult == null) {
+            dataSetBuilder.add(
+                    object : SelfRepresentingItem {
+                        override fun getLayoutResID(): Int {return R.layout.item_events_loading_indicator}
+                        override fun updateView(view: View?) {}
+                    }
+            );
+        }
+    }
+
+    private fun displayData(eventsLoadResult: LoadResult<List<Event>>?) {
+
+        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
+
+        val assetData = ARG_ASSET_DATA.get(intent.extras)
+
+        when(assetData) {
+            is Asset -> {
+                collapsing_toolbar.title = assetData.systemId
+
+                addRepresentationOf(assetData, dataSetBuilder)
+            }
+            is AMBAssetInfo -> {
+
+                collapsing_toolbar.title = assetData.name
+
+                if(!assetData.images.isEmpty()) {
+                    GlideApp.with(this)
+                            //TODO add Image type to SDK
+                            .load(assetData.images.entries.iterator().next().value.get("url").asString)
+                            .placeholder(R.drawable.placeholder_logo)
+                            .into(toolbarImage)
+                }
+
+                addRepresentationOf(assetData, dataSetBuilder)
+            }
+            else -> throw IllegalArgumentException("This activity can display only Asset or AssetInfo but got ${assetData.javaClass.name}")
+        }
+
+        addRepresentationOf(eventsLoadResult, dataSetBuilder);
 
         rvAssetList.adapter = dataSetBuilder.createAdapter(this)
     }
@@ -304,7 +310,7 @@ class SectionRepresentation(private val inflater: LayoutInflater, parent: ViewGr
 
 }
 
-class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.single_event_view, inflater, parent) {
+class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.item_event, inflater, parent) {
     override fun display(event: Event?) {
         ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.type else event!!.systemId)
         ViewUtils.setDate(itemView, R.id.eventDate, Date(event!!.gmtTimeStamp))
@@ -341,5 +347,3 @@ class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Re
         }
     }
 }
-
-
