@@ -256,7 +256,7 @@ class SectionTitleRepresentation(inflater: LayoutInflater, parent: ViewGroup) : 
 
 }
 
-class SectionRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Map<String, Any?>>(R.layout.item_section, inflater, parent) {
+class SectionRepresentation(private val inflater: LayoutInflater, parent: ViewGroup) : Representation<Map<String, Any?>>(R.layout.item_section, inflater, parent) {
 
     private val itemsLayout: LinearLayout
 
@@ -267,29 +267,19 @@ class SectionRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Repre
     override fun display(data: Map<String, Any?>?) {
         itemsLayout.removeAllViews();
 
-        val context: Context = itemView.context
-
-        var tempTitleTv: TextView
-        var tempSubtitleTv: TextView
-
         for ((key, value) in data!!) {
-            tempTitleTv = TextView(itemView.context)
-            tempTitleTv.text = key
-            tempTitleTv.setTypeface(null, Typeface.BOLD);
-
-            val colorId = when(value) {
-                null -> R.color.colorPrimaryDarkT
-                else -> R.color.colorTextPrimary
+            val layoutId = when(value) {
+                null -> R.layout.text_view_section_header
+                else -> R.layout.text_view_section_key
             }
-
-            context.resources?.getColor(colorId)?.let {
-                tempTitleTv.setTextColor(it)
-            }
+            val tempTitleTv =  inflater.inflate(layoutId, itemsLayout, false) as TextView
             itemsLayout.addView(tempTitleTv)
 
-            if(value != null) {
-                tempSubtitleTv = TextView(itemView.context)
+            tempTitleTv.text = key.capitalize()
 
+            if(value != null) {
+                val tempSubtitleTv = inflater.inflate(R.layout.text_view_section_value, itemsLayout, false) as TextView
+                itemsLayout.addView(tempSubtitleTv)
 
                 //            if (key.toLowerCase() == "timestamp") {
                 //                tempSubtitleTv.text = (value as Long).toString()
@@ -299,12 +289,7 @@ class SectionRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Repre
 
                 tempSubtitleTv.text = value.toString()
 
-                context.resources?.getColor(R.color.colorTextSecondary)?.let {
-                    tempSubtitleTv.setTextColor(it)
-                }
-                itemsLayout.addView(tempSubtitleTv)
-                tempSubtitleTv.setOnClickListener { (it as TextView).text.setClipboard(context, key) }
-
+                tempSubtitleTv.setOnClickListener { (it as TextView).text.setClipboard(itemView.context, key) }
             }
         }
     }
