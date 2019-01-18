@@ -29,8 +29,10 @@ class AssetInfoSearchFragment : Fragment() {
                             is String -> FragmentSwitchHelper.replaceFragment(this, LoadAssetFragment.createFor(searchCriteria), false)
                             is Identifier ->  FragmentSwitchHelper.replaceFragment(this, AssetIDsSearchFragment.createFor(searchCriteria), false)
                         }
-                    } else
-                        message.text = "${it.data}" //display
+                    } else {
+                        AssetActivity.startFor(it.data[0], activity!!)
+                        activity!!.onBackPressed()
+                    }
                 } else
                     message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
             }

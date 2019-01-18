@@ -67,6 +67,14 @@ public class AMBEvent extends Event {
         return name != null ? name : getSystemId();
     }
 
+    public Map<String, JsonObject> getImages() {
+        return images;
+    }
+
+    public Map<String, JsonObject> getDocuments() {
+        return documents;
+    }
+
     public Map<String, JsonElement> getAttributes() {
         return attributes;
     }
