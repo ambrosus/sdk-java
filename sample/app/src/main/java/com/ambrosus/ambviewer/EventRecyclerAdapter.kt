@@ -113,7 +113,7 @@ class EventRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         tempSubtitleTv.setTextColor(it)
                     }
                     defaultViewHolder.cardViewLayout.addView(tempSubtitleTv)
-                    tempSubtitleTv.setOnClickListener { context?.let { it1 -> (it as TextView).text.setClipboard(it1, key) } }
+                    //tempSubtitleTv.setOnClickListener { context?.let { it1 -> (it as TextView).text.setClipboard(it1, key) } }
                 }
             }
             EVENT_TYPE -> {
