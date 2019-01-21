@@ -62,9 +62,9 @@ public class AMBEvent extends Event {
         return type;
     }
 
-    @NonNull
+    @Nullable
     public String getName() {
-        return name != null ? name : getSystemId();
+        return name;
     }
 
     public Map<String, JsonObject> getImages() {
@@ -86,7 +86,7 @@ public class AMBEvent extends Event {
 
     @Override
     public String toString() {
-        return Strings.defaultToString(this) + String.format(Locale.US, "(name: %s, type: %s)", getName(), getType());
+        return Strings.defaultToString(this) + String.format(Locale.US, "(name: %s, type: %s)", getName() != null ? getName() : getType(), getType());
     }
 
     private static String getEventName(JsonObject dataObject) {
