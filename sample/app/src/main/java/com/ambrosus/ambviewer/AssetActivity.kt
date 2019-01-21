@@ -1,5 +1,7 @@
 package com.ambrosus.ambviewer
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -12,15 +14,18 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.ambrosus.ambviewer.utils.*
+import com.ambrosus.ambviewer.utils.BundleArgument
+import com.ambrosus.ambviewer.utils.Representation
+import com.ambrosus.ambviewer.utils.RepresentationAdapter
+import com.ambrosus.ambviewer.utils.RepresentationFactory
+import com.ambrosus.ambviewer.utils.SelfRepresentingItem
+import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Event
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Location
 import kotlinx.android.synthetic.main.activity_asset.*
-import kotlinx.android.synthetic.main.loading_indicator.*
-import java.util.*
-
+import java.util.Date
 
 class AssetActivity : AppCompatActivity() {
 
@@ -41,45 +46,6 @@ class AssetActivity : AppCompatActivity() {
 //            //            IntentsUtil.runEventActivity(this,
 ////                    it)
 //        }
-
-// test data doesn't contain any image reference right now, so leaving it for now
-//        if (events.firstOrNull() != null) {
-//            val imageUrl = asset.imageUrl
-//            if (toolbarImage != null && imageUrl
-//                    != null) {
-//                GlideApp.with(this).load(imageUrl).placeholder(R.drawable.placeholder_logo).into(toolbarImage!!)
-//            }
-//        }
-
-//        getEventsViewModel().eventsList.observe(
-//                this,
-//                Observer {
-//                    if (it!!.isSuccessful()) {
-//                        loadingIndicator.visibility = View.INVISIBLE;
-//
-//                        val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
-//
-//                        dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
-//
-//                        val assetSection = LinkedHashMap<String, Any>()
-//                        assetSection.put("assetId", asset.systemId)
-//                        assetSection.put("createdBy", asset.account)
-//                        assetSection.put("timestamp", asset.timestamp)
-//
-//                        dataSetBuilder.add(assetSection, SectionRepresentation.factory)
-//                        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
-//
-//                        for (event in it.data) {
-//                            dataSetBuilder.add(event, ShortEventRepresentation.factory)
-//                        }
-//
-//                        rvAssetList.adapter = dataSetBuilder.createAdapter(this)
-//
-//                    } else {
-//                        AMBSampleApp.errorHandler.handleError(it.error);
-//                    }
-//                }
-//        )
     }
 
     private fun addRepresentationOf(asset: Asset, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
@@ -90,8 +56,6 @@ class AssetActivity : AppCompatActivity() {
         assetSection["createdBy"] = asset.account
         assetSection["timestamp"] = asset.timestamp
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
-
-        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
     }
 
     private fun addRepresentationOf(assetInfo: AMBAssetInfo, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
@@ -130,41 +94,56 @@ class AssetActivity : AppCompatActivity() {
 
         //generic asset section
         val assetSection = LinkedHashMap<String, Any>()
-        assetSection.put("assetId", assetInfo.assetId)
-        assetSection.put("createdBy", assetInfo.authorId)
-        assetSection.put("timestamp", assetInfo.gmtTimeStamp)
+        assetSection["assetId"] = assetInfo.assetId
+        assetSection["createdBy"] = assetInfo.authorId
+        assetSection["timestamp"] = assetInfo.gmtTimeStamp
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
-
-        //events title
-        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
     }
 
     private fun addRepresentationOf(eventsLoadResult: LoadResult<List<Event>>?, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
+        dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
+
         if(eventsLoadResult == null) {
             dataSetBuilder.add(
                     object : SelfRepresentingItem {
                         override fun getLayoutResID(): Int {return R.layout.item_events_loading_indicator}
                         override fun updateView(view: View?) {}
                     }
-            );
+            )
+        } else {
+            if(eventsLoadResult.isSuccessful()) {
+                for (event in eventsLoadResult.data) {
+                    dataSetBuilder.add(event, ShortEventRepresentation.factory)
+                }
+            } else
+                dataSetBuilder.add(
+                        object : SelfRepresentingItem {
+                            override fun getLayoutResID(): Int {
+                               return R.layout.item_events_loading_error
+                            }
+
+                            override fun updateView(view: View?) {
+                                (view as TextView).setText("Wasn't able to load events due to: ${eventsLoadResult.error}")
+                            }
+
+                        }
+                )
         }
     }
 
     private fun displayData(eventsLoadResult: LoadResult<List<Event>>?) {
 
         val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
-
-        val assetData = ARG_ASSET_DATA.get(intent.extras)
+        val assetData = getAssetData()
 
         when(assetData) {
             is Asset -> {
                 collapsing_toolbar.title = assetData.systemId
-
                 addRepresentationOf(assetData, dataSetBuilder)
             }
             is AMBAssetInfo -> {
 
-                collapsing_toolbar.title = assetData.name
+                collapsing_toolbar.title = assetData.name ?: assetData.systemId
 
                 if(!assetData.images.isEmpty()) {
                     GlideApp.with(this)
@@ -182,14 +161,31 @@ class AssetActivity : AppCompatActivity() {
         addRepresentationOf(eventsLoadResult, dataSetBuilder);
 
         rvAssetList.adapter = dataSetBuilder.createAdapter(this)
+
+        if(eventsLoadResult == null) {
+                getEventsListViewModel().eventsList.observe(
+                        this,
+                        Observer {
+                            displayData(it)
+                        }
+                )
+        }
     }
 
-//    private fun getEventsViewModel(): EventsListViewModel {
-//        return ViewModelProviders.of(
-//                this,
-//                EventsListViewModelFactory(asset.systemId, AMBSampleApp.network)
-//        ).get(EventsListViewModel::class.java)
-//    }
+    private fun getEventsListViewModel(): EventsListViewModel {
+        val assetData = getAssetData()
+        val viewModelFactory: ViewModelProvider.Factory = when (assetData) {
+            is Asset -> GenericEventsListViewModelFactory(assetData.systemId, AMBSampleApp.network)
+            is AMBAssetInfo -> AMBEventsListViewModelFactory(assetData.assetId, AMBSampleApp.network)
+            else -> throw IllegalArgumentException("This activity can display only Asset or AssetInfo but got ${assetData.javaClass.name}")
+        }
+        return ViewModelProviders.of(
+                this,
+                viewModelFactory
+        ).get(EventsListViewModel::class.java)
+    }
+
+    private fun getAssetData() = ARG_ASSET_DATA.get(intent.extras)
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -198,7 +194,7 @@ class AssetActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        //getEventsViewModel().refreshEventsList()
+        getEventsListViewModel().refreshEventsList()
     }
 
     companion object {
@@ -312,14 +308,34 @@ class SectionRepresentation(private val inflater: LayoutInflater, parent: ViewGr
 
 class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.item_event, inflater, parent) {
     override fun display(event: Event?) {
-        ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.type else event!!.systemId)
+        ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.systemId)
         ViewUtils.setDate(itemView, R.id.eventDate, Date(event!!.gmtTimeStamp))
 
         //TODO need to understand how to check if event public or private
         var eventLocation : Location? = null
         if(event is com.ambrosus.sdk.model.AMBEvent) eventLocation = event?.location
 
-        ViewUtils.setText(itemView, R.id.eventSubTitle, eventLocation?.name)
+        var locationSting = StringBuffer()
+
+        eventLocation?.city?.let {
+            locationSting.append(it).append(", ")
+        }
+
+        eventLocation?.country?.let {
+            locationSting.append(it)
+        }
+
+        if(locationSting.endsWith(", "))
+            locationSting.removeSuffix(", ")
+
+        if(locationSting.isEmpty())
+            eventLocation?.name?.let { locationSting.append(it) }
+
+        ViewUtils.setText(
+                itemView,
+                R.id.eventSubTitle,
+                locationSting.toString()
+        )
         ViewUtils.setText(itemView, R.id.eventVisibility, generatePrivacy())
 
 //        tempCard.tag = event
