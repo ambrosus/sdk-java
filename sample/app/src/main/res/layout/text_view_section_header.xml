@@ -12,6 +12,7 @@
     android:paddingBottom="10dp"
 
     android:textColor="@color/colorPrimaryDarkT"
+    android:textSize="15sp"
 
     android:textStyle="bold"
 

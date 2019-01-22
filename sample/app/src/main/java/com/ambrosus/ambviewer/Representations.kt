@@ -165,7 +165,7 @@ private fun CharSequence.setClipboard(context: Context, label: String) {
 class MapRepresentation(private val lifecycleOwner: LifecycleOwner, inflater: LayoutInflater, parent: ViewGroup) : Representation<Location>(R.layout.item_map, inflater, parent) {
 
 
-    private val mapView  = itemView as MapView
+    private val mapView  = itemView.findViewById<MapView>(R.id.map)
 
     init {
         mapView.onCreate(null)

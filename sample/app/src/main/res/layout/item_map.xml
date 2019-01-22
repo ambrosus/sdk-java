@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.gms.maps.MapView
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:layout_weight="1"/>
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:outlineProvider="bounds"
+    app:cardCornerRadius="5sp"
+    app:cardElevation="4dp">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_weight="1"/>
+</android.support.v7.widget.CardView>

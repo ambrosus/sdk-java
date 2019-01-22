@@ -29,7 +29,7 @@ import java.util.Date
 
 class EventActivity : AppCompatActivity() {
 
-    val mapRepresentationFactory = com.ambrosus.ambviewer.MapRepresentationFactory(this)
+    val mapRepresentationFactory = MapRepresentationFactory(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +69,7 @@ class EventActivity : AppCompatActivity() {
                 dataSetBuilder.add("Location", SectionTitleRepresentation.factory)
                 dataSetBuilder.add(location, mapRepresentationFactory)
 
+                dataSetBuilder.add("Location details", SectionTitleRepresentation.factory)
                 dataSetBuilder.add(
                         mapOf("name" to location.name, "city" to location.city, "country" to location.country).filterValues {it != null},
                         SectionRepresentation.factory
