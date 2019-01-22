@@ -22,11 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.BundleArgument
-import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
-import com.ambrosus.ambviewer.utils.TitleHelper
+import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Identifier
-import kotlinx.android.synthetic.main.fragment_asset_search.*
-import kotlinx.android.synthetic.main.loading_indicator_small.*
+import kotlinx.android.synthetic.main.fragment_status.*
 import java.io.Serializable
 
 class AssetInfoSearchFragment : Fragment() {
@@ -34,38 +32,18 @@ class AssetInfoSearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().assetsList.observe(this, Observer {
-            loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
                 if(it.isSuccessful()) {
-                    if(it.data.isEmpty()) {
-                        val searchCriteria = getSearchCriteria()
-                        when(searchCriteria) {
-                            is String -> FragmentSwitchHelper.replaceFragment(this, LoadAssetFragment.createFor(searchCriteria), false)
-                            is Identifier ->  FragmentSwitchHelper.replaceFragment(this, AssetIDsSearchFragment.createFor(searchCriteria), false)
-                        }
-                    } else {
-                        AssetActivity.startFor(it.data[0], activity!!)
-                        activity!!.onBackPressed()
-                    }
-                } else
-                    message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                    getListener()?.onSearchResult(it.data, getSearchCriteria())
+                } else {
+                    loadingContainer.visibility = View.GONE
+                    resultContainer.visibility = View.VISIBLE
+                    statusMessage.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                }
             }
         });
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_asset_search, container, false);
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        message.text = "Searching for AMBAssetInfo ${getSearchCriteria()}"
-    }
-
-    override fun onResume() {
-        super.onResume()
-        TitleHelper.ensureTitle(this, "Searching for Info...")
-    }
 
     private fun getViewModel(): AssetInfoSearchViewModel {
         return ViewModelProviders.of(
@@ -74,12 +52,42 @@ class AssetInfoSearchFragment : Fragment() {
         ).get(AssetInfoSearchViewModel::class.java)
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_status, container, false);
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadingMessage.text = "Searching for AMBAssetInfo ${getSearchCriteria()}"
+        resultContainer.setOnClickListener {
+            getListener()?.onCancel()
+        }
+    }
+
     private fun getSearchCriteria() = ARG_SEARCH_CRITERIA.get(this)
+
+    private fun getListener() = parentFragment as? SearchResultListener
+
+    interface SearchResultListener {
+
+        fun onSearchResult(result: List<AMBAssetInfo>, searchCriteria: Any)
+        fun onCancel()
+
+    }
 
     companion object {
 
         private val ARG_SEARCH_CRITERIA = BundleArgument<Serializable>("ARG_SEARCH_CRITERIA", Serializable::class.java)
 
+        fun createFor(assetID: String): AssetInfoSearchFragment {
+            return createForCriteria(assetID)
+        }
+
+        fun createFor(identifier: Identifier): AssetInfoSearchFragment {
+            return createForCriteria(identifier)
+        }
+
+        
         fun getArguments(assetID: String): Bundle {
             return getArgumentsByCriteria(assetID)
         }
@@ -90,6 +98,12 @@ class AssetInfoSearchFragment : Fragment() {
 
         private fun getArgumentsByCriteria(searchCriteria: Serializable): Bundle {
             return ARG_SEARCH_CRITERIA.put(Bundle(), searchCriteria)
+        }
+
+        private fun createForCriteria(searchCriteria: Serializable): AssetInfoSearchFragment {
+            val result = AssetInfoSearchFragment()
+            result.arguments = getArgumentsByCriteria(searchCriteria)
+            return result;
         }
 
 

@@ -22,42 +22,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.TitleHelper
+import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.EntityNotFoundException
-import kotlinx.android.synthetic.main.fragment_asset_search.*
-import kotlinx.android.synthetic.main.loading_indicator_small.*
+import kotlinx.android.synthetic.main.fragment_status.*
 
 class LoadAssetFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().asset.observe(this, Observer {
-            loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
                 if(it.isSuccessful()) {
-                    AssetActivity.startFor(it.data, activity!!)
-                    activity!!.onBackPressed()
+                    getListener()?.onLoadResult(it.data)
                 } else {
-                    if(it.error is EntityNotFoundException)
-                        message.text = "Can't find any asset with id: ${getAssetId()}"
+                    loadingContainer.visibility = View.GONE
+                    resultContainer.visibility = View.VISIBLE
+
+                    statusMessage.text = if(it.error is EntityNotFoundException)
+                        "Can't find any asset with id: ${getAssetId()}"
                     else
-                        message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                        AMBSampleApp.errorHandler.getErrorMessage(it.error)
                 }
             }
         });
     }
 
+    private fun getListener() = parentFragment as? LoadResultListener
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_asset_search, container, false);
+        return inflater.inflate(R.layout.fragment_status, container, false);
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        message.text = "Loading Asset ${getAssetId()}"
-    }
-
-    override fun onResume() {
-        super.onResume()
-        TitleHelper.ensureTitle(this, "Loading...")
+        loadingMessage.text = "Loading Asset ${getAssetId()}"
+        resultContainer.setOnClickListener {
+            getListener()?.onCancel()
+        }
     }
 
     private fun getViewModel(): AssetViewModel {
@@ -75,6 +76,11 @@ class LoadAssetFragment : Fragment() {
             return ARG_ID.putTo(LoadAssetFragment(), assetID)
         }
 
+    }
+
+    interface LoadResultListener {
+        fun onLoadResult(asset: Asset)
+        fun onCancel()
     }
 
 }

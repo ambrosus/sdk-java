@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/root"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@android:color/black">
+
+    <LinearLayout
+        android:id="@+id/loadingContainer"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:gravity="center"
+
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/loading_indicator_small"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/loadingMessage"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+
+            tools:text="Searching for asset"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/resultContainer"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:gravity="center"
+
+        android:orientation="vertical"
+
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/statusMessage"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+
+            tools:text="Searching for asset"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="5dp"
+
+            android:gravity="center"
+
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+
+            android:textStyle="bold"
+
+            android:text="Tap to continue"/>
+    </LinearLayout>
+
+
+</FrameLayout>

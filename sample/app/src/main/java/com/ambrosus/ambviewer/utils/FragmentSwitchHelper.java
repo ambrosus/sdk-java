@@ -68,12 +68,22 @@ public class FragmentSwitchHelper {
         addChild(root.getSupportFragmentManager(), child, containerID, true);
     }
 
-    private static boolean addChild(FragmentManager fragmentManager, Fragment fragment, int containerID, boolean exclusive){
+    public static boolean addChild(Fragment root, Fragment fragment, int containerID, boolean exclusive, boolean addToBackStack) {
+        return addChild(root.getChildFragmentManager(), fragment, containerID, exclusive, addToBackStack);
+    }
+
+    private static boolean addChild(FragmentManager fragmentManager, Fragment fragment, int containerID, boolean exclusive) {
+        return addChild(fragmentManager, fragment, containerID, exclusive, false);
+    }
+
+    private static boolean addChild(FragmentManager fragmentManager, Fragment fragment, int containerID, boolean exclusive, boolean addToBackStack){
         if(exclusive && fragmentManager.findFragmentByTag(getFragmentTag(fragment)) != null)
             return false;
 
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.add(containerID, fragment, getFragmentTag(fragment));
+        if(addToBackStack)
+            ft.addToBackStack(getFragmentTag(fragment));
         ft.commit();
         return true;
     }
@@ -93,6 +103,7 @@ public class FragmentSwitchHelper {
         removeFragment(root.getChildFragmentManager(), child, allowStateLoss);
     }
 
+    //TODO (instance of)  check may be better for this case
     public static <T extends Fragment> T getChild(Fragment root, Class<T> childClass){
         return (T) root.getChildFragmentManager().findFragmentByTag(getFragmentTag(childClass));
     }
@@ -166,11 +177,14 @@ public class FragmentSwitchHelper {
 
     }
 
+    public static boolean goBack(FragmentManager fragmentManager, int containerID ){
+        return handleBack(fragmentManager.findFragmentById(containerID))
+                || FragmentSwitchHelper.popBackStack(fragmentManager);
+    }
+
 
     public static boolean goBack(Fragment root, int containerID ){
-        FragmentManager childFragmentManager = root.getChildFragmentManager();
-        return handleBack(childFragmentManager.findFragmentById(containerID))
-                || FragmentSwitchHelper.popBackStack(childFragmentManager);
+        return goBack(root.getChildFragmentManager(), containerID);
     }
 
     /**

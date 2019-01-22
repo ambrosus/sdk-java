@@ -19,6 +19,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -47,12 +48,12 @@ class MainActivity : AppCompatActivity(),
             updateBackButtonState()
         }
 
-        FragmentSwitchHelper.addChild(this, ViewerFragment(), R.id.contentContainer)
+        FragmentSwitchHelper.addChild(this, MainScannerFragment(), R.id.contentContainer)
     }
 
     override fun onBackPressed() {
-        if(!canGoBack()) confirmQuit()
-        else super.onBackPressed()
+        if(!FragmentSwitchHelper.goBack(supportFragmentManager, R.id.contentContainer))
+            confirmQuit()
     }
 
     private fun canGoBack() = supportFragmentManager.backStackEntryCount > 0

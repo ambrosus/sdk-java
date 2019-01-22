@@ -21,43 +21,42 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
 import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.model.Identifier
-import kotlinx.android.synthetic.main.fragment_asset_search.*
-import kotlinx.android.synthetic.main.loading_indicator_small.*
+import kotlinx.android.synthetic.main.fragment_status.*
 
 class AssetIDsSearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().assetIdList.observe(this, Observer {
-            loadingIndicatorSmall.visibility = View.GONE
             if(it != null) {
-                if(it.isSuccessful()) {
-                    if(it.data.isEmpty()) {
-                        message.text = "Can't find any asset with ${identifier()}"
+                if(it.isSuccessful() && !it.data.isEmpty()) {
+                    getListener()?.onSearchResult(it.data)
+                } else {
+                    loadingContainer.visibility = View.GONE
+                    resultContainer.visibility = View.VISIBLE
+
+                    statusMessage.text  = if(!it.isSuccessful()) {
+                        AMBSampleApp.errorHandler.getErrorMessage(it.error)
                     } else {
-                        FragmentSwitchHelper.replaceFragment(this, LoadAssetFragment.createFor(it.data[0]), false)
+                        "Can't find any asset with ${identifier()}"
                     }
-                } else
-                    message.text = AMBSampleApp.errorHandler.getErrorMessage(it.error)
+                }
             }
         });
     }
 
+    private fun getListener() = parentFragment as? AssetIDsSearchFragment.SearchResultListener
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_asset_search, container, false);
+        return inflater.inflate(R.layout.fragment_status, container, false);
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        message.text = "Searching for asset ids by ${identifier()}"
-    }
-
-    override fun onResume() {
-        super.onResume()
-        TitleHelper.ensureTitle(this, "Searching for IDs...")
+        loadingMessage.text = "Searching for asset ids by ${identifier()}"
+        resultContainer.setOnClickListener { getListener()?.onCancel() }
     }
 
     private fun getViewModel(): AssetIDsSearchViewModel {
@@ -74,6 +73,13 @@ class AssetIDsSearchFragment : Fragment() {
         fun createFor(identifier: Identifier): AssetIDsSearchFragment {
             return ARG_IDENTIFIER.putTo(AssetIDsSearchFragment(), identifier)
         }
+
+    }
+
+    interface SearchResultListener {
+
+        fun onSearchResult(result: List<String>)
+        fun onCancel()
 
     }
 
