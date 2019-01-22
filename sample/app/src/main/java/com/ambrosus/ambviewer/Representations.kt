@@ -1,6 +1,11 @@
 package com.ambrosus.ambviewer
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -12,6 +17,10 @@ import com.ambrosus.ambviewer.utils.RepresentationFactory
 import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Event
 import com.ambrosus.sdk.model.Location
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
@@ -26,7 +35,7 @@ fun addSection(dataSetBuilder: RepresentationAdapter.DataSetBuilder, title: Stri
 
 class SectionTitleRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<String>(R.layout.item_section_title, inflater, parent) {
 
-    private val title: TextView = itemView as TextView
+    private val title = itemView as TextView
 
     override fun display(data: String?) {
         title.text = data!!
@@ -150,4 +159,62 @@ private fun CharSequence.setClipboard(context: Context, label: String) {
     }
     Toast.makeText(context, "Copied $label!", Toast
             .LENGTH_LONG).show()
+}
+
+
+class MapRepresentation(private val lifecycleOwner: LifecycleOwner, inflater: LayoutInflater, parent: ViewGroup) : Representation<Location>(R.layout.item_map, inflater, parent) {
+
+
+    private val mapView  = itemView as MapView
+
+    init {
+        mapView.onCreate(null)
+    }
+
+    private val lifecycleObserver = object : LifecycleObserver {
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        fun onResume() {
+            mapView.onResume()
+        }
+
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        fun onPause() {
+            mapView.onPause()
+        }
+
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        fun onDestroy() {
+            mapView.onDestroy()
+        }
+    }
+
+    override fun display(location: Location?) {
+        mapView.getMapAsync {
+            val point = LatLng(location!!.latitude, location.longitude)
+            it.addMarker(MarkerOptions().position(point))
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(point, 14f)
+            it.moveCamera(cameraUpdate)
+        }
+        // addObserver() method just did nothing if such observe has been already added
+        lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
+    }
+
+    companion object {
+        val factory = object : RepresentationFactory<String>() {
+            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<String> {
+                return SectionTitleRepresentation(inflater, parent)
+            }
+        }
+    }
+
+}
+
+class MapRepresentationFactory(private val lifecycleOwner: LifecycleOwner) : RepresentationFactory<Location>() {
+
+    override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Location> {
+        return MapRepresentation(lifecycleOwner, inflater, parent)
+    }
 }

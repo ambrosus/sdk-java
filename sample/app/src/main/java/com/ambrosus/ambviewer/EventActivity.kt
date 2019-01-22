@@ -10,12 +10,12 @@ import com.ambrosus.ambviewer.utils.DateAdapter
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
 import com.ambrosus.sdk.Event
 import com.ambrosus.sdk.model.AMBEvent
-import com.google.gson.JsonElement
-import kotlinx.android.synthetic.main.activity_asset.*
 import kotlinx.android.synthetic.main.activity_event.*
 import java.util.Date
 
 class EventActivity : AppCompatActivity() {
+
+    val mapRepresentationFactory = com.ambrosus.ambviewer.MapRepresentationFactory(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,17 @@ class EventActivity : AppCompatActivity() {
             addSection(dataSetBuilder, "Attributes", event.attributes)
             addSection(dataSetBuilder, "Documents", event.documents)
             addSection(dataSetBuilder, "Images", event.images)
+
+            val location = event.location
+            if(location != null) {
+                dataSetBuilder.add("Location", SectionTitleRepresentation.factory)
+                dataSetBuilder.add(location, mapRepresentationFactory)
+
+                dataSetBuilder.add(
+                        mapOf("name" to location.name, "city" to location.city, "country" to location.country).filterValues {it != null},
+                        SectionRepresentation.factory
+                )
+            }
 
             title = event.name ?: event.type ?: event.systemId
         } else title = event.systemId
