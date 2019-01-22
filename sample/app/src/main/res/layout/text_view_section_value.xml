@@ -10,4 +10,6 @@
 
     android:textColor="@color/colorTextSecondary"
 
+    android:autoLink="web|email|map"
+
     tools:text="Test"/>

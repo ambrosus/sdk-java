@@ -38,6 +38,8 @@ import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Event
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Location
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_asset.*
 import java.util.Date
 
@@ -63,6 +65,7 @@ class AssetActivity : AppCompatActivity() {
     }
 
     private fun addRepresentationOf(asset: Asset, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
+        //asset title
         dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
 
         val assetSection = LinkedHashMap<String, Any>()
@@ -73,38 +76,22 @@ class AssetActivity : AppCompatActivity() {
     }
 
     private fun addRepresentationOf(assetInfo: AMBAssetInfo, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
-        //identifiers title
-        dataSetBuilder.add("Identifiers", SectionTitleRepresentation.factory)
+        if(!assetInfo.identifiers.isEmpty()) {
+            //identifiers title
+            dataSetBuilder.add("Identifiers", SectionTitleRepresentation.factory)
 
-        //identifiers section
-        val identifiersSection = LinkedHashMap<String, Any>()
-        for (identifier in assetInfo.identifiers) {
-            identifiersSection[identifier.type] = identifier.value
-        }
-        dataSetBuilder.add(identifiersSection, SectionRepresentation.factory)
-
-        //asset details title
-        dataSetBuilder.add("Asset details", SectionTitleRepresentation.factory)
-
-        //asset details section
-        val detailsSection = LinkedHashMap<String, Any?>()
-        for (attribute in assetInfo.attributes) {
-            val key = attribute.key
-            val value = attribute.value
-            if(!value.isJsonObject) {
-                detailsSection[key] = value.asString
-            } else {
-                detailsSection[key] = null
-                val childJson = value.asJsonObject
-                for (childJsonKey in childJson.keySet()) {
-                    detailsSection[childJsonKey] = childJson.get(childJsonKey).asString
-                }
+            //identifiers section
+            val identifiersSection = LinkedHashMap<String, Any>()
+            for (identifier in assetInfo.identifiers) {
+                identifiersSection[identifier.type] = identifier.value
             }
+            dataSetBuilder.add(identifiersSection, SectionRepresentation.factory)
         }
-        dataSetBuilder.add(detailsSection, SectionRepresentation.factory)
+
+        addSection(dataSetBuilder, "Asset details", assetInfo.attributes)
 
         //generic asset title
-        dataSetBuilder.add("Generic asset", SectionTitleRepresentation.factory)
+        dataSetBuilder.add("Asset", SectionTitleRepresentation.factory)
 
         //generic asset section
         val assetSection = LinkedHashMap<String, Any>()
@@ -237,143 +224,3 @@ class AssetActivity : AppCompatActivity() {
     }
 }
 
-fun CharSequence.setClipboard(context: Context, label: String) {
-    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.text.ClipboardManager
-        clipboard.text = this
-    } else {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        val clip = android.content.ClipData.newPlainText("Copied Text", this)
-        clipboard.primaryClip = clip
-    }
-    Toast.makeText(context, "Copied $label!", Toast
-            .LENGTH_LONG).show()
-}
-
-class SectionTitleRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<String>(R.layout.item_section_title, inflater, parent) {
-
-    private val title: TextView
-
-    init {
-        title = itemView as TextView
-    }
-
-    override fun display(data: String?) {
-        title.setText(data!!)
-    }
-
-    companion object {
-        val factory = object : RepresentationFactory<String>() {
-            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<String> {
-                return SectionTitleRepresentation(inflater, parent)
-            }
-        }
-    }
-
-}
-
-class SectionRepresentation(private val inflater: LayoutInflater, parent: ViewGroup) : Representation<Map<String, Any?>>(R.layout.item_section, inflater, parent) {
-
-    private val itemsLayout: LinearLayout
-
-    init {
-        itemsLayout = itemView.findViewById(R.id.items)
-    }
-
-    override fun display(data: Map<String, Any?>?) {
-        itemsLayout.removeAllViews();
-
-        for ((key, value) in data!!) {
-            val layoutId = when(value) {
-                null -> R.layout.text_view_section_header
-                else -> R.layout.text_view_section_key
-            }
-            val tempTitleTv =  inflater.inflate(layoutId, itemsLayout, false) as TextView
-            itemsLayout.addView(tempTitleTv)
-
-            tempTitleTv.text = key.capitalize()
-
-            if(value != null) {
-                val tempSubtitleTv = inflater.inflate(R.layout.text_view_section_value, itemsLayout, false) as TextView
-                itemsLayout.addView(tempSubtitleTv)
-
-                //            if (key.toLowerCase() == "timestamp") {
-                //                tempSubtitleTv.text = (value as Long).toString()
-                //            } else {
-                //                tempSubtitleTv.text = value.toString()
-                //            }
-
-                tempSubtitleTv.text = value.toString()
-
-                tempSubtitleTv.setOnClickListener { (it as TextView).text.setClipboard(itemView.context, key) }
-            }
-        }
-    }
-
-    companion object {
-        val factory = object : RepresentationFactory<Map<String, Any?>>() {
-            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Map<String, Any?>> {
-                return SectionRepresentation(inflater, parent)
-            }
-        }
-    }
-
-}
-
-class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.item_event, inflater, parent) {
-    override fun display(event: Event?) {
-        ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.systemId)
-        ViewUtils.setDate(itemView, R.id.eventDate, Date(event!!.gmtTimeStamp))
-
-        //TODO need to understand how to check if event public or private
-        var eventLocation : Location? = null
-        if(event is com.ambrosus.sdk.model.AMBEvent) eventLocation = event?.location
-
-        var locationSting = StringBuffer()
-
-        eventLocation?.city?.let {
-            locationSting.append(it).append(", ")
-        }
-
-        eventLocation?.country?.let {
-            locationSting.append(it)
-        }
-
-        if(locationSting.endsWith(", "))
-            locationSting.removeSuffix(", ")
-
-        if(locationSting.isEmpty())
-            eventLocation?.name?.let { locationSting.append(it) }
-
-        ViewUtils.setText(
-                itemView,
-                R.id.eventSubTitle,
-                locationSting.toString()
-        )
-        ViewUtils.setText(itemView, R.id.eventVisibility, generatePrivacy())
-
-//        tempCard.tag = event
-//            tempCard.setOnClickListener {
-//                eventClickListener(it.tag as com.ambrosus.sdk.model.AMBEvent)
-//            }
-//        }
-    }
-
-    private fun generatePrivacy(): String {
-        val random = (0..2).shuffled().last()
-
-        return when (random) {
-            0 -> "Public"
-            else -> "Private"
-        }
-    }
-
-
-    companion object {
-        val factory = object : RepresentationFactory<Event>() {
-            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Event> {
-                return ShortEventRepresentation(inflater, parent)
-            }
-        }
-    }
-}
