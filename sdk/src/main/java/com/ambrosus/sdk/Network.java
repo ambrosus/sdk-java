@@ -15,10 +15,20 @@
 package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
+import android.util.Base64;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
+import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
+
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -74,5 +84,41 @@ public class Network {
     @NonNull
     public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
         return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
+    }
+
+    /**
+     *
+     * @param duration - duration in milliseconds
+     * @param privateKeyStr - private key as a hex string, can contain '0x' prefix
+     * @return
+     */
+    static String createAMBTokenFor(long duration, String privateKeyStr) {
+        return createAMBToken(privateKeyStr, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() + duration));
+    }
+
+    /**
+     *
+     * @param privateKeyStr see {@link #createAMBTokenFor(long, String)}
+     * @param validUntil - duration in seconds
+     * @return
+     */
+    static String createAMBToken(String privateKeyStr, long validUntil) {
+        BigInteger privateKey = Numeric.toBigInt(privateKeyStr/*can contain 0x prefix*/);
+        ECKeyPair keyPair = ECKeyPair.create(privateKey);
+        String address = Keys.toChecksumAddress(Keys.getAddress(keyPair)); // account address associated with private key
+
+        JsonObject idData = new JsonObject();
+        idData.addProperty("createdBy", address);
+        idData.addProperty("validUntil", validUntil);
+
+        String signature = CryptoUtils.computeSignature(idData.toString(), keyPair);
+
+        JsonObject token = new JsonObject();
+        token.add("idData", idData);
+        token.addProperty("signature", signature);
+
+        String tokenString = token.toString();
+        //TODO use different encoder for pure java version
+        return Base64.encodeToString(tokenString.getBytes(), Base64.DEFAULT);
     }
 }
