@@ -28,6 +28,7 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'org.web3j:core:4.1.0-android'
 
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
