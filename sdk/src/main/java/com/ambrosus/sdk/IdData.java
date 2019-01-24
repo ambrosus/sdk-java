@@ -14,11 +14,29 @@
 
 package com.ambrosus.sdk;
 
-class MissingEntityErrorHandler implements NetworkErrorHandler {
+import android.support.annotation.NonNull;
 
-    @Override
-    public void handleNetworkError(int code, String message) throws NetworkException {
-        if(code == 404)
-            throw new EntityNotFoundException(code, message);
+import com.ambrosus.sdk.utils.Assert;
+
+class IdData {
+
+    private String createdBy;
+    private long timestamp;
+
+    //no-argument contructor for GSON
+    IdData(){}
+
+    IdData(@NonNull String createdBy, long timestamp) {
+        this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
+        this.timestamp = timestamp;
+    }
+
+    @NonNull
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    long getTimestamp() {
+        return timestamp;
     }
 }

@@ -79,4 +79,12 @@ public class AssetsIntegrationTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test(expected = AccessDeniedException.class)
+    public void pushAsset() throws Throwable {
+        String privateKey = "0x864ba4c90a04dcaadeaa06d1621855879aaa37c70012d544475a9862c9460515";
+        Asset asset = new Asset.Builder().createAsset(privateKey);
+        Network network = new Network();
+        Asset resultAsset = network.pushAsset(asset, privateKey).execute();
+    }
 }

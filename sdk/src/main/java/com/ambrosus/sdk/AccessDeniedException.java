@@ -14,11 +14,9 @@
 
 package com.ambrosus.sdk;
 
-class MissingEntityErrorHandler implements NetworkErrorHandler {
+public class AccessDeniedException extends NetworkException {
 
-    @Override
-    public void handleNetworkError(int code, String message) throws NetworkException {
-        if(code == 404)
-            throw new EntityNotFoundException(code, message);
+    public AccessDeniedException(int code, String message) {
+        super(code, message);
     }
 }

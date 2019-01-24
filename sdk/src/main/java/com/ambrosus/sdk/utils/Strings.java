@@ -14,6 +14,8 @@
 
 package com.ambrosus.sdk.utils;
 
+import android.support.annotation.NonNull;
+
 public class Strings {
 
     public static String defaultToString(Object o) {
@@ -21,5 +23,10 @@ public class Strings {
                 Integer.toHexString(System.identityHashCode(o));
     }
 
-
+    @NonNull
+    public static String getWithHexPrefix(String str) {
+        if(!str.startsWith("0x"))
+            str += "0x";
+        return str;
+    }
 }

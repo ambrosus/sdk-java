@@ -15,9 +15,11 @@
 package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 public class Asset {
 
@@ -26,6 +28,14 @@ public class Asset {
     private Content content;
     private MetaData metadata;
 
+    //no-args constructor for Gson
+    Asset(){}
+
+    Asset(Content content) {
+        this.assetId = Network.getObjectHash(content);
+        this.content = content;
+    }
+
     @NonNull
     public String getSystemId() {
         return assetId;
@@ -33,17 +43,15 @@ public class Asset {
 
     @NonNull
     public String getAccount() {
-        return content.idData.createdBy;
+        return content.idData.getCreatedBy();
     }
 
-    @NonNull
+    public long getTimestamp() {
+        return content.idData.getTimestamp();
+    }
+
     public long getSequenceNumber() {
         return content.idData.sequenceNumber;
-    }
-
-    @NonNull
-    public long getTimestamp() {
-        return content.idData.timestamp;
     }
 
     @NonNull
@@ -51,18 +59,43 @@ public class Asset {
         return metadata;
     }
 
+    static class AssetIdData extends IdData {
 
-    private static class Content implements Serializable {
-        private IDData idData;
-    }
-
-    private static class IDData implements Serializable {
-
-        private String createdBy;
-        private long timestamp;
         private long sequenceNumber;
 
+        //no-argument contructor for GSON
+        private AssetIdData(){
+            super();
+        }
+
+        AssetIdData(String createdBy, long timeStamp, long sequenceNumber) {
+            super(createdBy, timeStamp);
+            this.sequenceNumber = sequenceNumber;
+        }
     }
+
+    static class Content {
+
+        private AssetIdData idData;
+        private String signature;
+
+        //no-args constructor for Gson
+        private Content() {}
+
+        private Content(AssetIdData idData, String signature) {
+            this.idData = idData;
+            this.signature = signature;
+        }
+
+        public AssetIdData getIdData() {
+            return idData;
+        }
+
+        static Content create(AssetIdData idData, String privateKey) {
+            return new Content(idData, Network.getObjectSignature(idData, privateKey));
+        }
+    }
+
 
     public static class MetaData implements Serializable {
         private String bundleTransactionHash;
@@ -82,6 +115,33 @@ public class Asset {
         @NonNull
         public String getBundleId() {
             return bundleId;
+        }
+    }
+
+
+    public static class Builder {
+
+        private long timeStamp;
+        private long sequenceNumber;
+
+        public Builder() {
+            setTimeStamp(System.currentTimeMillis());
+        }
+
+        public void setUnixTimeStamp(long timeStamp, long sequenceNumber) {
+            this.timeStamp = timeStamp;
+            this.sequenceNumber = sequenceNumber;
+        }
+
+        public void setTimeStamp(long timeMillis) {
+            setUnixTimeStamp(TimeUnit.MILLISECONDS.toSeconds(timeMillis), System.nanoTime());
+        }
+
+        public Asset createAsset(String privateKey) {
+            String address = Ethereum.getPublicKey(privateKey);
+            AssetIdData assetIdData = new AssetIdData(address, timeStamp, sequenceNumber);
+            Content content = Content.create(assetIdData, privateKey);
+            return new Asset(content);
         }
     }
 }

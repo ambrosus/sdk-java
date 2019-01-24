@@ -12,43 +12,49 @@
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.ambrosus.sdk.utils;
+package com.ambrosus.sdk;
 
+import com.ambrosus.sdk.utils.GsonUtil;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.internal.Streams;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
+import org.junit.Test;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-abstract public class GsonUtil {
+import static org.junit.Assert.assertEquals;
 
-    private static final Gson BASIC_GSON = new Gson();
+public class GsonUtilTest {
 
-    public static String getStringValue(JsonObject jsonObject, String key) {
-        return jsonObject.has(key) ? jsonObject.get(key).getAsString() : null;
+    private static class TestObject {
+
+        private String testField2 = "second test field";
+        private String testField0 = "zero test field";
+        private String testField1 = "first test field";
+
     }
 
-    public static String getLexNormalizedJsonStr(Object src) {
-        return getLexNormalizedJson(BASIC_GSON.toJsonTree(src)).toString();
+    @Test
+    public void testGetLexNormalizedJson(){
+        String expected = "{\"testField0\":\"zero test field\",\"testField1\":\"first test field\",\"testField2\":\"second test field\"}";
+        String actual = GsonUtil.getLexNormalizedJsonStr(new TestObject());
+        assertEquals(expected, actual);
     }
-
-    private static JsonElement getLexNormalizedJson(JsonElement json) {
-        return json instanceof JsonObject ? getLexNormalizedJson(json.getAsJsonObject()) : json;
-    }
-
-    private static JsonElement getLexNormalizedJson(JsonObject json) {
-        JsonObject result = new JsonObject();
-        List<Map.Entry<String, JsonElement>> entriesList = new ArrayList<>(json.entrySet());
-        Collections.sort(entriesList, (o1, o2) -> o1.getKey().compareTo(o2.getKey()));
-        for (Map.Entry<String, JsonElement> entry : entriesList) {
-            result.add(entry.getKey(), getLexNormalizedJson(entry.getValue()));
-        }
-        return result;
-    }
-
 
 
 }

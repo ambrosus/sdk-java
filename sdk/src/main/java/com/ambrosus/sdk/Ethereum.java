@@ -14,17 +14,23 @@
 
 package com.ambrosus.sdk;
 
-import org.web3j.crypto.*;
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.web3j.crypto.ECDSASignature;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Hash;
+import org.web3j.crypto.Keys;
+import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-/**
- * Utility class for crypto-related operations.
- */
-public abstract class CryptoUtils {
+abstract class Ethereum {
 
     private static final String ETH_PREAMBLE = "\u0019Ethereum Signed Message:\n";
     private static final int ECDSA_OUTPUT_LENGTH = 32;
@@ -126,4 +132,22 @@ public abstract class CryptoUtils {
 
         return computeHashString(message).equals(candidateHash);
     }
+
+    /**
+     *
+     * @param privateKeyStr private key hex string, can contain 0x prefix
+     * @return
+     */
+    static String getPublicKey(String privateKeyStr) {
+        ECKeyPair keyPair = getEcKeyPair(privateKeyStr);
+        return Keys.toChecksumAddress(Keys.getAddress(keyPair));
+    }
+
+    @NonNull
+    static ECKeyPair getEcKeyPair(String privateKeyStr) {
+        BigInteger privateKey = Numeric.toBigInt(privateKeyStr);
+        return ECKeyPair.create(privateKey);
+    }
+
+
 }
