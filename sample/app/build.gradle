@@ -68,7 +68,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // android part
 
-    implementation project(path: ':ambsdk')
     implementation project(path: ':sdk')
     //implementation project(':sdk')
 
