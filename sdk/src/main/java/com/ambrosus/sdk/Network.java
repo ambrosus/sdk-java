@@ -41,6 +41,10 @@ public class Network {
     private final Service service;
 
     public Network(){
+        this("https://gateway-test.ambrosus.com/");
+    }
+
+    public Network(String url){
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -55,7 +59,7 @@ public class Network {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://gateway-test.ambrosus.com/")
+                .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .client(client)
                 .build();
