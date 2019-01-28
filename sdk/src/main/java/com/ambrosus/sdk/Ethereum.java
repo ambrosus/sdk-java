@@ -138,7 +138,7 @@ abstract class Ethereum {
      * @param privateKeyStr private key hex string, can contain 0x prefix
      * @return
      */
-    static String getPublicKey(String privateKeyStr) {
+    static String getAddress(String privateKeyStr) {
         ECKeyPair keyPair = getEcKeyPair(privateKeyStr);
         return Keys.toChecksumAddress(Keys.getAddress(keyPair));
     }

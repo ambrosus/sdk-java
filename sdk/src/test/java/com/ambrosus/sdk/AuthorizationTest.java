@@ -37,19 +37,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Base64.class)
-public class NetworkTest {
+public class AuthorizationTest {
 
     @Test
-    public void createToken(){
-        PowerMockito.mockStatic(Base64.class);
-        when(Base64.encodeToString(any(byte[].class), anyInt())).thenAnswer(
-                new Answer<Object>() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        return java.util.Base64.getEncoder().encodeToString((byte[]) invocation.getArguments()[0]);
-                    }
-                }
-        );
+    public void createTokenTest(){
+        TestUtils.mockAndroidBase64Encoding();
 
         //fake private key
         final String privateKey = "0xc104ec10ff80d8111b972470fe2e61fa960149a16c01a4214d15167c29ff4e4c";
@@ -60,7 +52,7 @@ public class NetworkTest {
         calendar.set(2020, 0, 1);
         long validUntil = calendar.getTimeInMillis() / 1000;
 
-        assertEquals(validToken, Network.createAMBToken(privateKey, validUntil));
+        assertEquals(validToken, Authorization.createAMBToken(privateKey, validUntil));
     }
 
 }

@@ -15,21 +15,10 @@
 package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
-import android.util.Base64;
 
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.Strings;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
-import org.web3j.utils.Numeric;
-
-import java.math.BigInteger;
-
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -39,6 +28,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Network {
 
     private final Service service;
+
+    private Authorization authorization = new Authorization();
 
     public Network(){
         this("https://gateway-test.ambrosus.com/");
@@ -89,7 +80,7 @@ public class Network {
 
     @NonNull
     public NetworkCall<Asset> pushAsset(Asset asset, String privateKey) {
-        return new NetworkCallWrapper<>(service.createAsset(getABMAuthHeader(privateKey), asset), new AccessDeniedErrorHandler());
+        return new NetworkCallWrapper<>(service.createAsset(Authorization.getABMAuthHeader(privateKey), asset), new AccessDeniedErrorHandler());
     }
 
     @NonNull
@@ -97,44 +88,13 @@ public class Network {
         return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), event));
     }
 
-    private static String getABMAuthHeader(String privateKey){
-        return "AMB " + Strings.getWithHexPrefix(privateKey);
+    @NonNull
+    public NetworkCall<Account> getAccount(String address) {
+        return new NetworkCallWrapper<>(service.getAccount(address, authorization.getAMBToken()));
     }
 
-    /**
-     *
-     * @param duration - duration in milliseconds
-     * @param privateKeyStr - private key as a hex string, can contain '0x' prefix
-     * @return
-     */
-    static String createAMBTokenFor(long duration, String privateKeyStr) {
-        return createAMBToken(privateKeyStr, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() + duration));
-    }
-
-    /**
-     *
-     * @param privateKeyStr see {@link #createAMBTokenFor(long, String)}
-     * @param validUntil - duration in seconds
-     * @return
-     */
-    static String createAMBToken(String privateKeyStr, long validUntil) {
-        BigInteger privateKey = Numeric.toBigInt(privateKeyStr/*can contain 0x prefix*/);
-        ECKeyPair keyPair = ECKeyPair.create(privateKey);
-        String address = Keys.toChecksumAddress(Keys.getAddress(keyPair)); // account address associated with private key
-
-        JsonObject idData = new JsonObject();
-        idData.addProperty("createdBy", address);
-        idData.addProperty("validUntil", validUntil);
-
-        String signature = Ethereum.computeSignature(idData.toString(), keyPair);
-
-        JsonObject token = new JsonObject();
-        token.add("idData", idData);
-        token.addProperty("signature", signature);
-
-        String tokenString = token.toString();
-        //TODO use different encoder for pure java version
-        return Base64.encodeToString(tokenString.getBytes(), Base64.DEFAULT);
+    public void authorize(String privateKey, long durationMillis) {
+        authorization.authorize(privateKey, durationMillis);
     }
 
     static String getObjectHash(Object object){

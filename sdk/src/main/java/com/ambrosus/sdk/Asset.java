@@ -17,10 +17,6 @@ package com.ambrosus.sdk;
 import android.support.annotation.NonNull;
 
 import com.ambrosus.sdk.utils.Time;
-import com.google.gson.Gson;
-
-import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 public class Asset {
 
@@ -108,7 +104,7 @@ public class Asset {
         }
 
         public Asset createAsset(String privateKey) {
-            String address = Ethereum.getPublicKey(privateKey);
+            String address = Ethereum.getAddress(privateKey);
             AssetIdData assetIdData = new AssetIdData(address, timeStamp, sequenceNumber);
             return new Asset(AssetContent.create(assetIdData, privateKey));
         }

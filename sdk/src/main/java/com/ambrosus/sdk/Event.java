@@ -137,7 +137,7 @@ public class Event {
         static EventContent create(@NonNull String assetId, long timeStamp, int accessLevel, @NonNull JsonArray data, @NonNull String privateKey) {
             EventIdData idData = new EventIdData(
                     assetId,
-                    Ethereum.getPublicKey(privateKey),
+                    Ethereum.getAddress(privateKey),
                     timeStamp, accessLevel,
                     Network.getObjectHash(data)
             );

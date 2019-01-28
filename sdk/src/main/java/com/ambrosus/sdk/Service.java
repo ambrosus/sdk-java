@@ -53,4 +53,11 @@ interface Service {
             "Accept:application/json"
     })
     Call<Event> createEvent(@Path("assetId") String assetId, @Body Event event);
+
+
+    @GET("accounts/{accountAddress}")
+    @Headers({
+            "Accept:application/json"
+    })
+    Call<Account> getAccount(@Path("accountAddress") String accountAddress, @Header("Authorization") String ambToken);
 }
