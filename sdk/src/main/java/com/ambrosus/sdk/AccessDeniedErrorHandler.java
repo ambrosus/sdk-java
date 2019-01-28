@@ -14,11 +14,13 @@
 
 package com.ambrosus.sdk;
 
-class MissingEntityErrorHandler implements NetworkErrorHandler {
+import android.accounts.NetworkErrorException;
+
+class AccessDeniedErrorHandler implements NetworkErrorHandler {
 
     @Override
     public void handleNetworkError(int code, String message) throws NetworkException {
-        if(code == 404)
-            throw new EntityNotFoundException(code, message);
+        if(code == 403)
+            throw new AccessDeniedException(code, message);
     }
 }

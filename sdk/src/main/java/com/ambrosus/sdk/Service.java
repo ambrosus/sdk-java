@@ -17,7 +17,11 @@ package com.ambrosus.sdk;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
@@ -29,11 +33,17 @@ interface Service {
     @GET("events/{eventId}")
     Call<Event> getEvent(@Path("eventId") String assetId);
 
-
     @GET("assets")
     Call<SearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
 
     @GET("events")
     Call<SearchResult<Event>> findEvents(@QueryMap Map<String, String> options);
 
+
+    @POST("assets")
+    @Headers({
+            "Content-Type:application/json",
+            "Accept:application/json"
+    })
+    Call<Asset> createAsset(@Header("Authorization") String token, @Body Asset body);
 }
