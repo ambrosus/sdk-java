@@ -133,7 +133,7 @@ class AssetActivity : AppCompatActivity() {
             }
             is AMBAssetInfo -> {
 
-                collapsing_toolbar.title = assetData.name ?: assetData.systemId
+                collapsing_toolbar.title = assetData.name ?: assetData.eventId
 
                 if(!assetData.images.isEmpty()) {
                     GlideApp.with(this)

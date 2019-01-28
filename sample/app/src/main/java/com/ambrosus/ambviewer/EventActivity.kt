@@ -76,8 +76,8 @@ class EventActivity : AppCompatActivity() {
                 )
             }
 
-            title = event.name ?: event.type ?: event.systemId
-        } else title = event.systemId
+            title = event.name ?: event.type ?: event.eventId
+        } else title = event.eventId
 
         eventDetails.adapter = dataSetBuilder.createAdapter(this)
     }

@@ -21,9 +21,7 @@ import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.Time;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +32,7 @@ public class Event {
 
     public static final String DATA_OBJECT_ATTR_TYPE = "type";
 
-    @SerializedName("eventId")
-    private String systemId;
+    private String eventId;
     private EventContent content;
     private MetaData metadata;
 
@@ -43,21 +40,20 @@ public class Event {
     private Event(){}
 
     private Event(EventContent content) {
-        this.systemId = Network.getObjectHash(content);
+        this.eventId = Network.getObjectHash(content);
         this.content = content;
     }
 
 
     protected Event(Event source){
         // it looks like it's more reliable to use copy constructor there instead of this(EventContent)
-        this.systemId = source.systemId;
+        this.eventId = source.eventId;
         this.content = source.content;
         this.metadata = source.metadata;
     }
 
-    //TODO rename to getEventId()
-    public String getSystemId() {
-        return systemId;
+    public String getEventId() {
+        return eventId;
     }
 
     public String getAssetId() {
@@ -105,7 +101,7 @@ public class Event {
 
     @Override
     public String toString() {
-        return super.toString() + String.format(Locale.US, "(%s)", getSystemId());
+        return super.toString() + String.format(Locale.US, "(%s)", getEventId());
     }
 
 
