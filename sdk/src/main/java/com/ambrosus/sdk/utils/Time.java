@@ -12,45 +12,22 @@
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.ambrosus.sdk;
+package com.ambrosus.sdk.utils;
 
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
+public class Time {
 
-interface Service {
+    public static long getUnixTime(){
+        return getUnixTime(System.currentTimeMillis());
+    }
 
-    @GET("assets/{assetId}")
-    Call<Asset> getAsset(@Path("assetId") String assetId);
+    public static long getUnixTime(long millis){
+        return TimeUnit.MILLISECONDS.toSeconds(millis);
+    }
 
-    @GET("events/{eventId}")
-    Call<Event> getEvent(@Path("eventId") String assetId);
+    public static long getMillis(long unixTime) {
+        return  TimeUnit.SECONDS.toMillis(unixTime);
+    }
 
-    @GET("assets")
-    Call<SearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
-
-    @GET("events")
-    Call<SearchResult<Event>> findEvents(@QueryMap Map<String, String> options);
-
-
-    @POST("assets")
-    @Headers({
-            "Content-Type:application/json",
-            "Accept:application/json"
-    })
-    Call<Asset> createAsset(@Header("Authorization") String token, @Body Asset body);
-
-    @POST("assets/{assetId}/events")
-    @Headers({
-            "Content-Type:application/json",
-            "Accept:application/json"
-    })
-    Call<Event> createEvent(@Path("assetId") String assetId, @Body Event event);
 }

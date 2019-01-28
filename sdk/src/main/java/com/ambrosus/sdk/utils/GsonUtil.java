@@ -14,7 +14,10 @@
 
 package com.ambrosus.sdk.utils;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -31,12 +34,26 @@ abstract public class GsonUtil {
         return jsonObject.has(key) ? jsonObject.get(key).getAsString() : null;
     }
 
-    public static String getLexNormalizedJsonStr(Object src) {
+    public static String getLexNormalizedJsonStr(@NonNull Object src) {
+        Assert.assertNotNull(src, "src == null");
         return getLexNormalizedJson(BASIC_GSON.toJsonTree(src)).toString();
     }
 
     private static JsonElement getLexNormalizedJson(JsonElement json) {
-        return json instanceof JsonObject ? getLexNormalizedJson(json.getAsJsonObject()) : json;
+        if(json.isJsonObject())
+            return getLexNormalizedJson(json.getAsJsonObject());
+        else if(json.isJsonArray())
+            return getLexNormalizedJsonArray(json.getAsJsonArray());
+        else
+            return json;
+    }
+
+    private static JsonArray getLexNormalizedJsonArray(JsonArray jsonArray){
+        JsonArray result = new JsonArray();
+        for (JsonElement item : jsonArray) {
+            result.add(getLexNormalizedJson(item));
+        }
+        return result;
     }
 
     private static JsonElement getLexNormalizedJson(JsonObject json) {
@@ -45,6 +62,14 @@ abstract public class GsonUtil {
         Collections.sort(entriesList, (o1, o2) -> o1.getKey().compareTo(o2.getKey()));
         for (Map.Entry<String, JsonElement> entry : entriesList) {
             result.add(entry.getKey(), getLexNormalizedJson(entry.getValue()));
+        }
+        return result;
+    }
+
+    public static List<JsonObject> getAsObjectsList(JsonArray array) {
+        ArrayList<JsonObject> result = new ArrayList<>();
+        for (JsonElement dataObject : array) {
+            result.add(dataObject.getAsJsonObject());
         }
         return result;
     }

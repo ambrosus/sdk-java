@@ -22,26 +22,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.ambrosus.ambviewer.utils.BundleArgument
-import com.ambrosus.ambviewer.utils.Representation
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
-import com.ambrosus.ambviewer.utils.RepresentationFactory
 import com.ambrosus.ambviewer.utils.SelfRepresentingItem
-import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Event
 import com.ambrosus.sdk.model.AMBAssetInfo
-import com.ambrosus.sdk.model.Location
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_asset.*
-import java.util.Date
 
 class AssetActivity : AppCompatActivity() {
 
@@ -97,7 +86,7 @@ class AssetActivity : AppCompatActivity() {
         val assetSection = LinkedHashMap<String, Any>()
         assetSection["assetId"] = assetInfo.assetId
         assetSection["createdBy"] = assetInfo.authorId
-        assetSection["timestamp"] = assetInfo.gmtTimeStamp
+        assetSection["timestamp"] = assetInfo.timeStamp
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
     }
 

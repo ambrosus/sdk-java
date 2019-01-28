@@ -14,43 +14,22 @@
 
 package com.ambrosus.sdk;
 
-import java.util.Map;
+class ContentField {
 
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
+    private String signature;
 
-interface Service {
+    //no args constructor for GSON and sub classes
+    ContentField(){}
 
-    @GET("assets/{assetId}")
-    Call<Asset> getAsset(@Path("assetId") String assetId);
+    static <T extends ContentField> T create(Class<T> subClass, Object idDataObject, String privateKey) {
+        try {
+            T content = subClass.newInstance();
+            ((ContentField)content).signature = Network.getObjectSignature(idDataObject, privateKey);
+            return content;
+        } catch (Exception e) {
+            //it should not be possible
+            throw new RuntimeException(e);
+        }
+    }
 
-    @GET("events/{eventId}")
-    Call<Event> getEvent(@Path("eventId") String assetId);
-
-    @GET("assets")
-    Call<SearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
-
-    @GET("events")
-    Call<SearchResult<Event>> findEvents(@QueryMap Map<String, String> options);
-
-
-    @POST("assets")
-    @Headers({
-            "Content-Type:application/json",
-            "Accept:application/json"
-    })
-    Call<Asset> createAsset(@Header("Authorization") String token, @Body Asset body);
-
-    @POST("assets/{assetId}/events")
-    @Headers({
-            "Content-Type:application/json",
-            "Accept:application/json"
-    })
-    Call<Event> createEvent(@Path("assetId") String assetId, @Body Event event);
 }

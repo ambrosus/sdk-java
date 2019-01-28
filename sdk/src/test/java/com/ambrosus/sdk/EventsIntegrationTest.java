@@ -14,6 +14,14 @@
 
 package com.ambrosus.sdk;
 
+import com.ambrosus.sdk.utils.GsonUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import junit.framework.Assert;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -63,6 +71,22 @@ public class EventsIntegrationTest {
         }
     }
 
+    @Test
+    public void pushEvent() {
+        JsonObject testData = new JsonObject();
+        testData.addProperty("testKey", "testValue");
+        testData.addProperty("anotherKey", "anotherValue");
 
+        Event.Builder builder = new Event.Builder()
+                .setAssetId("0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333")
+                .addData("custom", testData);
+        Event event = builder.createEvent("0x864ba4c99a04dc9adeaa06d1621855849aaa37c70012d544475a9862c9460514");
 
+        try {
+            Event result = network.pushEvent(event).execute();
+            System.out.println();
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
 }

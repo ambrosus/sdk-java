@@ -36,8 +36,9 @@ public class AssetInfoIntegrationTest {
         try {
             List<AMBAssetInfo> assetInfoList = networkCall.execute();
             AMBAssetInfo assetInfo = assetInfoList.get(0);
+            assertEquals("0xafa2e53de0855ba93597e5f5985e0cf8f39ca4f011456bef808c1c2fca1005a9", assetInfo.getSystemId());
             assertEquals("PURE DARK CHOCOLATE BAR 92%", assetInfo.getName());
-            assertEquals(1496250888000L, assetInfo.getGMTTimeStamp());
+            assertEquals(1496250888000L, assetInfo.getTimeStamp());
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }

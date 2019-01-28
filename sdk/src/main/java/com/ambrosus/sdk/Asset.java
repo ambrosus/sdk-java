@@ -16,6 +16,7 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.utils.Time;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -25,13 +26,13 @@ public class Asset {
 
     private String assetId;
 
-    private Content content;
+    private AssetContent content;
     private MetaData metadata;
 
     //no-args constructor for Gson
     Asset(){}
 
-    Asset(Content content) {
+    Asset(AssetContent content) {
         this.assetId = Network.getObjectHash(content);
         this.content = content;
     }
@@ -59,6 +60,20 @@ public class Asset {
         return metadata;
     }
 
+    static class AssetContent extends ContentField {
+
+        private AssetIdData idData;
+
+        //no args constructor for GSON
+        AssetContent(){super();}
+
+        private static AssetContent create(AssetIdData idData, String privateKey){
+            AssetContent result = ContentField.create(AssetContent.class, idData, privateKey);
+            result.idData = idData;
+            return result;
+        }
+    }
+
     static class AssetIdData extends IdData {
 
         private long sequenceNumber;
@@ -73,51 +88,6 @@ public class Asset {
             this.sequenceNumber = sequenceNumber;
         }
     }
-
-    static class Content {
-
-        private AssetIdData idData;
-        private String signature;
-
-        //no-args constructor for Gson
-        private Content() {}
-
-        private Content(AssetIdData idData, String signature) {
-            this.idData = idData;
-            this.signature = signature;
-        }
-
-        public AssetIdData getIdData() {
-            return idData;
-        }
-
-        static Content create(AssetIdData idData, String privateKey) {
-            return new Content(idData, Network.getObjectSignature(idData, privateKey));
-        }
-    }
-
-
-    public static class MetaData implements Serializable {
-        private String bundleTransactionHash;
-        private String bundleUploadTimestamp;
-        private String bundleId;
-
-        @NonNull
-        public String getBundleTransactionHash() {
-            return bundleTransactionHash;
-        }
-
-        @NonNull
-        public String getBundleUploadTimestamp() {
-            return bundleUploadTimestamp;
-        }
-
-        @NonNull
-        public String getBundleId() {
-            return bundleId;
-        }
-    }
-
 
     public static class Builder {
 
@@ -134,14 +104,13 @@ public class Asset {
         }
 
         public void setTimeStamp(long timeMillis) {
-            setUnixTimeStamp(TimeUnit.MILLISECONDS.toSeconds(timeMillis), System.nanoTime());
+            setUnixTimeStamp(Time.getUnixTime(timeMillis), System.nanoTime());
         }
 
         public Asset createAsset(String privateKey) {
             String address = Ethereum.getPublicKey(privateKey);
             AssetIdData assetIdData = new AssetIdData(address, timeStamp, sequenceNumber);
-            Content content = Content.create(assetIdData, privateKey);
-            return new Asset(content);
+            return new Asset(AssetContent.create(assetIdData, privateKey));
         }
     }
 }

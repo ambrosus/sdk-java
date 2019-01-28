@@ -19,6 +19,7 @@ import android.util.Base64;
 
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.Strings;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
@@ -53,12 +54,9 @@ public class Network {
                 .addInterceptor(interceptor)
                 .build();
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Event.class, new EventDeserializer());
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://gateway-test.ambrosus.com/")
-                .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
+                .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .client(client)
                 .build();
 
@@ -88,6 +86,11 @@ public class Network {
     @NonNull
     public NetworkCall<Asset> pushAsset(Asset asset, String privateKey) {
         return new NetworkCallWrapper<>(service.createAsset(getABMAuthHeader(privateKey), asset), new AccessDeniedErrorHandler());
+    }
+
+    @NonNull
+    public NetworkCall<Event> pushEvent(Event event) {
+        return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), event));
     }
 
     private static String getABMAuthHeader(String privateKey){

@@ -5,7 +5,6 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -95,7 +94,7 @@ class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Re
 
     override fun display(event: Event?) {
         ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.systemId)
-        ViewUtils.setDate(itemView, R.id.eventDate, Date(event!!.gmtTimeStamp))
+        ViewUtils.setDate(itemView, R.id.eventDate, Date(event!!.timeStamp))
 
         //TODO need to understand how to check if event public or private
         var eventLocation : Location? = null

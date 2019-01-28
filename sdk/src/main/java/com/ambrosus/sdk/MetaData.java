@@ -21,8 +21,9 @@ import java.io.Serializable;
 public class MetaData {
 
     private String bundleTransactionHash;
-    private String bundleUploadTimestamp;
+    private long bundleUploadTimestamp;
     private String bundleId;
+    private long entityUploadTimestamp;
 
     private MetaData(){}
 
@@ -32,7 +33,7 @@ public class MetaData {
     }
 
     @NonNull
-    public String getBundleUploadTimestamp() {
+    public long getBundleUploadTimestamp() {
         return bundleUploadTimestamp;
     }
 
