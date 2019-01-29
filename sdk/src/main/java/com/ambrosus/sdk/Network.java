@@ -20,6 +20,8 @@ import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.Strings;
 import com.google.gson.Gson;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -32,10 +34,10 @@ public class Network {
     private Authorization authorization = new Authorization();
 
     public Network(){
-        this("https://gateway-test.ambrosus.com/");
+        this(new Configuration());
     }
 
-    public Network(String url){
+    public Network(Configuration conf){
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -47,10 +49,11 @@ public class Network {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .readTimeout(conf.readTimeOut, TimeUnit.MILLISECONDS)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(conf.url)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .client(client)
                 .build();
