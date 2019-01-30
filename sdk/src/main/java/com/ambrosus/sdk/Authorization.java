@@ -23,7 +23,7 @@ class Authorization {
 
     static String getAMBTokenAuthHeader(AuthToken authToken) {
         return "AMB_TOKEN "
-                + Base64.encodeToString(GsonUtil.getLexNormalizedJsonStr(authToken).getBytes(), Base64.DEFAULT);
+                + Base64.encodeToString(GsonUtil.getLexNormalizedJsonStr(authToken).getBytes(), Base64.NO_WRAP);
     }
 
 
