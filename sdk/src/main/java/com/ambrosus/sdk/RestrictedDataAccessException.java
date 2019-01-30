@@ -14,42 +14,9 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
+public class RestrictedDataAccessException extends AmbrosusException {
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.concurrent.TimeUnit;
-
-@PowerMockIgnore("javax.net.ssl.*")
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Base64.class)
-public class AccountsIntegrationTest {
-
-    private static Network network;
-
-    @Before
-    public void setUpNetwork(){
-        network = new Network();
+    public RestrictedDataAccessException(String message) {
+        super(message);
     }
-
-    @Test
-    public void getAccountTest(){
-        try {
-            TestUtils.mockAndroidBase64Encoding();
-            AuthToken authToken = TestUtils.getAuthToken();
-            network.authorize(authToken);
-            Account account = network.getAccount(authToken.getAccount()).execute();
-            Assert.assertEquals(authToken.getAccount(), account.getAddress());
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
 }

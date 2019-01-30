@@ -37,7 +37,11 @@ public class NetworkCallAdapter<I, O> implements NetworkCall<O> {
         networkCall.enqueue(new NetworkCallback<I>() {
             @Override
             public void onSuccess(@NonNull NetworkCall<I> call, @NonNull I result) {
-                callback.onSuccess(NetworkCallAdapter.this, resultAdapter.convert(result));
+                try {
+                    callback.onSuccess(NetworkCallAdapter.this, resultAdapter.convert(result));
+                } catch (Throwable throwable) {
+                    callback.onFailure(NetworkCallAdapter.this, throwable);
+                }
             }
 
             @Override

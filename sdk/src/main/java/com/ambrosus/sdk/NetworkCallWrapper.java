@@ -14,8 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Log;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -109,7 +107,7 @@ class NetworkCallWrapper<T> implements NetworkCall<T> {
                         message = reason.toString();
                 }
             } catch (JsonSyntaxException e) {
-                Log.e(TAG, "Can't parse error response: " + responseString);
+                Log.e(TAG, "Can't parse error response: " + responseString, e);
             }
 
             int code = response.code();

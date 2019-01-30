@@ -16,6 +16,7 @@ package com.ambrosus.sdk.model;
 
 
 import com.ambrosus.sdk.Event;
+import com.ambrosus.sdk.RestrictedDataAccessException;
 import com.ambrosus.sdk.utils.Assert;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -41,7 +42,7 @@ public class AMBAssetInfo extends AMBEvent {
      *
      * @param source - source event which contains data objects with DATA_OBJECT_TYPE_ASSET_IDENTIFIERS and DATA_OBJECT_TYPE_ASSET_INFO types
      */
-    public AMBAssetInfo(Event source) {
+    public AMBAssetInfo(Event source) throws RestrictedDataAccessException {
         super(source);
         Assert.assertTrue(
                 isValidSourceEvent(source),
@@ -84,10 +85,15 @@ public class AMBAssetInfo extends AMBEvent {
     }
 
     private JsonObject getIdentifiersData() {
-        return getDataObject(DATA_OBJECT_TYPE_ASSET_IDENTIFIERS);
+        try {
+            return getDataObject(DATA_OBJECT_TYPE_ASSET_IDENTIFIERS);
+        } catch (RestrictedDataAccessException e) {
+            //this should never happen
+            throw new IllegalStateException();
+        }
     }
 
-    static boolean isValidSourceEvent(Event event){
+    static boolean isValidSourceEvent(Event event) throws RestrictedDataAccessException {
         List<String> sourceDataTypes = event.getDataTypes();
         return sourceDataTypes.contains(DATA_OBJECT_TYPE_ASSET_INFO) && sourceDataTypes.contains(DATA_OBJECT_TYPE_ASSET_IDENTIFIERS);
     }

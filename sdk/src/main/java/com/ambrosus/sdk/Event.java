@@ -76,22 +76,32 @@ public class Event {
         return metadata;
     }
 
-    public List<JsonObject> getRawData() {
+    public List<JsonObject> getRawData() throws RestrictedDataAccessException {
+        Assert.assertNotNull(
+                content.getData(),
+                RestrictedDataAccessException.class,
+                String.format(
+                        Locale.US,
+                        "You have to be authorized as %s (or one of its child accounts) and have access level greater or equal to %d",
+                        content.getIdData().getCreatedBy(),
+                        content.getIdData().getAccessLevel()
+                )
+        );
         return content.getData();
     }
 
     //we need to be sure about the order of dataTypes in some cases, so result is list
     @NonNull
-    public List<String> getDataTypes() {
+    public List<String> getDataTypes() throws RestrictedDataAccessException {
         List<String> result = new ArrayList<>();
-        for (JsonObject dataObject : content.getData()) {
+        for (JsonObject dataObject : getRawData()) {
             result.add(getDataObjectType(dataObject));
         }
         return result;
     }
 
     @Nullable
-    public JsonObject getDataObject(String type) {
+    public JsonObject getDataObject(String type) throws RestrictedDataAccessException {
         for (JsonObject dataObject : getRawData()) {
             if(type.equals(getDataObjectType(dataObject)))
                 return dataObject;
@@ -124,8 +134,12 @@ public class Event {
             this.dataHash = Assert.assertNotNull(dataHash, "dataHash == null");
         }
 
-        public String getAssetId() {
+        String getAssetId() {
             return assetId;
+        }
+
+        int getAccessLevel() {
+            return accessLevel;
         }
     }
 

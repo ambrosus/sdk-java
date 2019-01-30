@@ -16,10 +16,13 @@ package com.ambrosus.sdk;
 
 import android.util.Base64;
 
+import com.google.gson.Gson;
+
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -29,12 +32,26 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestUtils {
 
-    public static InputStream getTestResource(Object caller, String resourceName){
-        return caller.getClass().getResourceAsStream(resourceName);
+    private static final Gson gson = new Gson();
+
+    public static InputStream getTestResource(Class callerClass, String resourceName){
+        return callerClass.getResourceAsStream(resourceName);
     }
 
-    public static InputStreamReader getTestResourceReader(Object caller, String resourceName) {
-        return new InputStreamReader(getTestResource(caller, resourceName));
+    public static AuthToken getAuthToken(){
+        return getFromJson(TestUtils.class, AuthToken.class, "AuthToken.json");
+    }
+
+    public static <T> T getFromJson(Class callerClass, Class<T> resultType, String jsonResource) {
+        try(InputStreamReader in = getTestResourceReader(callerClass, jsonResource)) {
+            return gson.fromJson(in, resultType);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static InputStreamReader getTestResourceReader(Class callerClass, String resourceName) {
+        return new InputStreamReader(getTestResource(callerClass, resourceName));
     }
 
     public static void mockAndroidBase64Encoding(){

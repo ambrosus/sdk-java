@@ -86,5 +86,6 @@ public class AssetsIntegrationTest {
         Asset asset = new Asset.Builder().createAsset(privateKey);
         Network network = new Network();
         Asset resultAsset = network.pushAsset(asset, privateKey).execute();
+        System.out.println();
     }
 }

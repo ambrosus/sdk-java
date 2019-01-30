@@ -16,8 +16,8 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.GsonUtil;
-import com.ambrosus.sdk.utils.Strings;
 import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
@@ -31,7 +31,7 @@ public class Network {
 
     private final Service service;
 
-    private Authorization authorization = new Authorization();
+    private AuthToken authToken;
 
     public Network(){
         this(new Configuration());
@@ -68,7 +68,7 @@ public class Network {
 
     @NonNull
     public NetworkCall<Event> getEvent(@NonNull String eventId) {
-        return new NetworkCallWrapper<>(service.getEvent(eventId), new MissingEntityErrorHandler());
+        return new NetworkCallWrapper<>(service.getEvent(eventId, getOptionalAMBTokenAuthHeader()), new MissingEntityErrorHandler());
     }
 
     @NonNull
@@ -78,7 +78,7 @@ public class Network {
 
     @NonNull
     public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
-        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams));
+        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams, getOptionalAMBTokenAuthHeader()));
     }
 
     @NonNull
@@ -93,11 +93,22 @@ public class Network {
 
     @NonNull
     public NetworkCall<Account> getAccount(String address) {
-        return new NetworkCallWrapper<>(service.getAccount(address, authorization.getAMBToken()));
+        Assert.assertNotNull(authToken, IllegalStateException.class, "You have to authorize first");
+        return new NetworkCallWrapper<>(
+                service.getAccount(
+                        address,
+                        Authorization.getAMBTokenAuthHeader(authToken)
+                )
+        );
     }
 
-    public void authorize(String privateKey, long durationMillis) {
-        authorization.authorize(privateKey, durationMillis);
+    public void authorize(AuthToken authToken) {
+        this.authToken = authToken;
+    }
+
+
+    private String getOptionalAMBTokenAuthHeader() {
+        return authToken != null ? Authorization.getAMBTokenAuthHeader(authToken) : null;
     }
 
     static String getObjectHash(Object object){

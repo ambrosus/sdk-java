@@ -14,28 +14,40 @@
 
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.utils.GsonUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import android.util.Base64;
+import android.util.Log;
+
 import com.google.gson.JsonObject;
 
-import junit.framework.Assert;
-
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.fail;
 
+@PowerMockIgnore("javax.net.ssl.*")
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Base64.class, Log.class})
 public class EventsIntegrationTest {
 
     private static Network network;
 
-    @BeforeClass
-    public static void setUpNetwork(){
-        network = new Network();
+    @Before
+    public void setUpNetwork(){
+        network = new Network(new Configuration().readTimeOut(0, TimeUnit.SECONDS));
     }
 
+    @Before
+    public void initLogs(){
+        AndroidLogMock.init();
+    }
 
 //TODO restore this test
 //    @Test
@@ -54,24 +66,15 @@ public class EventsIntegrationTest {
 //        }
 //    }
 
-    @Test
-    public void getEventById_notFoundException(){
+    @Test(expected = EntityNotFoundException.class)
+    public void getEventById_notFoundException() throws Throwable {
         final String eventID = "notPossible";
-
         NetworkCall<Event> networkCall = network.getEvent(eventID);
-
-        try {
-            networkCall.execute();
-            fail("got some event but should get an error");
-        } catch (EntityNotFoundException t) {
-            //it's expected
-            return;
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+        networkCall.execute();
     }
 
     @Test
+    //TODO for some reason I got incorrect error from server for the "0x58e2e95dc3c1367ec3b849cbdf89a6a9a1b11848484561e79a5c9cfd5c9b771b\n" assetID (with \n" at the end). Need to check whats going wrong.
     public void pushEvent() {
         JsonObject testData = new JsonObject();
         testData.addProperty("testKey", "testValue");
@@ -88,5 +91,36 @@ public class EventsIntegrationTest {
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
+    }
+
+    @Test(expected = RestrictedDataAccessException.class)
+    public void checkRestrictedDataAccessException() throws RestrictedDataAccessException {
+        TestUtils.mockAndroidBase64Encoding();
+        NetworkCall<Event> networkCall = network.getEvent("0x4a2f4b6db79fba46a9a99e486498f1ce44d4e8714db7ccae4fdd1cb33bc5ef89");
+
+        Event result;
+        try {
+            result = networkCall.execute();
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+
+        result.getRawData();
+    }
+
+    @Test
+    public void checkLimitedAccessEvents() throws RestrictedDataAccessException {
+        TestUtils.mockAndroidBase64Encoding();
+
+        Event result;
+        try {
+            network.authorize(TestUtils.getAuthToken());
+            NetworkCall<Event> networkCall = network.getEvent("0x4a2f4b6db79fba46a9a99e486498f1ce44d4e8714db7ccae4fdd1cb33bc5ef89");
+            result = networkCall.execute();
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+
+        result.getRawData();
     }
 }

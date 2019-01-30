@@ -16,7 +16,7 @@ package com.ambrosus.sdk;
 
 import java.lang.Exception;
 
-public class NetworkException extends Exception {
+public class NetworkException extends AmbrosusException {
 
     public final int code;
 

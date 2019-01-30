@@ -31,13 +31,13 @@ interface Service {
     Call<Asset> getAsset(@Path("assetId") String assetId);
 
     @GET("events/{eventId}")
-    Call<Event> getEvent(@Path("eventId") String assetId);
+    Call<Event> getEvent(@Path("eventId") String assetId, @Header("Authorization") String ambToken);
 
     @GET("assets")
     Call<SearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
 
     @GET("events")
-    Call<SearchResult<Event>> findEvents(@QueryMap Map<String, String> options);
+    Call<SearchResult<Event>> findEvents(@QueryMap Map<String, String> options, @Header("Authorization") String ambToken);
 
 
     @POST("assets")

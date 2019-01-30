@@ -16,15 +16,8 @@ package com.ambrosus.sdk;
 
 import android.util.Base64;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -32,7 +25,6 @@ import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -40,19 +32,21 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class AuthorizationTest {
 
     @Test
-    public void createTokenTest(){
+    public void getAMBAuthHeaderTest(){
         TestUtils.mockAndroidBase64Encoding();
 
         //fake private key
         final String privateKey = "0xc104ec10ff80d8111b972470fe2e61fa960149a16c01a4214d15167c29ff4e4c";
-        final String validToken = "eyJpZERhdGEiOnsiY3JlYXRlZEJ5IjoiMHhmRGJmQjJENTc1NTBkN0QwNTQxNzA0NzkyRjJhNzc4N0ZhOUZGMkFhIiwidmFsaWRVbnRpbCI6MTU3NzgzNjgwMH0sInNpZ25hdHVyZSI6IjB4MjI1NGM0MDlhZTg0MTg0OTViYmUyYWNjNjY1MmY4OTQ2OGMwNGIyYmE4OTM2OTJmMWNmOGVhZjE2NTZkMmQxZDQ1MjUwZDFmMThjYWQzZTM2NGFlNGRjNTYwZjIxNjk2NGVlZTNhMGNmMGIxYmQ4MDliMjIwYThkZjNhMTZkMTkxYyJ9";
+        final String validToken = "AMB_TOKEN eyJpZERhdGEiOnsiY3JlYXRlZEJ5IjoiMHhmRGJmQjJENTc1NTBkN0QwNTQxNzA0NzkyRjJhNzc4N0ZhOUZGMkFhIiwidmFsaWRVbnRpbCI6MTU3NzgzNjgwMH0sInNpZ25hdHVyZSI6IjB4MjI1NGM0MDlhZTg0MTg0OTViYmUyYWNjNjY1MmY4OTQ2OGMwNGIyYmE4OTM2OTJmMWNmOGVhZjE2NTZkMmQxZDQ1MjUwZDFmMThjYWQzZTM2NGFlNGRjNTYwZjIxNjk2NGVlZTNhMGNmMGIxYmQ4MDliMjIwYThkZjNhMTZkMTkxYyJ9";
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(0);
         calendar.set(2020, 0, 1);
         long validUntil = calendar.getTimeInMillis() / 1000;
 
-        assertEquals(validToken, Authorization.createAMBToken(privateKey, validUntil));
+        AuthToken authToken = AuthToken.create(privateKey, validUntil);
+
+        assertEquals(validToken, Authorization.getAMBTokenAuthHeader(authToken));
     }
 
 }

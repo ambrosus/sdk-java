@@ -28,22 +28,15 @@ public class EventDeserializationTest {
 
     @Test
     public void deserializeEvent(){
-        try(InputStreamReader in = TestUtils.getTestResourceReader(this, "SingleEvent.json")) {
-            Event event = new Gson().fromJson(in, Event.class);
-            //TODO: check event fields values
-            System.out.println();
-        } catch (IOException e) {}
+        Event event = TestUtils.getFromJson(getClass(), Event.class, "SingleEvent.json");
+        System.out.println();
     }
 
     //this test is about empty event deserialization, current BE implementation has a couple of events like this
     @Test
     public void deserializeEmptyEvent(){
-        try(InputStreamReader in = TestUtils.getTestResourceReader(this, "EmptyEvent.json")) {
-            Event event = new Gson().fromJson(in, Event.class);
-            //TODO: check event fields values
-            System.out.println();
-        } catch (IOException e) {}
-
+        Event event = TestUtils.getFromJson(getClass(), Event.class, "EmptyEvent.json");
+        System.out.println();
     }
 
 }

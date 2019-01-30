@@ -16,6 +16,7 @@ package com.ambrosus.sdk.model;
 
 import com.ambrosus.sdk.Event;
 import com.ambrosus.sdk.NetworkResultAdapter;
+import com.ambrosus.sdk.RestrictedDataAccessException;
 import com.ambrosus.sdk.SearchResult;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ class EventAdapter implements NetworkResultAdapter<SearchResult<Event>, List<AMB
     };
 
     @Override
-    public List<AMBEvent> convert(SearchResult<Event> source) {
+    public List<AMBEvent> convert(SearchResult<Event> source) throws RestrictedDataAccessException {
         List<AMBEvent> result = new ArrayList<>(source.getValues().size());
         for (Event sourceEvent : source.getValues()) {
             if(isValidSourceEvent(sourceEvent)) {
@@ -43,7 +44,7 @@ class EventAdapter implements NetworkResultAdapter<SearchResult<Event>, List<AMB
         return result;
     }
 
-    private static boolean isValidSourceEvent(Event event) {
+    private static boolean isValidSourceEvent(Event event) throws RestrictedDataAccessException {
         //limiting output to non-service event
         List<String> dataTypes = event.getDataTypes();
         dataTypes.removeAll(AMBROSUS_SERVICE_EVENT_TYPES);

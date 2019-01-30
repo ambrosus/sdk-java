@@ -18,6 +18,7 @@ import android.provider.CalendarContract;
 
 import com.ambrosus.sdk.Event;
 import com.ambrosus.sdk.NetworkResultAdapter;
+import com.ambrosus.sdk.RestrictedDataAccessException;
 import com.ambrosus.sdk.SearchResult;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.List;
 class AssetInfoAdapter implements NetworkResultAdapter<SearchResult<Event>, List<AMBAssetInfo>> {
 
     @Override
-    public List<AMBAssetInfo> convert(SearchResult<Event> source) {
+    public List<AMBAssetInfo> convert(SearchResult<Event> source) throws RestrictedDataAccessException {
 
         List<AMBAssetInfo> result = new ArrayList<>(1);
         for (Event event : source.getValues()) {
@@ -36,7 +37,7 @@ class AssetInfoAdapter implements NetworkResultAdapter<SearchResult<Event>, List
         return result;
     }
 
-    private static boolean isValidSourceEvent(Event event) {
+    private static boolean isValidSourceEvent(Event event) throws RestrictedDataAccessException {
         return AMBAssetInfo.isValidSourceEvent(event);
     }
 }

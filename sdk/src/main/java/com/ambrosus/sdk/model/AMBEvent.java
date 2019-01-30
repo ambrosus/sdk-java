@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ambrosus.sdk.Event;
+import com.ambrosus.sdk.RestrictedDataAccessException;
 import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.Strings;
 import com.google.gson.JsonElement;
@@ -51,7 +52,7 @@ public class AMBEvent extends Event {
      *
      * @param source - any source event which contains at least one data object of "ambrosus" type (see AmbrosusData implementation)
      */
-    public AMBEvent(Event source){
+    public AMBEvent(Event source) throws RestrictedDataAccessException {
         super(source);
 
         List<String> ambrosusDataTypes = AmbrosusData.getAmbrosusDataTypes(source.getDataTypes());
