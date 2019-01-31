@@ -120,8 +120,12 @@ public class Network {
         );
     }
 
-    public void authorize(AuthToken authToken) {
+    public void authorize(@Nullable AuthToken authToken) {
         this.authToken = authToken;
+    }
+
+    public @Nullable AuthToken getAuthToken() {
+        return authToken;
     }
 
 
