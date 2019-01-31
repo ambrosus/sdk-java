@@ -15,6 +15,7 @@
 package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.GsonUtil;
@@ -63,12 +64,12 @@ public class Network {
 
     @NonNull
     public NetworkCall<Asset> getAsset(@NonNull String assetId) {
-        return new NetworkCallWrapper<>(service.getAsset(assetId), new MissingEntityErrorHandler());
+        return new NetworkCallWrapper<>(service.getAsset(assetId), MissingEntityErrorHandler.INSTANCE);
     }
 
     @NonNull
     public NetworkCall<Event> getEvent(@NonNull String eventId) {
-        return new NetworkCallWrapper<>(service.getEvent(eventId, getOptionalAMBTokenAuthHeader()), new MissingEntityErrorHandler());
+        return new NetworkCallWrapper<>(service.getEvent(eventId, getOptionalAMBTokenAuthHeader()), MissingEntityErrorHandler.INSTANCE);
     }
 
     @NonNull
@@ -83,7 +84,7 @@ public class Network {
 
     @NonNull
     public NetworkCall<Asset> pushAsset(Asset asset, String privateKey) {
-        return new NetworkCallWrapper<>(service.createAsset(Authorization.getABMAuthHeader(privateKey), asset), new AccessDeniedErrorHandler());
+        return new NetworkCallWrapper<>(service.createAsset(Authorization.getABMAuthHeader(privateKey), asset), PermissionDeniedErrorHandler.INSTANCE);
     }
 
     @NonNull
@@ -91,14 +92,31 @@ public class Network {
         return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), event));
     }
 
+
+    /**
+     * It will get you an Account instance for account with specified address
+     * if you have "manage_accounts" permissions (at least for the case when account which you have used for authorization
+     * and specified account have the same access level)
+     *
+     * result.execute() will throw
+     *  - {@link PermissionDeniedException} - if you authorized with private key which is not registered on Ambrosus network
+     *  - {@link EntityNotFoundException} - if you are asking for an account which is not registered on Ambrosus network
+     *
+     * @param address - address for Account instance which you want to get
+     * @return
+     * @throws IllegalStateException if you haven't authorized this network instance with some non-null AuthToken before (by calling {@link #authorize(AuthToken)})
+     */
+    //TODO check what it returns in the case when you don't have "manage_account" permissions
+    //TODO check what it returns when you ask for account with greater access level than you currently have (authorized with)
     @NonNull
-    public NetworkCall<Account> getAccount(String address) {
+    public NetworkCall<Account> getAccount(String address) throws IllegalStateException {
         Assert.assertNotNull(authToken, IllegalStateException.class, "You have to authorize first");
         return new NetworkCallWrapper<>(
                 service.getAccount(
                         address,
                         Authorization.getAMBTokenAuthHeader(authToken)
-                )
+                ),
+                PermissionDeniedErrorHandler.INSTANCE, MissingEntityErrorHandler.INSTANCE
         );
     }
 

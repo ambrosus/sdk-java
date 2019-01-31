@@ -14,13 +14,9 @@
 
 package com.ambrosus.sdk;
 
-import android.accounts.NetworkErrorException;
+public class PermissionDeniedException extends NetworkException {
 
-class AccessDeniedErrorHandler implements NetworkErrorHandler {
-
-    @Override
-    public void handleNetworkError(int code, String message) throws NetworkException {
-        if(code == 403)
-            throw new AccessDeniedException(code, message);
+    public PermissionDeniedException(int code, String message) {
+        super(code, message);
     }
 }

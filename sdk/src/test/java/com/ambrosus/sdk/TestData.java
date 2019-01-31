@@ -30,7 +30,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class TestUtils {
+public class TestData {
+
+    public static final String UNREGISTERED_PRIVATE_KEY = "0x864ab5c99a14dc9adeaa06d1621855849aaa37c70012d544475a9862c9460515";
+    public static final String UNREGISTERED_ACCOUNT_ADDRESS = Ethereum.getAddress(UNREGISTERED_PRIVATE_KEY);
 
     private static final Gson gson = new Gson();
 
@@ -39,7 +42,7 @@ public class TestUtils {
     }
 
     public static AuthToken getAuthToken(){
-        return getFromJson(TestUtils.class, AuthToken.class, "AuthToken.json");
+        return getFromJson(TestData.class, AuthToken.class, "AuthToken.json");
     }
 
     public static <T> T getFromJson(Class callerClass, Class<T> resultType, String jsonResource) {

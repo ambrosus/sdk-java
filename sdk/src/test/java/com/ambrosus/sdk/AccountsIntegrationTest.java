@@ -18,7 +18,6 @@ import android.util.Base64;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -40,16 +39,28 @@ public class AccountsIntegrationTest {
     }
 
     @Test
-    public void getAccountTest(){
-        try {
-            TestUtils.mockAndroidBase64Encoding();
-            AuthToken authToken = TestUtils.getAuthToken();
-            network.authorize(authToken);
-            Account account = network.getAccount(authToken.getAccount()).execute();
-            Assert.assertEquals(authToken.getAccount(), account.getAddress());
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
+    public void getAccountTest() throws Throwable {
+        TestData.mockAndroidBase64Encoding();
+        AuthToken authToken = TestData.getAuthToken();
+        network.authorize(authToken);
+        Account account = network.getAccount(authToken.getAccount()).execute();
+        Assert.assertEquals(authToken.getAccount(), account.getAddress());
     }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void getAccountTest_for_not_existing_account() throws Throwable {
+        TestData.mockAndroidBase64Encoding();
+        network.authorize(TestData.getAuthToken());
+        network.getAccount(TestData.UNREGISTERED_ACCOUNT_ADDRESS).execute();
+    }
+
+    @Test(expected = PermissionDeniedException.class)
+    public void getAccountTest_authorized_with_not_existing_account() throws Throwable {
+        TestData.mockAndroidBase64Encoding();
+        AuthToken authToken = AuthToken.create(TestData.UNREGISTERED_PRIVATE_KEY, 5, TimeUnit.DAYS);
+        network.authorize(authToken);
+        network.getAccount(TestData.getAuthToken().getAccount()).execute();
+    }
+
 
 }

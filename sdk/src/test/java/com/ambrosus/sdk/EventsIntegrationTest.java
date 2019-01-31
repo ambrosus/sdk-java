@@ -20,9 +20,7 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -83,7 +81,7 @@ public class EventsIntegrationTest {
         Event.Builder builder = new Event.Builder()
                 .setAssetId("0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333")
                 .addData("custom", testData);
-        Event event = builder.createEvent("0x864ba4c99a04dc9adeaa06d1621855849aaa37c70012d544475a9862c9460514");
+        Event event = builder.createEvent(TestData.UNREGISTERED_PRIVATE_KEY);
 
         try {
             Event result = network.pushEvent(event).execute();
@@ -95,7 +93,7 @@ public class EventsIntegrationTest {
 
     @Test(expected = RestrictedDataAccessException.class)
     public void checkRestrictedDataAccessException() throws RestrictedDataAccessException {
-        TestUtils.mockAndroidBase64Encoding();
+        TestData.mockAndroidBase64Encoding();
         NetworkCall<Event> networkCall = network.getEvent("0x4a2f4b6db79fba46a9a99e486498f1ce44d4e8714db7ccae4fdd1cb33bc5ef89");
 
         Event result;
@@ -110,11 +108,11 @@ public class EventsIntegrationTest {
 
     @Test
     public void checkLimitedAccessEvents() throws RestrictedDataAccessException {
-        TestUtils.mockAndroidBase64Encoding();
+        TestData.mockAndroidBase64Encoding();
 
         Event result;
         try {
-            network.authorize(TestUtils.getAuthToken());
+            network.authorize(TestData.getAuthToken());
             NetworkCall<Event> networkCall = network.getEvent("0x4a2f4b6db79fba46a9a99e486498f1ce44d4e8714db7ccae4fdd1cb33bc5ef89");
             result = networkCall.execute();
         } catch (Throwable t) {

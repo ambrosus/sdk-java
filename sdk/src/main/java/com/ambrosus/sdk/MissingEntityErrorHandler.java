@@ -16,6 +16,12 @@ package com.ambrosus.sdk;
 
 class MissingEntityErrorHandler implements NetworkErrorHandler {
 
+    static final MissingEntityErrorHandler INSTANCE = new MissingEntityErrorHandler();
+
+    //single INSTANCE can be reused for multiple cases
+    private MissingEntityErrorHandler() {}
+
+
     @Override
     public void handleNetworkError(int code, String message) throws NetworkException {
         if(code == 404)

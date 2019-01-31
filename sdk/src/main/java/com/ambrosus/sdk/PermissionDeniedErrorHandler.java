@@ -14,9 +14,16 @@
 
 package com.ambrosus.sdk;
 
-public class AccessDeniedException extends NetworkException {
+class PermissionDeniedErrorHandler implements NetworkErrorHandler {
 
-    public AccessDeniedException(int code, String message) {
-        super(code, message);
+    static final PermissionDeniedErrorHandler INSTANCE = new PermissionDeniedErrorHandler();
+
+    //single INSTANCE can be reused for multiple cases
+    private PermissionDeniedErrorHandler() {}
+
+    @Override
+    public void handleNetworkError(int code, String message) throws NetworkException {
+        if(code == 403)
+            throw new PermissionDeniedException(code, message);
     }
 }

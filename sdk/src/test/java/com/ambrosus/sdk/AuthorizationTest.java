@@ -33,7 +33,7 @@ public class AuthorizationTest {
 
     @Test
     public void getAMBAuthHeaderTest(){
-        TestUtils.mockAndroidBase64Encoding();
+        TestData.mockAndroidBase64Encoding();
 
         //fake private key
         final String privateKey = "0xc104ec10ff80d8111b972470fe2e61fa960149a16c01a4214d15167c29ff4e4c";

@@ -14,28 +14,20 @@
 
 package com.ambrosus.sdk;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import org.junit.Test;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class EventDeserializationTest {
 
     @Test
     public void deserializeEvent(){
-        Event event = TestUtils.getFromJson(getClass(), Event.class, "SingleEvent.json");
+        Event event = TestData.getFromJson(getClass(), Event.class, "SingleEvent.json");
         System.out.println();
     }
 
     //this test is about empty event deserialization, current BE implementation has a couple of events like this
     @Test
     public void deserializeEmptyEvent(){
-        Event event = TestUtils.getFromJson(getClass(), Event.class, "EmptyEvent.json");
+        Event event = TestData.getFromJson(getClass(), Event.class, "EmptyEvent.json");
         System.out.println();
     }
 
