@@ -48,7 +48,7 @@ public class AuthToken implements Serializable {
         return new Date(TimeUnit.SECONDS.toMillis(idData.validUntil));
     }
 
-    public static AuthToken create(String privateKey, long duration, TimeUnit durationUnit) {
+    public static AuthToken create(String privateKey, long duration, TimeUnit durationUnit) throws NumberFormatException {
         return create(
                 privateKey,
                 TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
@@ -77,8 +77,16 @@ public class AuthToken implements Serializable {
      * @return AMB_TOKEN
      */
     //package local for tests
-    static AuthToken create(String privateKeyStr, long validUntil) {
-        BigInteger privateKey = Numeric.toBigInt(privateKeyStr/*can contain 0x prefix*/);
+    static AuthToken create(String privateKeyStr, long validUntil) throws NumberFormatException {
+
+        BigInteger privateKey;
+
+        try {
+            privateKey = Numeric.toBigInt(privateKeyStr/*can contain 0x prefix*/);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("private key isn't a valid hex string");
+        }
+
         ECKeyPair keyPair = ECKeyPair.create(privateKey);
         String address = Keys.toChecksumAddress(Keys.getAddress(keyPair)); // account address associated with private key
 
