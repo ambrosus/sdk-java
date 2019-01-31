@@ -23,7 +23,7 @@ public class Account {
     private String registeredBy;
     private long registeredOn;
     private List<String> permissions;
-    private String accessLevel;
+    private int accessLevel;
     private long organization;
 
     public String getAddress() {
@@ -42,7 +42,7 @@ public class Account {
         return Collections.unmodifiableList(permissions);
     }
 
-    public String getAccessLevel() {
+    public int getAccessLevel() {
         return accessLevel;
     }
 
