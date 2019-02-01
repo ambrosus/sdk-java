@@ -19,12 +19,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.text.TextUtils
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.DateAdapter
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
 import com.ambrosus.sdk.Event
+import com.ambrosus.sdk.RestrictedDataAccessException
 import com.ambrosus.sdk.model.AMBEvent
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.zxing.common.StringUtils
 import kotlinx.android.synthetic.main.activity_event.*
+import java.util.Collections
 import java.util.Date
 
 class EventActivity : AppCompatActivity() {
@@ -77,7 +83,18 @@ class EventActivity : AppCompatActivity() {
             }
 
             title = event.name ?: event.type ?: event.eventId
-        } else title = event.eventId
+        } else {
+            title = event.eventId
+
+            dataSetBuilder.add("Content", SectionTitleRepresentation.factory)
+
+            try {
+                val jsonContent = GsonBuilder().setPrettyPrinting().create().toJson(event.rawData)
+                dataSetBuilder.add(jsonContent, TextRepresentation.factory)
+            } catch (e: RestrictedDataAccessException) {
+                dataSetBuilder.add(mapOf(e.javaClass.name to (e.message as Any)), SectionRepresentation.factory)
+            }
+        }
 
         eventDetails.adapter = dataSetBuilder.createAdapter(this)
     }

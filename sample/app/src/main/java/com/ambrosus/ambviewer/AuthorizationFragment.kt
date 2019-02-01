@@ -52,7 +52,7 @@ class AuthorizationFragment : Fragment(), BarcodeCallback {
         val barcodeFormat = result!!.barcodeFormat
         if (barcodeFormat == BarcodeFormat.QR_CODE || barcodeFormat == BarcodeFormat.DATA_MATRIX) {
             try {
-                val authToken = AuthToken.create(result.text, 1, TimeUnit.DAYS)
+                val authToken = AuthToken.create(result.text, 5, TimeUnit.DAYS)
                 AMBSampleApp.network.authorize(authToken)
                 activity!!.onBackPressed()
                 return

@@ -7,9 +7,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.ambrosus.ambviewer.utils.Representation
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
 import com.ambrosus.ambviewer.utils.RepresentationFactory
@@ -216,4 +214,20 @@ class MapRepresentationFactory(private val lifecycleOwner: LifecycleOwner) : Rep
     override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Location> {
         return MapRepresentation(lifecycleOwner, inflater, parent)
     }
+}
+
+class TextRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<String>(R.layout.item_text, inflater, parent) {
+
+    override fun display(data: String?) {
+        ViewUtils.setText(itemView, R.id.text, data)
+    }
+
+    companion object {
+        val factory = object : RepresentationFactory<String>() {
+            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<String> {
+                return TextRepresentation(inflater, parent)
+            }
+        }
+    }
+
 }
