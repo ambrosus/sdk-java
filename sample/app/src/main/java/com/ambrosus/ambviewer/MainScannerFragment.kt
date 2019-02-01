@@ -18,6 +18,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
@@ -41,6 +44,7 @@ class MainScannerFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         BarcodeScannerFragment.addAsChild(this, R.id.scannerContainer)
     }
 
@@ -48,9 +52,32 @@ class MainScannerFragment :
         return inflater.inflate(R.layout.fragment_main_scanner, container, false)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item!!.itemId) {
+            R.id.menu_item_authorize -> {
+                FragmentSwitchHelper.showNextFragment(this, AuthorizationFragment())
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         TitleHelper.ensureTitle(this, "Scanner")
+
+        val authToken = AMBSampleApp.network.authToken
+        when(authToken) {
+            null -> authorizationMessage.visibility = View.GONE
+            else -> {
+                authorizationMessage.visibility = View.VISIBLE
+                authorizationMessage.setText("Authorized as ${authToken.account}");
+            }
+        }
     }
 
     override fun handleBackKey(): Boolean {

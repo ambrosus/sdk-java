@@ -15,22 +15,12 @@
 package com.ambrosus.ambviewer
 
 import android.app.Application
-import com.ambrosus.sdk.Network
-import com.ambrosus.sdk.model.AMBNetwork
+import android.widget.Toast
 
-class AMBSampleApp : Application() {
+class MessageHandler(private val context: Application) {
 
-    companion object {
-        lateinit var network: AMBNetwork
-        lateinit var errorHandler: ErrorHandler private set
-        lateinit var messageHandler: MessageHandler private set
+    fun displayErrorMessage(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        network = AMBNetwork()
-        messageHandler = MessageHandler(this)
-        errorHandler = ErrorHandler(messageHandler)
-
-    }
 }

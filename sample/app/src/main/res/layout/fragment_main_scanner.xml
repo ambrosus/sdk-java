@@ -35,18 +35,44 @@
         android:layout_height="150dp"
         android:layout_alignParentBottom="true">
 
-        <TextView
-            android:id="@+id/statusMessage"
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
+        <LinearLayout
             android:gravity="center"
 
-            android:text="Place a barcode inside viewfinder rectangle to scan it"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-            android:textSize="14dp"/>
+            android:layout_gravity="center"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/statusMessage"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:text="Place a barcode inside viewfinder rectangle to scan it"
+
+                android:gravity="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                android:textSize="14dp"/>
+
+            <TextView
+                android:id="@+id/authorizationMessage"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:padding="10dp"
+
+                android:visibility="gone"
+                android:gravity="center"
+
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                android:textSize="12dp"/>
+        </LinearLayout>
+
+
     </FrameLayout>
 
 </RelativeLayout>
