@@ -56,10 +56,23 @@ class MainScannerFragment :
         inflater!!.inflate(R.menu.main, menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        val authorized = AMBSampleApp.network.authToken != null
+        menu!!.findItem(R.id.menu_item_logout).isVisible = authorized
+        menu.findItem(R.id.menu_item_authorize).isVisible = !authorized
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item!!.itemId) {
             R.id.menu_item_authorize -> {
                 FragmentSwitchHelper.showNextFragment(this, AuthorizationFragment())
+                true
+            }
+            R.id.menu_item_logout -> {
+                AMBSampleApp.network.authorize(null)
+                activity!!.invalidateOptionsMenu()
+                displayAuthorizationState()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -69,9 +82,12 @@ class MainScannerFragment :
     override fun onResume() {
         super.onResume()
         TitleHelper.ensureTitle(this, "Scanner")
+        displayAuthorizationState()
+    }
 
+    private fun displayAuthorizationState() {
         val authToken = AMBSampleApp.network.authToken
-        when(authToken) {
+        when (authToken) {
             null -> authorizationMessage.visibility = View.GONE
             else -> {
                 authorizationMessage.visibility = View.VISIBLE

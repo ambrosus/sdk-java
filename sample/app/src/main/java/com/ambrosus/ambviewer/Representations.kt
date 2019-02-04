@@ -198,15 +198,6 @@ class MapRepresentation(private val lifecycleOwner: LifecycleOwner, inflater: La
         // addObserver() method just did nothing if such observe has been already added
         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
     }
-
-    companion object {
-        val factory = object : RepresentationFactory<String>() {
-            override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<String> {
-                return SectionTitleRepresentation(inflater, parent)
-            }
-        }
-    }
-
 }
 
 class MapRepresentationFactory(private val lifecycleOwner: LifecycleOwner) : RepresentationFactory<Location>() {
