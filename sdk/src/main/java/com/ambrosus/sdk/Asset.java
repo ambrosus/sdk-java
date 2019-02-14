@@ -16,7 +16,9 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.utils.Time;
+import com.ambrosus.sdk.utils.UnixTime;
+
+import java.util.Date;
 
 public class Asset {
 
@@ -43,8 +45,8 @@ public class Asset {
         return content.idData.getCreatedBy();
     }
 
-    public long getTimestamp() {
-        return content.idData.getTimestamp();
+    public Date getTimestamp() {
+        return content.idData.getTimeStamp();
     }
 
     public long getSequenceNumber() {
@@ -91,16 +93,27 @@ public class Asset {
         private long sequenceNumber;
 
         public Builder() {
-            setTimeStamp(System.currentTimeMillis());
+            setTimeStamp(new Date());
         }
 
+        /**
+         *
+         * @param timeStamp - the number of seconds that have elapsed since 00:00:00 Thursday, 1 January 1970
+         * @param sequenceNumber - any value, it's used to make possible to create different assets with the same timeStamp
+         */
         public void setUnixTimeStamp(long timeStamp, long sequenceNumber) {
             this.timeStamp = timeStamp;
             this.sequenceNumber = sequenceNumber;
         }
 
-        public void setTimeStamp(long timeMillis) {
-            setUnixTimeStamp(Time.getUnixTime(timeMillis), System.nanoTime());
+        /**
+         * TimeStamp precision is limited to seconds, milliseconds value will be truncated. {@link #createAsset(String)#getTimestamp()}}
+         * will return just a date value with the same amount of seconds as original {@code date} plus 0 milliseconds
+         *
+         * @param date
+         */
+        public void setTimeStamp(Date date) {
+            setUnixTimeStamp(UnixTime.get(date), System.nanoTime());
         }
 
         public Asset createAsset(String privateKey) {

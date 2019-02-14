@@ -14,16 +14,23 @@
 
 package com.ambrosus.sdk;
 
+import com.ambrosus.sdk.utils.UnixTime;
+
+import java.util.Date;
 import java.util.Map;
 
 class QueryParamsHelper {
 
-    static void addFrom(Map<String, String> queryParams, long timestamp) {
-        queryParams.put("fromTimestamp", Long.toString(timestamp));
+    static void addFrom(Map<String, String> queryParams, Date date) {
+        addTimeStamp(queryParams, "fromTimestamp", date);
     }
 
-    static void addTo(Map<String, String> queryParams, long timestamp) {
-        queryParams.put("toTimestamp", Long.toString(timestamp));
+    static void addTo(Map<String, String> queryParams, Date date) {
+        addTimeStamp(queryParams, "toTimestamp", date);
+    }
+
+    private static void addTimeStamp(Map<String, String> queryParams, String key, Date date) {
+        queryParams.put(key, Long.toString(UnixTime.get(date)));
     }
 
     static void addCreatedBy(Map<String, String> queryParams, String createdBy) {

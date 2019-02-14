@@ -17,6 +17,9 @@ package com.ambrosus.sdk;
 import android.support.annotation.NonNull;
 
 import com.ambrosus.sdk.utils.Assert;
+import com.ambrosus.sdk.utils.UnixTime;
+
+import java.util.Date;
 
 class IdData {
 
@@ -36,7 +39,7 @@ class IdData {
         return createdBy;
     }
 
-    long getTimestamp() {
-        return timestamp;
+    Date getTimeStamp() {
+        return UnixTime.toDate(timestamp);
     }
 }

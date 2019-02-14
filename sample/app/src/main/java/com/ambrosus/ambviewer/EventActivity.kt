@@ -61,7 +61,7 @@ class EventActivity : AppCompatActivity() {
 
         eventSection["assetId"] = event.assetId
         eventSection["createdBy"] = event.authorId
-        eventSection["timestamp"] = DateAdapter.dateToText(Date(event.timeStamp))
+        eventSection["timestamp"] = DateAdapter.dateToText(event.timeStamp)
 
         if(event is AMBEvent) {
             eventSection["type"] = event.type

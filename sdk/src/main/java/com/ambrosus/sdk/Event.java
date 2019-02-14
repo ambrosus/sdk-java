@@ -19,12 +19,13 @@ import android.support.annotation.Nullable;
 
 import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.GsonUtil;
-import com.ambrosus.sdk.utils.Time;
+import com.ambrosus.sdk.utils.UnixTime;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,12 +65,8 @@ public class Event {
         return content.getIdData().getCreatedBy();
     }
 
-    public long getUnixTimeStamp() {
-        return content.getIdData().getTimestamp();
-    }
-
-    public long getTimeStamp() {
-        return Time.getMillis(getUnixTimeStamp());
+    public Date getTimeStamp() {
+        return content.getIdData().getTimeStamp();
     }
 
     public MetaData getMetadata() {
@@ -177,7 +174,7 @@ public class Event {
         private String assetId;
 
         private int accessLevel;
-        private long timeStamp = Time.getUnixTime();
+        private long timeStamp = UnixTime.get();
 
         private JsonArray data = new JsonArray();
 
@@ -209,8 +206,14 @@ public class Event {
             return this;
         }
 
-        public Builder setTimeStamp(long millis) {
-            return setUnixTime(Time.getUnixTime(millis));
+        /**
+         * TimeStamp precision is limited to seconds, milliseconds value will be truncated. {@link #createEvent(String)#getTimestamp()}}
+         * will return just a date value with the same amount of seconds as original {@code date} plus 0 milliseconds
+         *
+         * @param date
+         */
+        public Builder setTimeStamp(Date date) {
+            return setUnixTime(UnixTime.get(date));
         }
 
         public Event createEvent(@NonNull String privateKey){

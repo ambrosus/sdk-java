@@ -14,20 +14,29 @@
 
 package com.ambrosus.sdk.utils;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class Time {
+public class UnixTime {
 
-    public static long getUnixTime(){
-        return getUnixTime(System.currentTimeMillis());
+    public static long get(){
+        return get(System.currentTimeMillis());
     }
 
-    public static long getUnixTime(long millis){
+    public static long get(long millis){
         return TimeUnit.MILLISECONDS.toSeconds(millis);
+    }
+
+    public static long get(Date date) {
+        return get(date.getTime());
     }
 
     public static long getMillis(long unixTime) {
         return  TimeUnit.SECONDS.toMillis(unixTime);
+    }
+
+    public static Date toDate(long unixTime) {
+        return new Date(getMillis(unixTime));
     }
 
 }

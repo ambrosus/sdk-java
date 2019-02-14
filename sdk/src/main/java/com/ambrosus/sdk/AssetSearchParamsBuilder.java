@@ -16,6 +16,9 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.utils.UnixTime;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,14 +28,14 @@ public class AssetSearchParamsBuilder {
     private final Map<String, String> queryParams = new HashMap<>();
 
     @NonNull
-    public AssetSearchParamsBuilder from(long timestamp) {
-        QueryParamsHelper.addFrom(queryParams, timestamp);
+    public AssetSearchParamsBuilder from(Date date) {
+        QueryParamsHelper.addFrom(queryParams, date);
         return this;
     }
 
     @NonNull
-    public AssetSearchParamsBuilder to(long timestamp) {
-        QueryParamsHelper.addTo(queryParams, timestamp);
+    public AssetSearchParamsBuilder to(Date date) {
+        QueryParamsHelper.addTo(queryParams, date);
         return this;
     }
 

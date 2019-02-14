@@ -17,7 +17,9 @@ package com.ambrosus.sdk;
 import android.support.annotation.NonNull;
 
 import com.ambrosus.sdk.utils.Assert;
+import com.ambrosus.sdk.utils.UnixTime;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -28,14 +30,14 @@ public class GenericEventSearchParamsBuilder<T extends GenericEventSearchParamsB
     private final Map<String, String> queryParams = new HashMap<>();
 
     @NonNull
-    public T from(long timestamp) {
-        QueryParamsHelper.addFrom(queryParams, timestamp);
+    public T from(Date date) {
+        QueryParamsHelper.addFrom(queryParams, date);
         return (T) this;
     }
 
     @NonNull
-    public T to(long timestamp) {
-        QueryParamsHelper.addTo(queryParams, timestamp);
+    public T to(Date date) {
+        QueryParamsHelper.addTo(queryParams, date);
         return (T) this;
     }
 

@@ -92,7 +92,7 @@ class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Re
 
     override fun display(event: Event?) {
         ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.eventId)
-        ViewUtils.setDate(itemView, R.id.eventDate, Date(event!!.timeStamp))
+        ViewUtils.setDate(itemView, R.id.eventDate, event!!.timeStamp)
 
         //TODO need to understand how to check if event public or private
         var eventLocation : Location? = null
