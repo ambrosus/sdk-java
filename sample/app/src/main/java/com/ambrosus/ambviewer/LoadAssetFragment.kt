@@ -21,7 +21,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.EntityNotFoundException
 import kotlinx.android.synthetic.main.fragment_status.*
@@ -31,19 +30,7 @@ class LoadAssetFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().asset.observe(this, Observer {
-            if(it != null) {
-                if(it.isSuccessful()) {
-                    getListener()?.onLoadResult(it.data)
-                } else {
-                    loadingContainer.visibility = View.GONE
-                    resultContainer.visibility = View.VISIBLE
-
-                    statusMessage.text = if(it.error is EntityNotFoundException)
-                        "Can't find any asset with id: ${getAssetId()}"
-                    else
-                        AMBSampleApp.errorHandler.getErrorMessage(it.error)
-                }
-            }
+            getListener()?.onLoadResult(it!!)
         });
     }
 
@@ -56,9 +43,6 @@ class LoadAssetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingMessage.text = "Loading Asset ${getAssetId()}"
-        resultContainer.setOnClickListener {
-            getListener()?.onCancel()
-        }
     }
 
     private fun getViewModel(): AssetViewModel {
@@ -79,8 +63,7 @@ class LoadAssetFragment : Fragment() {
     }
 
     interface LoadResultListener {
-        fun onLoadResult(asset: Asset)
-        fun onCancel()
+        fun onLoadResult(result: LoadResult<Asset>)
     }
 
 }

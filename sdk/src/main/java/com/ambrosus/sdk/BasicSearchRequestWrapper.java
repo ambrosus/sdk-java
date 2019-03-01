@@ -14,32 +14,14 @@
 
 package com.ambrosus.sdk;
 
-import android.support.annotation.NonNull;
+class BasicSearchRequestWrapper<T extends Entity> extends NetworkCallAdapter<NetworkSearchResult<T>, SearchResult<T>> {
 
-import com.ambrosus.sdk.utils.Assert;
-import com.ambrosus.sdk.utils.UnixTime;
-
-import java.util.Date;
-
-class IdData {
-
-    private String createdBy;
-    private long timestamp;
-
-    //no-argument contructor for GSON
-    IdData(){}
-
-    IdData(@NonNull String createdBy, long timestamp) {
-        this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
-        this.timestamp = timestamp;
-    }
-
-    @NonNull
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    Date getTimestamp() {
-        return UnixTime.toDate(timestamp);
+    public BasicSearchRequestWrapper(NetworkCall<NetworkSearchResult<T>> networkCall, Query<? extends T> query) {
+        super(networkCall, new DataConverter<NetworkSearchResult<T>, SearchResult<T>>() {
+            @Override
+            public SearchResult<T> convert(NetworkSearchResult<T> source) throws Throwable {
+                return new SearchResult<>(query, source);
+            }
+        });
     }
 }

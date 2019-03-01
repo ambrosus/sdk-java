@@ -39,10 +39,9 @@ public class Network {
     }
 
     public Network(Configuration conf){
-
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
-            public void log(String message) {
+            public void log(@NonNull String message) {
                 System.out.println(message);
             }
         });
@@ -73,14 +72,37 @@ public class Network {
     }
 
     @NonNull
-    public NetworkCall<SearchResult<Asset>> findAssets(@NonNull AssetSearchParams searchParams) {
-        return new NetworkCallWrapper<>(service.findAssets(searchParams.queryParams));
+    public NetworkCall<SearchResult<Asset>> findAssets(@NonNull Query<Asset> query) {
+        return new BasicSearchRequestWrapper<>(
+                new NetworkCallWrapper<>(service.findAssets(query.asMap())),
+                query
+        );
     }
 
     @NonNull
-    public NetworkCall<SearchResult<Event>> findEvents(@NonNull EventSearchParams searchParams) {
-        return new NetworkCallWrapper<>(service.findEvents(searchParams.queryParams, getOptionalAMBTokenAuthHeader()));
+    public NetworkCall<SearchResult<Event>> findEvents(@NonNull Query<? extends Event> query) {
+        return new BasicSearchRequestWrapper<>(
+                new NetworkCallWrapper<>(
+                        service.findEvents(
+                                query.asMap(),
+                                getOptionalAMBTokenAuthHeader()
+                        )
+                ),
+                query
+        );
     }
+
+    public NetworkCall<SearchResult<? extends Entity>> find(Query query) {
+        if(Event.class.isAssignableFrom(query.resultType)) {
+            NetworkCall<SearchResult<Event>> eventsRequest = findEvents(query);
+            return (NetworkCall) eventsRequest;
+        } else if(Asset.class.isAssignableFrom(query.resultType)) {
+            NetworkCall<SearchResult<Asset>> assetsRequest = findAssets((Query<Asset>) query);
+            return (NetworkCall) assetsRequest;
+        }
+        throw new IllegalArgumentException("Unknown query type: " + query.resultType);
+    }
+
 
     @NonNull
     public NetworkCall<Asset> pushAsset(Asset asset, String privateKey) {

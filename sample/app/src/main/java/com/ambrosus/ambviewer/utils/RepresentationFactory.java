@@ -20,6 +20,6 @@ import android.view.ViewGroup;
 
 public abstract class RepresentationFactory<T> {
 
-    protected abstract Representation<T> createRepresentation(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
+    public abstract Representation<T> createRepresentation(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
 
 }

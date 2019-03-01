@@ -16,57 +16,70 @@ package com.ambrosus.sdk.model;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.Asset;
+import com.ambrosus.sdk.Entity;
+import com.ambrosus.sdk.EntityNotFoundException;
 import com.ambrosus.sdk.Event;
-import com.ambrosus.sdk.EventSearchParams;
-import com.ambrosus.sdk.EventSearchParamsBuilder;
 import com.ambrosus.sdk.Network;
 import com.ambrosus.sdk.NetworkCall;
 import com.ambrosus.sdk.NetworkCallAdapter;
+import com.ambrosus.sdk.DataConverter;
+import com.ambrosus.sdk.Query;
+import com.ambrosus.sdk.SearchRequestAdapter;
 import com.ambrosus.sdk.SearchResult;
 
 import java.util.List;
 
 public class AMBNetwork extends Network {
 
+    //TODO limit search for AMB events there by setting appropriate type (data[type]=pattern(ambrosus.event.*))
     @NonNull
-    public NetworkCall<List<AMBEvent>> findAMBEvents(EventSearchParams searchParams) {
-        NetworkCall<SearchResult<Event>> networkCall = findEvents(searchParams);
-        return new NetworkCallAdapter<>(networkCall, new EventAdapter());
-
+    public NetworkCall<SearchResult<AMBEvent>> findAMBEvents(Query<? extends AMBEvent> query, boolean ignoreRestrictedEvents) {
+        NetworkCall<SearchResult<Event>> networkCall = findEvents(query);
+        return new SearchRequestAdapter<>(networkCall, AMBEvent.class, new EventAdapter(ignoreRestrictedEvents));
     }
 
-    //TODO think about making converter public and converting from NetworkCall<List<AMBAssetInfo>> to NetworkCall<AMBAssetInfo>
+
     @NonNull
-    public NetworkCall<List<AMBAssetInfo>> getAssetInfo(@NonNull String assetID){
-        NetworkCall<SearchResult<Event>> networkCall = findEvents(
-                new EventSearchParamsBuilder()
-                        .forAsset(assetID)
-                        .byDataObjectType(AMBAssetInfo.DATA_OBJECT_TYPE_ASSET_INFO)
-                        .build()
-        );
-        return new NetworkCallAdapter<>(networkCall, new AssetInfoAdapter());
+    public NetworkCall<AMBAssetInfo> getAssetInfo(@NonNull String assetID){
+        Query<AMBAssetInfo> query = new GenericAMBEventQueryBuilder<>(AMBAssetInfo.class)
+                .forAsset(assetID)
+                .byDataObjectType(AMBAssetInfo.DATA_OBJECT_TYPE_ASSET_INFO)
+                .build();
+
+        NetworkCall<SearchResult<AMBAssetInfo>> assetInfoSearchRequest = findAssetInfo(query, false);
+
+        return new NetworkCallAdapter<>(assetInfoSearchRequest, new DataConverter<SearchResult<AMBAssetInfo>, AMBAssetInfo>() {
+            @Override
+            public AMBAssetInfo convert(SearchResult<AMBAssetInfo> source) throws Throwable {
+                List<AMBAssetInfo> resultsList = source.getValues();
+                if(resultsList.isEmpty())
+                    throw new EntityNotFoundException("Cant find AssetInfo for asset: " + assetID);
+                if(resultsList.size() > 1)
+                    throw new IllegalArgumentException("There are several asset info objects for assetID: " + assetID + ". Please use findAssetInfo(Query<AMBAssetInfo>) to get list of results.");
+                return resultsList.get(0);
+            }
+        });
     }
 
     @NonNull
-    public NetworkCall<List<AMBAssetInfo>> getAssetInfo(Identifier identifier){
-        NetworkCall<SearchResult<Event>> networkCall = findEvents(
-                new AMBEventSearchParamsBuilder()
-                        .byDataObjectType(AMBAssetInfo.DATA_OBJECT_TYPE_ASSET_INFO)
-                        .byDataObjectIdentifier(identifier)
-                        .build()
-        );
-        return new NetworkCallAdapter<>(networkCall, new AssetInfoAdapter());
+    public NetworkCall<SearchResult<AMBAssetInfo>> getAssetInfo(Identifier identifier, boolean ignorRestrictedEvents){
+        Query<AMBAssetInfo> query = new AssetInfoQueryBuilder()
+                .byDataObjectIdentifier(identifier)
+                .build();
+        return findAssetInfo(query, ignorRestrictedEvents);
     }
 
-    @NonNull
-    public NetworkCall<List<String>> getAssetIDs(Identifier identifier){
-        NetworkCall<SearchResult<Event>> networkCall = findEvents(
-                new AMBEventSearchParamsBuilder()
-                        .byDataObjectType(Identifier.DATA_OBJECT_TYPE_ASSET_IDENTIFIERS)
-                        .byDataObjectIdentifier(identifier)
-                        .build()
-        );
-        return new NetworkCallAdapter<>(networkCall, new AssetIDAdapter());
+    public NetworkCall<SearchResult<AMBAssetInfo>> findAssetInfo(Query<AMBAssetInfo> query, boolean ignoreRestrictedEvents) {
+        return new SearchRequestAdapter<>(findEvents(query ), query.resultType, new AssetInfoAdapter(ignoreRestrictedEvents));
+    }
+
+    @Override
+    public NetworkCall<SearchResult<? extends Entity>> find(Query query) {
+        if(AMBAssetInfo.class.isAssignableFrom(query.resultType))
+            return findAssetInfo(query, true);
+        else if(AMBEvent.class.isAssignableFrom(query.resultType))
+            return findAMBEvents(query, true);
+        else
+            return super.find(query);
     }
 }

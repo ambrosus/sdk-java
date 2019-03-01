@@ -17,6 +17,7 @@ package com.ambrosus.sdk.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ambrosus.sdk.Asset;
 import com.ambrosus.sdk.Event;
 import com.ambrosus.sdk.RestrictedDataAccessException;
 import com.ambrosus.sdk.utils.Assert;
@@ -24,6 +25,7 @@ import com.ambrosus.sdk.utils.Strings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -34,6 +36,16 @@ import java.util.Map;
 import okhttp3.internal.platform.Platform;
 
 public class AMBEvent extends Event {
+
+    private static final String AMBROSUS_OBJECT_TYPE_PREFIX = "ambrosus.asset.";
+
+    private static final HashSet<String> AMBROSUS_SERVICE_TYPES = new HashSet<String>(){
+        {
+            add("ambrosus.asset.redirection");
+            add("ambrosus.asset.identifiers");
+            add("ambrosus.asset.branding");
+        }
+    };
 
     private static final String DATA_OBJECT_ATTR_IMAGES = "images";
     private static final String DATA_OBJECT_ATTR_DOCUMENTS = "documents";
@@ -55,7 +67,7 @@ public class AMBEvent extends Event {
     public AMBEvent(Event source) throws RestrictedDataAccessException {
         super(source);
 
-        List<String> ambrosusDataTypes = AmbrosusData.getAmbrosusDataTypes(source.getDataTypes());
+        List<String> ambrosusDataTypes = getAmbrosusDataTypes(source);
 
         Assert.assertTrue(!ambrosusDataTypes.isEmpty(), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
         type = ambrosusDataTypes.get(0);
@@ -143,6 +155,17 @@ public class AMBEvent extends Event {
                 result.put(key, dataObject.get(key));
         }
 
+        return result;
+    }
+
+    @NonNull
+    static List<String> getAmbrosusDataTypes(Event event) throws RestrictedDataAccessException {
+        List<String> result = new ArrayList<>();
+        for (String dataType : event.getDataTypes()) {
+            if(dataType.startsWith(AMBROSUS_OBJECT_TYPE_PREFIX))
+                result.add(dataType);
+        }
+        result.removeAll(AMBROSUS_SERVICE_TYPES);
         return result;
     }
 }

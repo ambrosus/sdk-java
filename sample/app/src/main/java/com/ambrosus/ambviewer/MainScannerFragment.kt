@@ -25,7 +25,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
 import com.ambrosus.ambviewer.utils.TitleHelper
+import com.ambrosus.apps.SearchResultsListFragment
 import com.ambrosus.sdk.Asset
+import com.ambrosus.sdk.Entity
+import com.ambrosus.sdk.Query
+import com.ambrosus.sdk.QueryBuilder
+import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Identifier
 import com.google.zxing.BarcodeFormat
@@ -33,13 +38,13 @@ import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import kotlinx.android.synthetic.main.fragment_main_scanner.*
+import java.io.Serializable
 
 class MainScannerFragment :
         Fragment(),
         FragmentSwitchHelper.BackListener,
         BarcodeCallback,
         AssetInfoSearchFragment.SearchResultListener,
-        AssetIDsSearchFragment.SearchResultListener,
         LoadAssetFragment.LoadResultListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,59 +106,78 @@ class MainScannerFragment :
     }
 
     override fun barcodeResult(code: BarcodeResult?) {
+
+        val supportedIdentifiers = mapOf(
+                BarcodeFormat.EAN_13 to Identifier.EAN13,
+                BarcodeFormat.EAN_8 to Identifier.EAN8,
+                BarcodeFormat.CODE_128 to Identifier.GTIN
+        )
+
+        val barcodeFormat = code!!.barcodeFormat
+        val barcodeText = code.text
+
         var searchFragment: AssetInfoSearchFragment? = null
-        if (code!!.barcodeFormat == BarcodeFormat.QR_CODE && code.text.startsWith("https://amb.to/0x")) {
-            searchFragment = AssetInfoSearchFragment.createFor(code.text.replace("https://amb.to/", ""))
-        } else if (code.barcodeFormat == BarcodeFormat.EAN_13 || code.barcodeFormat == BarcodeFormat.EAN_8) {
 
-            val identifierType =
-                    when (code.barcodeFormat) {
-                        BarcodeFormat.EAN_13 -> Identifier.EAN13
-                        BarcodeFormat.EAN_8 -> Identifier.EAN8
-                        else -> throw IllegalStateException("shouldn't happen")
-                    }
-
-            searchFragment = AssetInfoSearchFragment.createFor(Identifier(identifierType, code.text))
+        if (barcodeFormat == BarcodeFormat.QR_CODE && barcodeText.startsWith("https://amb.to/0x")) {
+            searchFragment = AssetInfoSearchFragment.createFor(barcodeText.replace("https://amb.to/", ""))
+        } else if (supportedIdentifiers.contains(barcodeFormat)) {
+            searchFragment = AssetInfoSearchFragment.createFor(Identifier(supportedIdentifiers[barcodeFormat], barcodeText))
         }
 
         if(searchFragment != null) {
             displayStatusFragment(searchFragment)
         } else {
-            BarcodeScannerFragment.get(this).stopScanning()
-            statusMessage.text = Html.fromHtml("Unknown barcode data format.<br><br><b>Tap to continue.</b>")
-            statusContainer.setOnClickListener {
-                BarcodeScannerFragment.get(this).startScanning()
-                statusMessage.text = "Place a barcode inside viewfinder rectangle to scan it"
-                statusContainer.setOnClickListener(null)
+            displayError("Unknown barcode data format.")
+        }
+    }
+
+    private fun displayError(message: String) {
+        removeCurStatusFragment()
+        BarcodeScannerFragment.get(this).stopScanning()
+        statusMessage.text = Html.fromHtml(message + "<br><br><b>Tap to continue.</b>")
+        statusContainer.setOnClickListener {
+            BarcodeScannerFragment.get(this).startScanning()
+            statusMessage.text = "Place a barcode inside viewfinder rectangle to scan it"
+            statusContainer.setOnClickListener(null)
+        }
+    }
+
+    override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Serializable) {
+        if(!processError(result)) {
+            val searchResult = result.data
+            val resultsList = result.data.values
+            if(resultsList.isEmpty()) {
+                if(searchCriteria is String)
+                    displayAssetLoading(searchCriteria)
+                else
+                    displayError("Can't find any asset by $searchCriteria")
+            } else if(resultsList.size == 1) {
+                displayAsset(searchResult.values[0])
+            } else {
+                displayResultsList(searchResult.query)
             }
         }
     }
 
-    override fun onSearchResult(result: List<AMBAssetInfo>, searchCriteria: Any) {
-        if(result.isEmpty()) {
-            when(searchCriteria) {
-                is String -> displayAssetLoading(searchCriteria)
-                is Identifier -> displayAssetIdSearch(searchCriteria)
-            }
-        } else {
-            displayAsset(result[0])
+    private fun processError(result: LoadResult<*>): Boolean {
+        if(!result.isSuccessful()) {
+            displayError(AMBSampleApp.errorHandler.getErrorDescription(result.error))
         }
+        return !result.isSuccessful()
     }
 
-    override fun onSearchResult(result: List<String>) {
-        displayAssetLoading(result[0])
+    private fun displayResultsList(query: Query<out Entity>) {
+        removeCurStatusFragment()
+        FragmentSwitchHelper.showNextFragment(this, SearchResultsListFragment.create(query))
     }
 
-    override fun onLoadResult(asset: Asset) {
-        displayAsset(asset)
+    override fun onLoadResult(result: LoadResult<Asset>) {
+        if(!processError(result))
+            displayAsset(result.data)
     }
 
     private fun displayAssetLoading(assetId: String){
         displayStatusFragment(LoadAssetFragment.createFor(assetId))
-    }
-
-    private fun displayAssetIdSearch(identifier: Identifier){
-        displayStatusFragment(AssetIDsSearchFragment.createFor(identifier))
     }
 
     private fun removeCurStatusFragment(): Boolean {
@@ -167,15 +191,12 @@ class MainScannerFragment :
         FragmentSwitchHelper.addChild(this, fragment, R.id.statusContainer, true, true)
     }
 
-    private fun displayAsset(asset: Any) {
+    private fun displayAsset(asset: Entity) {
         when(asset) {
             is AMBAssetInfo -> AssetActivity.startFor(asset, activity!!)
             is Asset -> AssetActivity.startFor(asset, activity!!)
+            else -> throw IllegalStateException("Can't display $asset")
         }
-        removeCurStatusFragment()
-    }
-
-    override fun onCancel() {
         removeCurStatusFragment()
     }
 

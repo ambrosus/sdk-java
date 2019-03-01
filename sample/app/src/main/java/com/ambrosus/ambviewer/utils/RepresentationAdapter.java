@@ -137,7 +137,7 @@ public class RepresentationAdapter extends RecyclerView.Adapter {
         }
 
         @Override
-        protected Representation<SelfRepresentingItem> createRepresentation(LayoutInflater inflater, ViewGroup parent) {
+        public Representation<SelfRepresentingItem> createRepresentation(LayoutInflater inflater, ViewGroup parent) {
             return new DelegatedRepresentation(layoutResID, inflater, parent);
         }
 
@@ -153,7 +153,7 @@ public class RepresentationAdapter extends RecyclerView.Adapter {
             }
 
             @Override
-            protected void display(SelfRepresentingItem data) {
+            public void display(SelfRepresentingItem data) {
                 data.updateView(itemView);
             }
         }

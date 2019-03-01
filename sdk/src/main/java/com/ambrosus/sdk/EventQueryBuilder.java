@@ -14,32 +14,9 @@
 
 package com.ambrosus.sdk;
 
-import android.support.annotation.NonNull;
+public class EventQueryBuilder extends GenericEventQueryBuilder<EventQueryBuilder, Event> {
 
-import com.ambrosus.sdk.utils.Assert;
-import com.ambrosus.sdk.utils.UnixTime;
-
-import java.util.Date;
-
-class IdData {
-
-    private String createdBy;
-    private long timestamp;
-
-    //no-argument contructor for GSON
-    IdData(){}
-
-    IdData(@NonNull String createdBy, long timestamp) {
-        this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
-        this.timestamp = timestamp;
-    }
-
-    @NonNull
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    Date getTimestamp() {
-        return UnixTime.toDate(timestamp);
+    public EventQueryBuilder() {
+        super(Event.class);
     }
 }

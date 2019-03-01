@@ -18,6 +18,7 @@ import com.ambrosus.sdk.NetworkCall;
 
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -28,17 +29,16 @@ public class AssetInfoIntegrationTest {
     public void testAssetInfoIntegration(){
         AMBNetwork network = new AMBNetwork();
 
-        NetworkCall<List<AMBAssetInfo>> networkCall = network.getAssetInfo(
+        NetworkCall<AMBAssetInfo> networkCall = network.getAssetInfo(
                 //searching for "PURE DARK CHOCOLATE BAR 92%"
                 "0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae"
         );
 
         try {
-            List<AMBAssetInfo> assetInfoList = networkCall.execute();
-            AMBAssetInfo assetInfo = assetInfoList.get(0);
-            assertEquals("0xafa2e53de0855ba93597e5f5985e0cf8f39ca4f011456bef808c1c2fca1005a9", assetInfo.getEventId());
+            AMBAssetInfo assetInfo = networkCall.execute();
+            assertEquals("0xafa2e53de0855ba93597e5f5985e0cf8f39ca4f011456bef808c1c2fca1005a9", assetInfo.getSystemId());
             assertEquals("PURE DARK CHOCOLATE BAR 92%", assetInfo.getName());
-            assertEquals(1496250888000L, assetInfo.getTimeStamp());
+            assertEquals(new Date(1496250888000L), assetInfo.getTimestamp());
         } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }

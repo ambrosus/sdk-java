@@ -12,28 +12,17 @@
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.ambrosus.sdk;
+package com.ambrosus.sdk.model;
 
-import com.ambrosus.sdk.utils.UnixTime;
+public class AssetInfoQueryBuilder extends GenericAMBEventQueryBuilder<AssetInfoQueryBuilder, AMBAssetInfo> {
 
-import java.util.Date;
-import java.util.Map;
-
-class QueryParamsHelper {
-
-    static void addFrom(Map<String, String> queryParams, Date date) {
-        addTimeStamp(queryParams, "fromTimestamp", date);
+    public AssetInfoQueryBuilder() {
+        super(AMBAssetInfo.class);
+        byDataObjectType(AMBAssetInfo.DATA_OBJECT_TYPE_ASSET_INFO);
     }
 
-    static void addTo(Map<String, String> queryParams, Date date) {
-        addTimeStamp(queryParams, "toTimestamp", date);
+    public AssetInfoQueryBuilder byIdentifier(Identifier identifier) {
+        return byDataObjectIdentifier(identifier);
     }
 
-    private static void addTimeStamp(Map<String, String> queryParams, String key, Date date) {
-        queryParams.put(key, Long.toString(UnixTime.get(date)));
-    }
-
-    static void addCreatedBy(Map<String, String> queryParams, String createdBy) {
-        queryParams.put("createdBy", createdBy);
-    }
 }

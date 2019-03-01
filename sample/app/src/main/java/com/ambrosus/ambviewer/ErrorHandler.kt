@@ -14,19 +14,22 @@
 
 package com.ambrosus.ambviewer
 
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
 
 class ErrorHandler(private val messageHandler: MessageHandler) {
 
-    fun handleError(t: Throwable){
-        val message = getErrorMessage(t)
-        messageHandler.displayErrorMessage(message)
-        Log.e(ErrorHandler::class.java.name, message, t)
+    fun handleError(message: String?, reason: Throwable) {
+        val reasonString = getErrorDescription(reason)
+        val fullErrorMessage = "${message?:""} $reasonString".trim()
+        messageHandler.displayErrorMessage(fullErrorMessage)
+        Log.e(ErrorHandler::class.java.name, fullErrorMessage, reason)
     }
 
-    fun getErrorMessage(t: Throwable) =
+    fun handleError(t: Throwable){
+        handleError(null, t)
+    }
+
+    fun getErrorDescription(t: Throwable) =
             t.javaClass.name + (if (t.message != null) ": " + t.message else "")
 
 

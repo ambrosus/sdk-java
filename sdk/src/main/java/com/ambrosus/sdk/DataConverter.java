@@ -14,46 +14,8 @@
 
 package com.ambrosus.sdk;
 
-import android.support.annotation.NonNull;
+public interface DataConverter<I, O> {
 
-import com.ambrosus.sdk.utils.UnixTime;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-public class AssetSearchParamsBuilder {
-
-    private final Map<String, String> queryParams = new HashMap<>();
-
-    @NonNull
-    public AssetSearchParamsBuilder from(Date date) {
-        QueryParamsHelper.addFrom(queryParams, date);
-        return this;
-    }
-
-    @NonNull
-    public AssetSearchParamsBuilder to(Date date) {
-        QueryParamsHelper.addTo(queryParams, date);
-        return this;
-    }
-
-    @NonNull
-    public AssetSearchParamsBuilder byEventIdentifier(@NonNull String eventIdentifierType, String identifier) {
-        queryParams.put(String.format(Locale.US, "identifier[%s]", eventIdentifierType), identifier);
-        return this;
-    }
-
-    @NonNull
-    public AssetSearchParamsBuilder createdBy(@NonNull String accountAddress) {
-        QueryParamsHelper.addCreatedBy(queryParams, accountAddress);
-        return this;
-    }
-
-    @NonNull
-    public AssetSearchParams build(){
-        return new AssetSearchParams(queryParams);
-    }
+    O convert(I source) throws Throwable;
 
 }

@@ -15,7 +15,6 @@
 package com.ambrosus.ambviewer
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -27,9 +26,14 @@ import android.widget.TextView
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
 import com.ambrosus.ambviewer.utils.SelfRepresentingItem
+import com.ambrosus.apps.SearchResultsViewModel
 import com.ambrosus.sdk.Asset
+import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Event
+import com.ambrosus.sdk.EventQueryBuilder
+import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
+import com.ambrosus.sdk.model.AMBEventQueryBuilder
 import kotlinx.android.synthetic.main.activity_asset.*
 
 class AssetActivity : AppCompatActivity() {
@@ -86,24 +90,24 @@ class AssetActivity : AppCompatActivity() {
         val assetSection = LinkedHashMap<String, Any>()
         assetSection["assetId"] = assetInfo.assetId
         assetSection["createdBy"] = assetInfo.authorId
-        assetSection["timestamp"] = assetInfo.timeStamp
+        assetSection["timestamp"] = assetInfo.timestamp
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
     }
 
-    private fun addRepresentationOf(eventsLoadResult: LoadResult<List<Event>>?, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
+    private fun addRepresentationOf(eventsLoadResult: LoadResult<SearchResult<out Entity>>?, dataSetBuilder: RepresentationAdapter.DataSetBuilder) {
         dataSetBuilder.add("Events", SectionTitleRepresentation.factory)
 
         if(eventsLoadResult == null) {
             dataSetBuilder.add(
                     object : SelfRepresentingItem {
-                        override fun getLayoutResID(): Int {return R.layout.item_events_loading_indicator}
+                        override fun getLayoutResID(): Int {return R.layout.item_loading_indicator}
                         override fun updateView(view: View?) {}
                     }
             )
         } else {
             if(eventsLoadResult.isSuccessful()) {
-                for (event in eventsLoadResult.data) {
-                    dataSetBuilder.add(event, ShortEventRepresentation.factory)
+                for (entity in eventsLoadResult.data.values) {
+                    dataSetBuilder.add(entity as Event, ShortEventRepresentation.factory)
                 }
             } else
                 dataSetBuilder.add(
@@ -121,10 +125,10 @@ class AssetActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayData(eventsLoadResult: LoadResult<List<Event>>?) {
+    private fun displayData(eventsLoadResult: LoadResult<SearchResult<out Entity>>?) {
 
         val dataSetBuilder = RepresentationAdapter.DataSetBuilder()
-        val assetData = getAssetData()
+        val assetData = getAsset()
 
         when(assetData) {
             is Asset -> {
@@ -133,7 +137,7 @@ class AssetActivity : AppCompatActivity() {
             }
             is AMBAssetInfo -> {
 
-                collapsing_toolbar.title = assetData.name ?: assetData.eventId
+                collapsing_toolbar.title = assetData.name ?: assetData.systemId
 
                 if(!assetData.images.isEmpty()) {
                     GlideApp.with(this)
@@ -153,43 +157,40 @@ class AssetActivity : AppCompatActivity() {
         rvAssetList.adapter = dataSetBuilder.createAdapter(this)
 
         if(eventsLoadResult == null) {
-                getEventsListViewModel().eventsList.observe(
-                        this,
-                        Observer {
-                            displayData(it)
-                        }
-                )
+            getViewModel().getResults().observe(
+                    this,
+                    Observer {
+                        displayData(it)
+                    }
+            )
         }
     }
 
-    private fun getEventsListViewModel(): EventsListViewModel {
-        val assetData = getAssetData()
-        val viewModelFactory: ViewModelProvider.Factory = when (assetData) {
-            is Asset -> GenericEventsListViewModelFactory(assetData.systemId, AMBSampleApp.network)
-            is AMBAssetInfo -> AMBEventsListViewModelFactory(assetData.assetId, AMBSampleApp.network)
+    private fun getViewModel(): SingleSearchResultViewModel {
+        val assetData = getAsset()
+        val queryBuilder = when (assetData) {
+            is Asset -> EventQueryBuilder().forAsset(assetData.systemId)
+            is AMBAssetInfo -> AMBEventQueryBuilder().forAsset(assetData.assetId)
             else -> throw IllegalArgumentException("This activity can display only Asset or AssetInfo but got ${assetData.javaClass.name}")
         }
+        val factory = SingleSearchResultViewModel.Factory(AMBSampleApp.network, queryBuilder.build())
+
         return ViewModelProviders.of(
                 this,
-                viewModelFactory
-        ).get(EventsListViewModel::class.java)
+                factory
+        ).get(SingleSearchResultViewModel::class.java)
     }
 
-    private fun getAssetData() = ARG_ASSET_DATA.get(intent.extras)
+    private fun getAsset() = ARG_ASSET_DATA.get(intent.extras)
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        getEventsListViewModel().refreshEventsList()
-    }
-
     companion object {
 
-        private val ARG_ASSET_DATA = BundleArgument<Any>("KEY_ASSET_DATA", Any::class.java)
+        private val ARG_ASSET_DATA = BundleArgument<Entity>("KEY_ASSET_DATA", Entity::class.java)
 
 
         fun startFor(asset: Asset, context: Context) {
@@ -200,13 +201,13 @@ class AssetActivity : AppCompatActivity() {
             start(assetInfo, context)
         }
 
-        private fun start(data: Any, context: Context) {
+        private fun start(data: Entity, context: Context) {
             context.startActivity(
                     Intent(context, AssetActivity::class.java).putExtras(createArguments(data))
             )
         }
 
-        private fun createArguments(data: Any): Bundle {
+        private fun createArguments(data: Entity): Bundle {
             return ARG_ASSET_DATA.put(Bundle(), data)
         }
 

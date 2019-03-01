@@ -14,17 +14,27 @@
 
 package com.ambrosus.sdk.model;
 
+import com.ambrosus.sdk.Asset;
+import com.ambrosus.sdk.AssetQueryBuilder;
+import com.ambrosus.sdk.Entity;
 import com.ambrosus.sdk.Event;
-import com.ambrosus.sdk.EventSearchParamsBuilder;
+import com.ambrosus.sdk.EventQueryBuilder;
 import com.ambrosus.sdk.NetworkCall;
+import com.ambrosus.sdk.PageQueryBuilder;
+import com.ambrosus.sdk.Query;
 import com.ambrosus.sdk.SearchResult;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class AMBEventIntegrationTest {
@@ -40,7 +50,7 @@ public class AMBEventIntegrationTest {
     public void findEventsSimpleTest(){
         final String expectedAssetID = "0xfe7d80686adf18b2259a60d836104ab866a20b6eabf3bc4cde75ffc4aa8015a0";
 
-        AMBEventSearchParamsBuilder searchParamsBuilder = new AMBEventSearchParamsBuilder().byDataObjectIdentifier(Identifier.EAN13, "6942507312009");
+        AMBEventQueryBuilder searchParamsBuilder = new AMBEventQueryBuilder().byDataObjectIdentifier(Identifier.EAN13, "6942507312009");
 
         NetworkCall<SearchResult<Event>> networkCall = network.findEvents(searchParamsBuilder.build());
 
@@ -60,17 +70,15 @@ public class AMBEventIntegrationTest {
     @Test
     public void findAmbrosusEventsTest(){
 
-        EventSearchParamsBuilder searchParamsBuilder = new EventSearchParamsBuilder();
-        searchParamsBuilder.forAsset("0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae");
-
-        NetworkCall<List<AMBEvent>> networkCall = network.findAMBEvents(searchParamsBuilder.build());
+        AMBEventQueryBuilder eventQueryBuilder = new AMBEventQueryBuilder();
+        eventQueryBuilder.forAsset("0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae");
+        NetworkCall<SearchResult<AMBEvent>> networkCall = network.findAMBEvents(eventQueryBuilder.build(), false);
 
         try {
-            List<AMBEvent> ambEvents = networkCall.execute();
-            assertEquals(9, ambEvents.size());
+            SearchResult<AMBEvent> ambEvents = networkCall.execute();
+            assertEquals(9, ambEvents.getValues().size());
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
     }
-
 }

@@ -49,7 +49,7 @@ public class ViewUtils {
         ((ImageView) holder.findViewById(imageViewID)).setImageDrawable(drawable);
     }
 
-    public static void setText(View view, int textViewID, String text){
+    public static void setText(View view, int textViewID, CharSequence text){
         View target = view.findViewById(textViewID);
         if(target instanceof TextView)
             ((TextView) target).setText(text);

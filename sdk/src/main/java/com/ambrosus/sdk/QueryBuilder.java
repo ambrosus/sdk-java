@@ -14,11 +14,9 @@
 
 package com.ambrosus.sdk;
 
-import java.util.Map;
+public class QueryBuilder extends AbstractQueryBuilder<QueryBuilder, Entity> {
 
-public class EventSearchParams extends SearchParams {
-
-    EventSearchParams(Map<String, String> queryParams) {
-        super(queryParams);
+    public QueryBuilder(Query<? extends Entity> query) {
+        super(query);
     }
 }

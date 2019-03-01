@@ -11,4 +11,7 @@
 
     <string name="no_required_permission">Permission denied.</string>
     <string name="app_name">Viewer</string>
+
+    <string name="assetCreator"><font color='#9198BB'>by </font><font color='#0143BA'>%s</font></string>
+
 </resources>

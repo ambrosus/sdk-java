@@ -15,41 +15,39 @@
 package com.ambrosus.sdk.model;
 
 import com.ambrosus.sdk.Event;
-import com.ambrosus.sdk.NetworkResultAdapter;
+import com.ambrosus.sdk.DataConverter;
 import com.ambrosus.sdk.RestrictedDataAccessException;
-import com.ambrosus.sdk.SearchResult;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-class EventAdapter implements NetworkResultAdapter<SearchResult<Event>, List<AMBEvent>> {
+class EventAdapter implements DataConverter<List<Event>, List<AMBEvent>> {
 
-    private static final HashSet<String> AMBROSUS_SERVICE_EVENT_TYPES = new HashSet<String>(){
-        {
-            add("ambrosus.asset.redirection");
-            add("ambrosus.asset.info");
-            add("ambrosus.asset.identifiers");
-        }
-    };
+    private final boolean ignoreRestrictedEvents;
+
+    EventAdapter(boolean ignoreRestrictedEvents) {
+        this.ignoreRestrictedEvents = ignoreRestrictedEvents;
+    }
 
     @Override
-    public List<AMBEvent> convert(SearchResult<Event> source) throws RestrictedDataAccessException {
-        List<AMBEvent> result = new ArrayList<>(source.getValues().size());
-        for (Event sourceEvent : source.getValues()) {
-            if(isValidSourceEvent(sourceEvent)) {
-                result.add(new AMBEvent(sourceEvent));
+    public List<AMBEvent> convert(List<Event> source) throws RestrictedDataAccessException {
+        List<AMBEvent> result = new ArrayList<>(source.size());
+        for (Event sourceEvent : source) {
+            try {
+                if (isValidSourceEvent(sourceEvent)) {
+                    result.add(new AMBEvent(sourceEvent));
+                }
+            } catch(RestrictedDataAccessException e) {
+                if(!ignoreRestrictedEvents) throw e;
             }
         }
         return result;
     }
 
     private static boolean isValidSourceEvent(Event event) throws RestrictedDataAccessException {
-        //limiting output to non-service event
-        List<String> dataTypes = event.getDataTypes();
-        dataTypes.removeAll(AMBROSUS_SERVICE_EVENT_TYPES);
-        //check if we have at least one data object of non-service ambrosus type
-        return AmbrosusData.hasAmbosusData(dataTypes);
+        List<String> ambrosusDataTypes = AMBEvent.getAmbrosusDataTypes(event);
+        ambrosusDataTypes.remove(AMBAssetInfo.DATA_OBJECT_TYPE_ASSET_INFO);
+        return !ambrosusDataTypes.isEmpty();
     }
 
 }

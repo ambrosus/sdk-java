@@ -34,10 +34,10 @@ interface Service {
     Call<Event> getEvent(@Path("eventId") String assetId, @Header("Authorization") String ambToken);
 
     @GET("assets")
-    Call<SearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
+    Call<NetworkSearchResult<Asset>> findAssets(@QueryMap Map<String, String> options);
 
     @GET("events")
-    Call<SearchResult<Event>> findEvents(@QueryMap Map<String, String> options, @Header("Authorization") String ambToken);
+    Call<NetworkSearchResult<Event>> findEvents(@QueryMap Map<String, String> options, @Header("Authorization") String ambToken);
 
 
     @POST("assets")

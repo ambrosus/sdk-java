@@ -14,32 +14,16 @@
 
 package com.ambrosus.sdk;
 
-import android.support.annotation.NonNull;
+public class AssetQueryBuilder extends AbstractQueryBuilder<AssetQueryBuilder, Asset> {
 
-import com.ambrosus.sdk.utils.Assert;
-import com.ambrosus.sdk.utils.UnixTime;
-
-import java.util.Date;
-
-class IdData {
-
-    private String createdBy;
-    private long timestamp;
-
-    //no-argument contructor for GSON
-    IdData(){}
-
-    IdData(@NonNull String createdBy, long timestamp) {
-        this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
-        this.timestamp = timestamp;
+    public AssetQueryBuilder() {
+        super(Asset.class);
     }
 
-    @NonNull
-    public String getCreatedBy() {
-        return createdBy;
-    }
+//    @NonNull
+//    public AssetQueryBuilder byEventIdentifier(@NonNull String eventIdentifierType, String identifier) {
+//        queryParams.put(String.format(Locale.US, "identifier[%s]", eventIdentifierType), identifier);
+//        return this;
+//    }
 
-    Date getTimestamp() {
-        return UnixTime.toDate(timestamp);
-    }
 }

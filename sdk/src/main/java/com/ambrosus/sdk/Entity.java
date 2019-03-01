@@ -14,4 +14,17 @@
 
 package com.ambrosus.sdk;
 
-public class EventSearchParamsBuilder extends GenericEventSearchParamsBuilder<EventSearchParamsBuilder> {}
+import java.util.Date;
+
+public abstract class Entity {
+    
+    public abstract String getSystemId();
+    public abstract Date getTimestamp();
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if(!(obj instanceof Entity)) return false;
+        return getSystemId().equals(((Entity)obj).getSystemId());
+    }
+}

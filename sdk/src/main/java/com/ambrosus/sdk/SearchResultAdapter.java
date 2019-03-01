@@ -14,13 +14,21 @@
 
 package com.ambrosus.sdk;
 
-import java.util.Map;
+import java.util.List;
 
-class SearchParams {
+public class SearchResultAdapter<InputType extends Entity, OutputType extends Entity> implements DataConverter<SearchResult<InputType>, SearchResult<OutputType>> {
 
-    final Map<String, String> queryParams;
+    private final Class<OutputType> resultType;
+    private final DataConverter<List<InputType>, List<OutputType>> adapter;
 
-    SearchParams(Map<String, String> queryParams) {
-        this.queryParams = queryParams;
+    public SearchResultAdapter(Class<OutputType> resultType, DataConverter<List<InputType>, List<OutputType>> adapter) {
+        this.resultType = resultType;
+        this.adapter = adapter;
     }
+
+    @Override
+    public SearchResult<OutputType> convert(SearchResult<InputType> source) throws Throwable {
+        return SearchResult.create(source, resultType, adapter);
+    }
+
 }

@@ -12,24 +12,46 @@
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.ambrosus.sdk.model;
+package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.Event;
-import com.ambrosus.sdk.GenericEventSearchParamsBuilder;
+import com.google.gson.annotations.SerializedName;
 
-import java.util.Locale;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-public class AMBEventSearchParamsBuilder extends GenericEventSearchParamsBuilder<AMBEventSearchParamsBuilder> {
+class NetworkSearchResult<T extends Entity> {
 
-    @NonNull
-    public AMBEventSearchParamsBuilder byDataObjectIdentifier(@NonNull Identifier identifier) {
-        return byDataObjectIdentifier(identifier.type, identifier.value);
+    @SerializedName("results")
+    private List<T> values;
+
+    @SerializedName("resultCount")
+    private int totalCount;
+
+    //no-args constructor for GSON
+    private NetworkSearchResult(){}
+
+    NetworkSearchResult(NetworkSearchResult<T> source) {
+        this(source.values, source.totalCount);
+    }
+
+    NetworkSearchResult(List<T> values, int totalCount) {
+        this.values = Collections.unmodifiableList(values);
+        this.totalCount = totalCount;
+    }
+
+    Date getFirstItemTimestamp() {
+        return values.size() > 0 ? values.get(0).getTimestamp() : null;
     }
 
     @NonNull
-    public AMBEventSearchParamsBuilder byDataObjectIdentifier(@NonNull String eventIdentifierType, @NonNull String identifier) {
-        return byDataObjectField(String.format(Locale.US, "identifiers.%s", eventIdentifierType), identifier);
+    public List<T> getValues() {
+        return values;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
     }
 }

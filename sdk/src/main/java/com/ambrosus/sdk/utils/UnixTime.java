@@ -14,6 +14,8 @@
 
 package com.ambrosus.sdk.utils;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +29,7 @@ public class UnixTime {
         return TimeUnit.MILLISECONDS.toSeconds(millis);
     }
 
-    public static long get(Date date) {
+    public static long get(@NonNull Date date) {
         return get(date.getTime());
     }
 

@@ -14,27 +14,77 @@
 
 package com.ambrosus.sdk;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.google.gson.annotations.SerializedName;
+import com.ambrosus.sdk.utils.Assert;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class SearchResult<T> {
+public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
-    @SerializedName("results")
-    private List<T> values;
+    private Query<? extends Entity> query;
+    private Date firstItemTimestamp;
+    private Integer defaultPageSize;
 
-    @SerializedName("resultCount")
-    private int totalCount;
-
-    @NonNull
-    public List<T> getValues() {
-        return values;
+    SearchResult(Query<? extends Entity> query, NetworkSearchResult<T> source) {
+        super(source);
+        this.query = query;
+        firstItemTimestamp = source.getFirstItemTimestamp();
+        if(query.getPageSize() == null && getTotalCount() > getValues().size())
+            defaultPageSize = getValues().size();
     }
 
-    @NonNull
-    public int getTotalCount() {
-        return totalCount;
+    private SearchResult(List<T> values, SearchResult<?> source) {
+        super(values, source.getTotalCount());
+        this.query = source.query;
+        this.firstItemTimestamp = source.getFirstItemTimestamp();
+        this.defaultPageSize = source.defaultPageSize;
+    }
+
+    @Override
+    Date getFirstItemTimestamp() {
+        return firstItemTimestamp;
+    }
+
+
+    public Query<? extends Entity> getQuery() {
+        return query;
+    }
+
+    /** Zero based page number**/
+    public int getPage() {
+        return query.getPage();
+    }
+
+    public @Nullable Integer getPageSize(){
+        Integer queryPageSize = query.getPageSize();
+        return queryPageSize != null ? queryPageSize : defaultPageSize;
+    }
+
+    /**
+     * @return Total number of search result pages. Even if there are no results at all it will return 1 which means "one empty page"
+     */
+    public int getTotalPages() {
+        Integer pageSize = getPageSize();
+        return pageSize != null ? (getTotalCount()-1)/pageSize + 1 : 1;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "%s, page: %d/%d, query: %s", super.toString(), getPage(), getTotalPages(), query.asMap());
+
+    }
+
+    static <OutputType extends Entity, InputType extends Entity> SearchResult<OutputType> create(SearchResult<InputType> source, Class<OutputType> resultType, DataConverter<List<InputType>, List<OutputType>> adapter) throws Throwable {
+
+        Assert.assertTrue(
+                resultType.equals(source.getQuery().resultType),
+                IllegalArgumentException.class,
+                "resultType must match source.getQuery().resultType"
+        );
+
+        return new SearchResult<>(adapter.convert(source.getValues()), source);
     }
 }

@@ -76,9 +76,14 @@ public class AMBAssetInfo extends AMBEvent {
         JsonObject identifiersDataObject = getIdentifiersData();
         JsonObject identifiersJson = identifiersDataObject.getAsJsonObject("identifiers");
         for (String identifierType : identifiersJson.keySet()) {
-            JsonArray identifiers = identifiersJson.getAsJsonArray(identifierType);
-            for (JsonElement identifier : identifiers) {
-                result.add(new Identifier(identifierType, identifier.getAsString()));
+            JsonElement identifiersItem = identifiersJson.get(identifierType);
+            if(identifiersItem.isJsonArray()) {
+                JsonArray identifiers = identifiersJson.getAsJsonArray(identifierType);
+                for (JsonElement identifier : identifiers) {
+                    result.add(new Identifier(identifierType, identifier.getAsString()));
+                }
+            } else {
+                result.add(new Identifier(identifierType, identifiersItem.getAsString()));
             }
         }
         return result;

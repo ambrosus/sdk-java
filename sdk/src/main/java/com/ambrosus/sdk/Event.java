@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class Event {
+public class Event extends Entity{
 
     public static final String DATA_OBJECT_ATTR_TYPE = "type";
 
@@ -53,7 +53,7 @@ public class Event {
         this.metadata = source.metadata;
     }
 
-    public String getEventId() {
+    public String getSystemId() {
         return eventId;
     }
 
@@ -65,8 +65,8 @@ public class Event {
         return content.getIdData().getCreatedBy();
     }
 
-    public Date getTimeStamp() {
-        return content.getIdData().getTimeStamp();
+    public Date getTimestamp() {
+        return content.getIdData().getTimestamp();
     }
 
     public MetaData getMetadata() {
@@ -108,7 +108,7 @@ public class Event {
 
     @Override
     public String toString() {
-        return super.toString() + String.format(Locale.US, "(%s)", getEventId());
+        return super.toString() + String.format(Locale.US, "(%s)", getSystemId());
     }
 
 

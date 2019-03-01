@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import java.util.Date
 
 fun addSection(dataSetBuilder: RepresentationAdapter.DataSetBuilder, title: String, data: Map<String, JsonElement>) {
     if(!data.isEmpty()) {
@@ -91,8 +90,8 @@ class SectionRepresentation(private val inflater: LayoutInflater, parent: ViewGr
 class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.item_event, inflater, parent) {
 
     override fun display(event: Event?) {
-        ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.eventId)
-        ViewUtils.setDate(itemView, R.id.eventDate, event!!.timeStamp)
+        ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.systemId)
+        ViewUtils.setDate(itemView, R.id.eventDate, event!!.timestamp)
 
         //TODO need to understand how to check if event public or private
         var eventLocation : Location? = null

@@ -16,7 +16,12 @@ package com.ambrosus.sdk;
 
 public class EntityNotFoundException extends NetworkException {
 
-    public EntityNotFoundException(int code, String message) {
+    public EntityNotFoundException(String message) {
+        //request was OK but SDK wasn't able to find requested data
+        this(200, message);
+    }
+
+    EntityNotFoundException(int code, String message) {
         super(code, message);
     }
 }

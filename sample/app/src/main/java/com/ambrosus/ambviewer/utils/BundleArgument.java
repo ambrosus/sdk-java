@@ -16,6 +16,7 @@ package com.ambrosus.ambviewer.utils;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import java.io.Serializable;
@@ -46,11 +47,11 @@ public class BundleArgument<T> {
         return convertStoredValue(BundleUtils.extractBundleValueIfExists(args, key, Object.class, defaultValue));
     }
 
-    public T get(Bundle args){
+    public @NonNull T get(Bundle args){
         return convertStoredValue(BundleUtils.extractBundleValue(args, key, getClassForStoredValue()));
     }
 
-    public T get(Fragment fragment){
+    public @NonNull T get(Fragment fragment){
         return get(fragment.getArguments());
     }
 
@@ -72,6 +73,7 @@ public class BundleArgument<T> {
         return args;
     }
 
+    @NonNull
     public <FragmentType extends Fragment> FragmentType putTo(FragmentType fragment, T value){
         Bundle args = fragment.getArguments();
 

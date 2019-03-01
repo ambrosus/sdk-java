@@ -14,11 +14,14 @@
 
 package com.ambrosus.sdk;
 
-import java.util.Map;
+import java.util.List;
 
-public class AssetSearchParams extends SearchParams {
+public class SearchRequestAdapter<I extends Entity, O extends Entity> extends NetworkCallAdapter<SearchResult<I>, SearchResult<O>> {
 
-    AssetSearchParams(Map<String, String> queryParams) {
-        super(queryParams);
+    //we need result type here because we want to be sure that we get correct network call as argument
+    //but can't check it on this step (networkCall.execute.getQuery().result must match this resultType)
+    public SearchRequestAdapter(NetworkCall<SearchResult<I>> networkCall, Class<O> resultType, DataConverter<List<I>, List<O>> adapter) {
+        super(networkCall, new SearchResultAdapter<>(resultType, adapter));
     }
+
 }

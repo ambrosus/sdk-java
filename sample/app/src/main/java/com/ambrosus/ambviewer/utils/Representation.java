@@ -26,7 +26,7 @@ public abstract class Representation<T> extends RecyclerView.ViewHolder {
         super(inflateLayout(layoutResID, inflater, parent));
     }
 
-    protected abstract void display(T data);
+    public abstract void display(T data);
 
     static View inflateLayout(int layoutResID, LayoutInflater inflater, ViewGroup parent) {
         return inflater.inflate(layoutResID, parent, false);

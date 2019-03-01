@@ -20,7 +20,7 @@ import com.ambrosus.sdk.utils.UnixTime;
 
 import java.util.Date;
 
-public class Asset {
+public class Asset extends Entity {
 
     private String assetId;
 
@@ -46,7 +46,7 @@ public class Asset {
     }
 
     public Date getTimestamp() {
-        return content.idData.getTimeStamp();
+        return content.idData.getTimestamp();
     }
 
     public long getSequenceNumber() {

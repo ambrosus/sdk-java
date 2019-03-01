@@ -19,9 +19,9 @@ import android.support.annotation.NonNull;
 public class NetworkCallAdapter<I, O> implements NetworkCall<O> {
 
     private final NetworkCall<I> networkCall;
-    private final NetworkResultAdapter<I, O> resultAdapter;
+    private final DataConverter<I, O> resultAdapter;
 
-    public NetworkCallAdapter(NetworkCall<I> networkCall, NetworkResultAdapter<I, O> resultAdapter) {
+    public NetworkCallAdapter(NetworkCall<I> networkCall, DataConverter<I, O> resultAdapter) {
         this.networkCall = networkCall;
         this.resultAdapter = resultAdapter;
     }
