@@ -108,9 +108,9 @@ class MainScannerFragment :
     override fun barcodeResult(code: BarcodeResult?) {
 
         val supportedIdentifiers = mapOf(
-                BarcodeFormat.EAN_13 to Identifier.EAN13,
-                BarcodeFormat.EAN_8 to Identifier.EAN8,
-                BarcodeFormat.CODE_128 to Identifier.GTIN
+                BarcodeFormat.EAN_13 to "EAN13",
+                BarcodeFormat.EAN_8 to "EAN8",
+                BarcodeFormat.CODE_128 to "GTIN"
         )
 
         val barcodeFormat = code!!.barcodeFormat
