@@ -49,7 +49,7 @@ public class Asset extends Entity {
         return content.idData.getTimestamp();
     }
 
-    public long getSequenceNumber() {
+    public double getSequenceNumber() {
         return content.idData.sequenceNumber;
     }
 
@@ -74,7 +74,7 @@ public class Asset extends Entity {
 
     static class AssetIdData extends IdData {
 
-        private long sequenceNumber;
+        private double sequenceNumber;
 
         //no-argument contructor for GSON
         private AssetIdData(){

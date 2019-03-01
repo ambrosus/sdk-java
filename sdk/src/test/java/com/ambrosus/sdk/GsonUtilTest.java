@@ -52,7 +52,7 @@ public class GsonUtilTest {
     @Test
     public void testGetLexNormalizedJson(){
         String expected = "{\"testField0\":\"zero test field\",\"testField1\":\"first test field\",\"testField2\":\"second test field\"}";
-        String actual = GsonUtil.getLexNormalizedJsonStr(new TestObject());
+        String actual = GsonUtil.getLexNormalizedJsonStr(new TestObject(), Network.GSON);
         assertEquals(expected, actual);
     }
 

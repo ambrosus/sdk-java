@@ -20,15 +20,30 @@ import android.support.annotation.Nullable;
 import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+//TODO it would be nice to add toJson() method
 public class Network {
+
+    static final Gson GSON;
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, typeOfSrc, context) -> {
+            DecimalFormat df = new DecimalFormat("#.#########");
+            df.setRoundingMode(RoundingMode.CEILING);
+            return new JsonPrimitive(df.format(src));
+        });
+        GSON = gsonBuilder.create();
+    }
 
     private final Service service;
 
@@ -54,7 +69,7 @@ public class Network {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(conf.url)
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                .addConverterFactory(GsonConverterFactory.create(GSON))
                 .client(client)
                 .build();
 
@@ -156,11 +171,11 @@ public class Network {
     }
 
     static String getObjectHash(Object object){
-        return Ethereum.computeHashString(GsonUtil.getLexNormalizedJsonStr(object));
+        return Ethereum.computeHashString(GsonUtil.getLexNormalizedJsonStr(object, GSON));
     }
 
     static String getObjectSignature(Object object, String privateKey){
-        return Ethereum.computeSignature(GsonUtil.getLexNormalizedJsonStr(object), Ethereum.getEcKeyPair(privateKey));
+        return Ethereum.computeSignature(GsonUtil.getLexNormalizedJsonStr(object, GSON), Ethereum.getEcKeyPair(privateKey));
     }
 
 }

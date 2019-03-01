@@ -28,15 +28,13 @@ import java.util.Map;
 
 abstract public class GsonUtil {
 
-    private static final Gson BASIC_GSON = new Gson();
-
     public static String getStringValue(JsonObject jsonObject, String key) {
         return jsonObject.has(key) ? jsonObject.get(key).getAsString() : null;
     }
 
-    public static String getLexNormalizedJsonStr(@NonNull Object src) {
+    public static String getLexNormalizedJsonStr(@NonNull Object src, Gson gson) {
         Assert.assertNotNull(src, "src == null");
-        return getLexNormalizedJson(BASIC_GSON.toJsonTree(src)).toString();
+        return getLexNormalizedJson(gson.toJsonTree(src)).toString();
     }
 
     private static JsonElement getLexNormalizedJson(JsonElement json) {
