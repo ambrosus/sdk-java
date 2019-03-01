@@ -40,8 +40,6 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
     AbstractQueryBuilder(Query query) {
         this.queryType = query.resultType;
         this.params = query.getParams();
-        //TODO ensure that it's still required!!!
-        params.remove(PAGE_KEY);//TODO need a test for this case
     }
 
     @NonNull
