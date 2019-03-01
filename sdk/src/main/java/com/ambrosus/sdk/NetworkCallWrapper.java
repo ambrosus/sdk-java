@@ -107,7 +107,8 @@ class NetworkCallWrapper<T> implements NetworkCall<T> {
                         message = reason.toString();
                 }
             } catch (JsonSyntaxException e) {
-                Log.e(TAG, "Can't parse error response: " + responseString, e);
+                //TODO do we need a Logger?
+                //Log.e(TAG, "Can't parse error response: " + responseString, e);
             }
 
             int code = response.code();

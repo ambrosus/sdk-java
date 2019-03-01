@@ -19,11 +19,13 @@ import android.util.Base64;
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.Strings;
 
+import okio.ByteString;
+
 class Authorization {
 
     static String getAMBTokenAuthHeader(AuthToken authToken) {
         return "AMB_TOKEN "
-                + Base64.encodeToString(GsonUtil.getLexNormalizedJsonStr(authToken, Network.GSON).getBytes(), Base64.NO_WRAP);
+                + ByteString.encodeUtf8(GsonUtil.getLexNormalizedJsonStr(authToken, Network.GSON)).base64();
     }
 
 

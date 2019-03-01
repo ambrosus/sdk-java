@@ -26,9 +26,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.TimeUnit;
 
-@PowerMockIgnore("javax.net.ssl.*")
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Base64.class)
 public class AccountsIntegrationTest {
 
     private static Network network;
@@ -40,7 +37,6 @@ public class AccountsIntegrationTest {
 
     @Test
     public void getAccountTest() throws Throwable {
-        TestData.mockAndroidBase64Encoding();
         AuthToken authToken = TestData.getAuthToken();
         network.authorize(authToken);
         Account account = network.getAccount(authToken.getAccount()).execute();
@@ -49,14 +45,12 @@ public class AccountsIntegrationTest {
 
     @Test(expected = EntityNotFoundException.class)
     public void getAccountTest_for_not_existing_account() throws Throwable {
-        TestData.mockAndroidBase64Encoding();
         network.authorize(TestData.getAuthToken());
         network.getAccount(TestData.UNREGISTERED_ACCOUNT_ADDRESS).execute();
     }
 
     @Test(expected = PermissionDeniedException.class)
     public void getAccountTest_authorized_with_not_existing_account() throws Throwable {
-        TestData.mockAndroidBase64Encoding();
         AuthToken authToken = AuthToken.create(TestData.UNREGISTERED_PRIVATE_KEY, 5, TimeUnit.DAYS);
         network.authorize(authToken);
         network.getAccount(TestData.getAuthToken().getAccount()).execute();

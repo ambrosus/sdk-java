@@ -30,9 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.fail;
 
-@PowerMockIgnore("javax.net.ssl.*")
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Base64.class, Log.class})
 public class EventsIntegrationTest {
 
     private static Network network;
@@ -40,11 +37,6 @@ public class EventsIntegrationTest {
     @Before
     public void setUpNetwork(){
         network = new Network(new Configuration().readTimeOut(0, TimeUnit.SECONDS));
-    }
-
-    @Before
-    public void initLogs(){
-        AndroidLogMock.init();
     }
 
 //TODO restore this test
@@ -93,7 +85,6 @@ public class EventsIntegrationTest {
 
     @Test(expected = RestrictedDataAccessException.class)
     public void checkRestrictedDataAccessException() throws RestrictedDataAccessException {
-        TestData.mockAndroidBase64Encoding();
         NetworkCall<Event> networkCall = network.getEvent("0x4a2f4b6db79fba46a9a99e486498f1ce44d4e8714db7ccae4fdd1cb33bc5ef89");
 
         Event result;
@@ -108,8 +99,6 @@ public class EventsIntegrationTest {
 
     @Test
     public void checkLimitedAccessEvents() throws RestrictedDataAccessException {
-        TestData.mockAndroidBase64Encoding();
-
         Event result;
         try {
             network.authorize(TestData.getAuthToken());

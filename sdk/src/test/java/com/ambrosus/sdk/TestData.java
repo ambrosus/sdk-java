@@ -56,17 +56,4 @@ public class TestData {
     public static InputStreamReader getTestResourceReader(Class callerClass, String resourceName) {
         return new InputStreamReader(getTestResource(callerClass, resourceName));
     }
-
-    public static void mockAndroidBase64Encoding(){
-        PowerMockito.mockStatic(Base64.class);
-        when(Base64.encodeToString(any(byte[].class), anyInt())).thenAnswer(
-                new Answer<Object>() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        return java.util.Base64.getEncoder().encodeToString((byte[]) invocation.getArguments()[0]);
-                    }
-                }
-        );
-    }
-
 }

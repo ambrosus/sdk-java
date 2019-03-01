@@ -28,13 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Base64.class)
 public class AuthorizationTest {
 
     @Test
     public void getAMBAuthHeaderTest(){
-        TestData.mockAndroidBase64Encoding();
-
         //fake private key
         final String privateKey = "0xc104ec10ff80d8111b972470fe2e61fa960149a16c01a4214d15167c29ff4e4c";
         final String validToken = "AMB_TOKEN eyJpZERhdGEiOnsiY3JlYXRlZEJ5IjoiMHhmRGJmQjJENTc1NTBkN0QwNTQxNzA0NzkyRjJhNzc4N0ZhOUZGMkFhIiwidmFsaWRVbnRpbCI6MTU3NzgzNjgwMH0sInNpZ25hdHVyZSI6IjB4MjI1NGM0MDlhZTg0MTg0OTViYmUyYWNjNjY1MmY4OTQ2OGMwNGIyYmE4OTM2OTJmMWNmOGVhZjE2NTZkMmQxZDQ1MjUwZDFmMThjYWQzZTM2NGFlNGRjNTYwZjIxNjk2NGVlZTNhMGNmMGIxYmQ4MDliMjIwYThkZjNhMTZkMTkxYyJ9";
