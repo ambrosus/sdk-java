@@ -2,6 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.2.51'
+    ext.web3j_subversion="4.1.0-android"
     repositories {
         google()
 //        mavenCentral()

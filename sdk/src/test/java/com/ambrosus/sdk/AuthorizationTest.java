@@ -14,8 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;

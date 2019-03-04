@@ -1,38 +1,21 @@
-apply plugin: 'com.android.library'
+apply plugin: 'java-library'
 
-android {
-    compileSdkVersion 27
+sourceCompatibility = "8"
+targetCompatibility = "8"
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+repositories {
+    mavenCentral()
+    google()
+}
 
-    defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
+ext {
+    web3j_subversion = "android" != project.properties['buildType'] ? "4.1.1" : "4.1.0-android"
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'org.web3j:core:4.1.0-android'
+    implementation "org.web3j:core:${rootProject.ext.web3j_subversion}"
 
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
@@ -43,7 +26,4 @@ dependencies {
 
     testImplementation "org.powermock:powermock-module-junit4:1.7.4"
     testImplementation "org.powermock:powermock-api-mockito2:1.7.4"
-
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

@@ -14,9 +14,6 @@
 
 package com.ambrosus.sdk;
 
-
-import android.accounts.NetworkErrorException;
-
 import retrofit2.Response;
 
 public interface NetworkErrorHandler {

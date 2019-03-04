@@ -14,8 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
-
 import com.google.gson.Gson;
 
 import org.mockito.invocation.InvocationOnMock;

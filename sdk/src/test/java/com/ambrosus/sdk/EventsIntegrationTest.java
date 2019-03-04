@@ -14,9 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
-import android.util.Log;
-
 import com.google.gson.JsonObject;
 
 import org.junit.Before;

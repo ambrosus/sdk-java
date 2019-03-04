@@ -14,7 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
 
 import org.junit.Assert;
 import org.junit.Before;

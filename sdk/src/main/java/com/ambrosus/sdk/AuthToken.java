@@ -14,8 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
-
 import com.ambrosus.sdk.utils.GsonUtil;
 
 import org.web3j.crypto.ECKeyPair;

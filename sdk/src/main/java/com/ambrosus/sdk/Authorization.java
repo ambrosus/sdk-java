@@ -14,8 +14,6 @@
 
 package com.ambrosus.sdk;
 
-import android.util.Base64;
-
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.Strings;
 

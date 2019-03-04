@@ -17,7 +17,9 @@ package com.ambrosus.sdk;
 class Log {
 
     public static int e(String tag, String msg, Throwable t) {
-        return android.util.Log.e(tag, msg, t);
+        System.out.print(String.format("%s # %s", tag, msg));
+        t.printStackTrace();
+        return 0;
     }
 
 }
