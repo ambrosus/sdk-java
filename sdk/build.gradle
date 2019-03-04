@@ -8,8 +8,14 @@ repositories {
     google()
 }
 
+def javaBuildType = "android" != project.properties['buildType']
+
 ext {
-    web3j_subversion = "android" != project.properties['buildType'] ? "4.1.1" : "4.1.0-android"
+    web3j_subversion =  javaBuildType ? "4.1.1" : "4.1.0-android"
+}
+
+jar {
+    baseName = "ambrosus-sdk-" + (javaBuildType ? "java" : "android")
 }
 
 dependencies {
