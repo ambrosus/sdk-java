@@ -207,7 +207,7 @@ public class Event extends Entity{
         }
 
         /**
-         * TimeStamp precision is limited to seconds, milliseconds value will be truncated. {@link #createEvent(String)#getTimestamp()}}
+         * TimeStamp precision is limited to seconds, milliseconds value will be truncated. {@link Event#getTimestamp()}
          * will return just a date value with the same amount of seconds as original {@code date} plus 0 milliseconds
          *
          * @param date
