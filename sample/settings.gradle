@@ -1,2 +1,0 @@
-include ':app', ':sdk'
-project(':sdk').projectDir = new File('./../sdk')
