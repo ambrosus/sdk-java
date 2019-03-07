@@ -15,10 +15,11 @@
 package com.ambrosus.ambviewer
 
 import android.app.Application
+import android.support.multidex.MultiDexApplication
 import com.ambrosus.sdk.Network
 import com.ambrosus.sdk.model.AMBNetwork
 
-class AMBSampleApp : Application() {
+class AMBSampleApp : MultiDexApplication() {
 
     companion object {
         lateinit var network: AMBNetwork

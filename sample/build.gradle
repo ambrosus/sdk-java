@@ -5,16 +5,7 @@ buildscript {
     ext.web3j_subversion="4.1.0-android"
     repositories {
         google()
-//        mavenCentral()
         jcenter()
-//        maven {
-//            url "https://dl.bintray.com/ethereum/maven/"
-//
-//        }
-        maven {
-            url "https://jitpack.io"
-        }
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -30,13 +21,6 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-//        maven {
-//            url "https://dl.bintray.com/ethereum/maven/"
-//        }
-//        maven {
-//            url "https://github.com/io-digital/ethereumj-android"
-//        }
-
     }
 }
 

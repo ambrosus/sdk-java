@@ -8,13 +8,11 @@ apply plugin: 'kotlin-kapt'
 
 // single point of project variables e.g. compile versions
 ext {
-    _minSdkVersion = 21
+    _minSdkVersion = 19
     _targetSdkVersion = 27
     _compileSdkVersion = 27
     _buildToolsVersion = "27.0.3"
     _supportLibVersion = "27.1.1"
-    _gsonVersion = "2.8.0"
-
 }
 kapt {
     generateStubs = true
@@ -23,8 +21,6 @@ kapt {
 
 android {
     compileSdkVersion _compileSdkVersion
-    buildToolsVersion _buildToolsVersion
-
     defaultConfig {
         applicationId "com.ambrosus.ambviewer"
         minSdkVersion _minSdkVersion
@@ -32,14 +28,7 @@ android {
         versionCode 1
         versionName "0.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-
-        resValue "integer", "version_code", "$versionCode"
-        resValue "string", "version_string", "$versionName"
-//        multiDexEnabled true
-        dexOptions {
-            jumboMode = true
-        }
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -49,15 +38,6 @@ android {
         }
     }
 
-//    splits {
-//        abi {
-//            enable true
-//            reset()
-//            include 'x86', 'armeabi-v7a'
-//            universalApk true
-//        }
-//    }
-
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -65,63 +45,36 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // android part
-
     implementation project(path: ':sdk')
-    //implementation project(':sdk')
 
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 
-    implementation "android.arch.lifecycle:extensions:1.1.1"
-
-    implementation "com.android.support:appcompat-v7:$_supportLibVersion"
-    implementation "com.android.support:design:$_supportLibVersion"
-    implementation "com.android.support:support-vector-drawable:$_supportLibVersion"
-    implementation "com.android.support:support-v4:$_supportLibVersion"
-    implementation "com.android.support:palette-v7:$_supportLibVersion"
-    implementation "com.android.support:recyclerview-v7:$_supportLibVersion"
-    implementation "com.android.support:cardview-v7:$_supportLibVersion"
-    implementation "com.android.support:support-core-utils:$_supportLibVersion"
-    implementation "com.google.android.gms:play-services-maps:15.0.1"
-
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    // Testing env
-    implementation 'com.android.support:design:27.1.1'
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    testImplementation 'org.assertj:assertj-core:3.8.0'
-    // fix of : RuntimeException :  Method toString in org.json.JSONObject not mocked. See http://g.co/androidstudio/not-mocked for details.
-    testImplementation 'org.json:json:20140107'
-
-    // Multidex
-//    implementation 'com.android.support:multidex:1.0.3'
-
-    // HTTP Networking
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-//    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    // JSON
-//    implementation "com.google.code.gson:gson:$_gsonVersion"
-
-
-    //glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "com.google.android.gms:play-services-maps:16.1.0"
+
+    implementation "com.android.support:appcompat-v7:$_supportLibVersion"
+    implementation "com.android.support:design:$_supportLibVersion"
+    implementation "com.android.support:support-v4:$_supportLibVersion"
+    implementation "com.android.support:recyclerview-v7:$_supportLibVersion"
+    implementation "com.android.support:cardview-v7:$_supportLibVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testImplementation 'junit:junit:4.12'
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
 repositories {
     mavenCentral()
 }
