@@ -42,12 +42,10 @@ public class AMBNetwork extends Network {
         return new SearchRequestAdapter<>(networkCall, AMBEvent.class, new EventAdapter(ignoreRestrictedEvents));
     }
 
-
     @NonNull
     public NetworkCall<AMBAssetInfo> getAssetInfo(@NonNull String assetID){
-        Query<AMBAssetInfo> query = new GenericAMBEventQueryBuilder<>(AMBAssetInfo.class)
+        Query<AMBAssetInfo> query = new AssetInfoQueryBuilder()
                 .forAsset(assetID)
-                .byDataObjectType(AMBAssetInfo.DATA_OBJECT_TYPE_ASSET_INFO)
                 .build();
 
         NetworkCall<SearchResult<AMBAssetInfo>> assetInfoSearchRequest = findAssetInfo(query, false);
