@@ -31,6 +31,10 @@ import java.util.List;
 
 public class AMBNetwork extends Network {
 
+    public NetworkCall<SearchResult<AMBEvent>> findAMBEvents(Query<? extends AMBEvent> query) {
+        return findAMBEvents(query, true);
+    }
+
     //TODO limit search for AMB events there by setting appropriate type (data[type]=pattern(ambrosus.event.*))
     @NonNull
     public NetworkCall<SearchResult<AMBEvent>> findAMBEvents(Query<? extends AMBEvent> query, boolean ignoreRestrictedEvents) {
@@ -61,12 +65,8 @@ public class AMBNetwork extends Network {
         });
     }
 
-    @NonNull
-    public NetworkCall<SearchResult<AMBAssetInfo>> getAssetInfo(Identifier identifier, boolean ignorRestrictedEvents){
-        Query<AMBAssetInfo> query = new AssetInfoQueryBuilder()
-                .byDataObjectIdentifier(identifier)
-                .build();
-        return findAssetInfo(query, ignorRestrictedEvents);
+    public NetworkCall<SearchResult<AMBAssetInfo>> findAssetInfo(Query<AMBAssetInfo> query) {
+        return findAssetInfo(query, true);
     }
 
     public NetworkCall<SearchResult<AMBAssetInfo>> findAssetInfo(Query<AMBAssetInfo> query, boolean ignoreRestrictedEvents) {
