@@ -45,7 +45,7 @@ public class Asset extends Entity {
         return content.idData.getCreatedBy();
     }
 
-    public Date getTimestamp() {
+    final public Date getTimestamp() {
         return content.idData.getTimestamp();
     }
 

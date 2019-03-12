@@ -65,7 +65,7 @@ public class Event extends Entity{
         return content.getIdData().getCreatedBy();
     }
 
-    public Date getTimestamp() {
+    final public Date getTimestamp() {
         return content.getIdData().getTimestamp();
     }
 
