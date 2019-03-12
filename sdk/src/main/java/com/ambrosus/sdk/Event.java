@@ -101,7 +101,7 @@ public class Event extends Entity{
     public JsonObject getDataObject(String type) throws RestrictedDataAccessException {
         for (JsonObject dataObject : getRawData()) {
             if(type.equals(getDataObjectType(dataObject)))
-                return dataObject;
+                return dataObject.deepCopy();
         }
         return null;
     }
