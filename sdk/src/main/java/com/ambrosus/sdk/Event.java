@@ -53,7 +53,7 @@ public class Event extends Entity{
         this.metadata = source.metadata;
     }
 
-    public String getSystemId() {
+    final public String getSystemId() {
         return eventId;
     }
 

@@ -36,7 +36,7 @@ public class Asset extends Entity {
     }
 
     @NonNull
-    public String getSystemId() {
+    final public String getSystemId() {
         return assetId;
     }
 
