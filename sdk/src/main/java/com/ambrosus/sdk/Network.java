@@ -54,16 +54,7 @@ public class Network {
     }
 
     public Network(Configuration conf){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(@NonNull String message) {
-                System.out.println(message);
-            }
-        });
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
                 .readTimeout(conf.readTimeOut, TimeUnit.MILLISECONDS)
                 .build();
 

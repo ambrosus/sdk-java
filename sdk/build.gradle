@@ -46,7 +46,7 @@ signing {
 
 group = "com.ambrosus.sdk"
 archivesBaseName =  javaBuildType ? "core" : "core-android"
-version = "0.0.1"
+version = "0.0.2"
 
 uploadArchives {
     repositories {
@@ -99,8 +99,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation "org.web3j:core:${rootProject.ext.web3j_subversion}"
-
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
     implementation 'com.android.support:support-annotations:28.0.0'
 
