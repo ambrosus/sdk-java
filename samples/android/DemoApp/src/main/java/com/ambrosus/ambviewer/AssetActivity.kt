@@ -26,7 +26,6 @@ import android.widget.TextView
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
 import com.ambrosus.ambviewer.utils.SelfRepresentingItem
-import com.ambrosus.apps.SearchResultsViewModel
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Event
@@ -63,7 +62,7 @@ class AssetActivity : AppCompatActivity() {
 
         val assetSection = LinkedHashMap<String, Any>()
         assetSection["assetId"] = asset.systemId
-        assetSection["createdBy"] = asset.account
+        assetSection["createdBy"] = asset.accountAddress
         assetSection["timestamp"] = asset.timestamp
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
     }
@@ -89,7 +88,7 @@ class AssetActivity : AppCompatActivity() {
         //generic asset section
         val assetSection = LinkedHashMap<String, Any>()
         assetSection["assetId"] = assetInfo.assetId
-        assetSection["createdBy"] = assetInfo.authorId
+        assetSection["createdBy"] = assetInfo.accountAddress
         assetSection["timestamp"] = assetInfo.timestamp
         dataSetBuilder.add(assetSection, SectionRepresentation.factory)
     }

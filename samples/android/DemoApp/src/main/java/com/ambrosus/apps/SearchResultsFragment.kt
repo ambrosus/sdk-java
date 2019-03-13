@@ -22,7 +22,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -137,7 +136,7 @@ class SearchResultsListFragment : Fragment() {
             val assetInfo = data as AMBAssetInfo
             ViewUtils.setText(itemView, R.id.title, assetInfo.name ?: "no title")
             ViewUtils.setText(itemView, R.id.assetID, assetInfo.assetId)
-            ViewUtils.setText(itemView, R.id.authorID, Html.fromHtml(fragment.resources.getString(R.string.assetCreator, assetInfo.authorId)))
+            ViewUtils.setText(itemView, R.id.authorID, Html.fromHtml(fragment.resources.getString(R.string.assetCreator, assetInfo.accountAddress)))
 
             if(!assetInfo.images.isEmpty()) {
                 val url = assetInfo.images.entries.iterator().next().value.get("url")

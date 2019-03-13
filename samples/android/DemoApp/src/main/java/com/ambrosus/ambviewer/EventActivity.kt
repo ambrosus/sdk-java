@@ -55,7 +55,7 @@ class EventActivity : AppCompatActivity() {
         dataSetBuilder.add(eventSection, SectionRepresentation.factory)
 
         eventSection["assetId"] = event.assetId
-        eventSection["createdBy"] = event.authorId
+        eventSection["createdBy"] = event.accountAddress
         eventSection["timestamp"] = DateAdapter.dateToText(event.timestamp)
 
         if(event is AMBEvent) {

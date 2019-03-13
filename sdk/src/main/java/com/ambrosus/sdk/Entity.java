@@ -14,12 +14,18 @@
 
 package com.ambrosus.sdk;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 public abstract class Entity {
-    
+
+    @NonNull
     public abstract String getSystemId();
+    @NonNull
     public abstract Date getTimestamp();
+    @NonNull
+    public abstract String getAccountAddress();
 
     @Override
     public boolean equals(Object obj) {

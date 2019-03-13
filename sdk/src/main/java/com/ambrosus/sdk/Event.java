@@ -53,6 +53,8 @@ public class Event extends Entity{
         this.metadata = source.metadata;
     }
 
+    @NonNull
+    @Override
     final public String getSystemId() {
         return eventId;
     }
@@ -61,10 +63,14 @@ public class Event extends Entity{
         return content.getIdData().getAssetId();
     }
 
-    public String getAuthorId() {
+    @NonNull
+    @Override
+    public String getAccountAddress() {
         return content.getIdData().getCreatedBy();
     }
 
+    @NonNull
+    @Override
     final public Date getTimestamp() {
         return content.getIdData().getTimestamp();
     }

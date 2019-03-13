@@ -36,15 +36,19 @@ public class Asset extends Entity {
     }
 
     @NonNull
+    @Override
     final public String getSystemId() {
         return assetId;
     }
 
     @NonNull
-    public String getAccount() {
+    @Override
+    public String getAccountAddress() {
         return content.idData.getCreatedBy();
     }
 
+    @NonNull
+    @Override
     final public Date getTimestamp() {
         return content.idData.getTimestamp();
     }
