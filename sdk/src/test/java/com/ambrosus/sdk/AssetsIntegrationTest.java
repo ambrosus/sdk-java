@@ -84,7 +84,6 @@ public class AssetsIntegrationTest {
     public void pushAsset() throws Throwable {
         Asset asset = new Asset.Builder().createAsset(TestData.UNREGISTERED_PRIVATE_KEY);
         Network network = new Network();
-        Asset resultAsset = network.pushAsset(asset).execute();
-        System.out.println();
+        network.pushAsset(asset).execute();
     }
 }

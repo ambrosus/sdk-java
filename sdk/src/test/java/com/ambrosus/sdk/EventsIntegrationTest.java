@@ -60,9 +60,10 @@ public class EventsIntegrationTest {
         networkCall.execute();
     }
 
-    @Test
+
     //TODO for some reason I got incorrect error from server for the "0x58e2e95dc3c1367ec3b849cbdf89a6a9a1b11848484561e79a5c9cfd5c9b771b\n" assetID (with \n" at the end). Need to check whats going wrong.
-    public void pushEvent() {
+    @Test(expected = PermissionDeniedException.class)
+    public void pushEvent() throws Throwable {
         JsonObject testData = new JsonObject();
         testData.addProperty("testKey", "testValue");
         testData.addProperty("anotherKey", "anotherValue");
@@ -72,12 +73,7 @@ public class EventsIntegrationTest {
                 .addData("custom", testData);
         Event event = builder.createEvent(TestData.UNREGISTERED_PRIVATE_KEY);
 
-        try {
-            Event result = network.pushEvent(event).execute();
-            System.out.println();
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
+        network.pushEvent(event).execute();
     }
 
     @Test(expected = RestrictedDataAccessException.class)
