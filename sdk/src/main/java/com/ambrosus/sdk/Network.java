@@ -120,8 +120,8 @@ public class Network {
 
 
     @NonNull
-    public NetworkCall<Asset> pushAsset(Asset asset, String privateKey) {
-        return new NetworkCallWrapper<>(service.createAsset(Authorization.getABMAuthHeader(privateKey), asset), PermissionDeniedErrorHandler.INSTANCE);
+    public NetworkCall<Asset> pushAsset(Asset asset) {
+        return new NetworkCallWrapper<>(service.createAsset(asset), PermissionDeniedErrorHandler.INSTANCE);
     }
 
     @NonNull
