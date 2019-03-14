@@ -53,6 +53,13 @@ public class EventsIntegrationTest {
 //        }
 //    }
 
+    @Test
+    public void getEventById() throws Throwable {
+        final String eventId = "0x36fe3d701297e0ede30456241594f19b60c07ae4e629f5a11a944d46567efafe";
+        Event event = network.getEvent(eventId).execute();
+        System.out.println(event.getSystemId());
+    }
+
     @Test(expected = EntityNotFoundException.class)
     public void getEventById_notFoundException() throws Throwable {
         final String eventID = "notPossible";

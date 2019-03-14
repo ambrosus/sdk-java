@@ -14,22 +14,16 @@
 
 package com.ambrosus.sdk;
 
-class ContentField {
+class SignedContent<T> {
 
     private String signature;
+    T idData;
 
-    //no args constructor for GSON and sub classes
-    ContentField(){}
+    //no args constructor for GSON and sub-classes
+    SignedContent(){}
 
-    static <T extends ContentField> T create(Class<T> subClass, Object idDataObject, String privateKey) {
-        try {
-            T content = subClass.newInstance();
-            ((ContentField)content).signature = Network.getObjectSignature(idDataObject, privateKey);
-            return content;
-        } catch (Exception e) {
-            //it should not be possible
-            throw new RuntimeException(e);
-        }
+    SignedContent(T idData, String privateKey){
+        signature = Network.getObjectSignature(idData, privateKey);
+        this.idData = idData;
     }
-
 }

@@ -24,13 +24,13 @@ public class Asset extends Entity {
 
     private String assetId;
 
-    private AssetContent content;
+    private SignedContent<AssetIdData> content;
     private MetaData metadata;
 
     //no-args constructor for Gson
-    Asset(){}
+    private Asset(){}
 
-    Asset(AssetContent content) {
+    private Asset(SignedContent<AssetIdData> content) {
         this.assetId = Network.getObjectHash(content);
         this.content = content;
     }
@@ -62,30 +62,16 @@ public class Asset extends Entity {
         return metadata;
     }
 
-    static class AssetContent extends ContentField {
-
-        private AssetIdData idData;
-
-        //no args constructor for GSON
-        AssetContent(){super();}
-
-        private static AssetContent create(AssetIdData idData, String privateKey){
-            AssetContent result = ContentField.create(AssetContent.class, idData, privateKey);
-            result.idData = idData;
-            return result;
-        }
-    }
-
-    static class AssetIdData extends IdData {
+    private static class AssetIdData extends IdData {
 
         private double sequenceNumber;
 
-        //no-argument contructor for GSON
+        //no-args constructor for GSON
         private AssetIdData(){
             super();
         }
 
-        AssetIdData(String createdBy, long timeStamp, long sequenceNumber) {
+        private AssetIdData(String createdBy, long timeStamp, long sequenceNumber) {
             super(createdBy, timeStamp);
             this.sequenceNumber = sequenceNumber;
         }
@@ -121,9 +107,12 @@ public class Asset extends Entity {
         }
 
         public Asset createAsset(String privateKey) {
-            String address = Ethereum.getAddress(privateKey);
-            AssetIdData assetIdData = new AssetIdData(address, timeStamp, sequenceNumber);
-            return new Asset(AssetContent.create(assetIdData, privateKey));
+            AssetIdData assetIdData = new AssetIdData(
+                    Ethereum.getAddress(privateKey),
+                    timeStamp,
+                    sequenceNumber
+            );
+            return new Asset(new SignedContent<>(assetIdData, privateKey));
         }
     }
 }

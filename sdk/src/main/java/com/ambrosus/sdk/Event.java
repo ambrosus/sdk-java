@@ -124,13 +124,16 @@ public class Event extends Entity{
         throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing type key)");
     }
 
-    static class EventIdData extends IdData {
+    public static class EventIdData extends IdData {
 
         private String assetId;
         private int accessLevel;
         private String dataHash;
 
-        EventIdData(@NonNull String assetId, @NonNull String createdBy, long timestamp, int accessLevel, String dataHash) {
+        //no-args constructor for GSON
+        private EventIdData(){}
+
+        private EventIdData(@NonNull String assetId, @NonNull String createdBy, long timestamp, int accessLevel, String dataHash) {
             super(createdBy, timestamp);
             this.assetId = Assert.assertNotNull(assetId, "assetId == null");
             this.accessLevel = accessLevel;
@@ -146,22 +149,16 @@ public class Event extends Entity{
         }
     }
 
-    static class EventContent extends ContentField {
+    static class EventContent extends SignedContent<EventIdData> {
 
-        private EventIdData idData;
         private List<JsonObject> data;
 
-        static EventContent create(@NonNull String assetId, long timeStamp, int accessLevel, @NonNull JsonArray data, @NonNull String privateKey) {
-            EventIdData idData = new EventIdData(
-                    assetId,
-                    Ethereum.getAddress(privateKey),
-                    timeStamp, accessLevel,
-                    Network.getObjectHash(data)
-            );
-            EventContent result = create(EventContent.class, idData, privateKey);
-            result.idData = idData;
-            result.data = Collections.unmodifiableList(GsonUtil.getAsObjectsList(data));
-            return result;
+        //no-args constructor for GSON
+        private EventContent(){}
+
+        private EventContent(EventIdData idData, JsonArray data, String privateKey) {
+            super(idData, privateKey);
+            this.data = Collections.unmodifiableList(GsonUtil.getAsObjectsList(data));
         }
 
         //for tests
@@ -190,6 +187,7 @@ public class Event extends Entity{
             setAssetId(assetId);
         }
 
+        //TODO is it possible to create events for asset which was created by another account?
         public Builder setAssetId(@NonNull String assetId) {
             this.assetId = Assert.assertNotNull(assetId, "assetId == null");
             return this;
@@ -222,16 +220,17 @@ public class Event extends Entity{
             return setUnixTime(UnixTime.get(date));
         }
 
+        //TODO: throw exception when creating an Event with empty data array
+        //TODO: make it impossible to create Events without assetID but leave ability to change assetID on builder level
         public Event createEvent(@NonNull String privateKey){
-            return new Event(
-                    EventContent.create(
-                            assetId,
-                            timeStamp,
-                            accessLevel,
-                            data,
-                            privateKey
-                    )
+            EventIdData idData = new EventIdData(
+                    assetId,
+                    Ethereum.getAddress(privateKey),
+                    timeStamp,
+                    accessLevel,
+                    Network.getObjectHash(data)
             );
+            return new Event(new EventContent(idData, data, privateKey));
         }
     }
 

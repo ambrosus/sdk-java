@@ -14,36 +14,24 @@
 
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.utils.GsonUtil;
-
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
-import org.web3j.utils.Numeric;
+import com.ambrosus.sdk.utils.UnixTime;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class AuthToken implements Serializable {
-
-    private String signature;
-    private IdData idData;
-
-    //no-args constructor for GSON
-    private AuthToken() {}
-
-    private AuthToken(String signature, IdData idData) {
-        this.signature = signature;
-        this.idData = idData;
-    }
+public class AuthToken extends SignedContent<AuthToken.AuthTokenIdData> implements Serializable {
 
     public String getAccount() {
         return idData.createdBy;
     }
 
     public Date getExpiration() {
-        return new Date(TimeUnit.SECONDS.toMillis(idData.validUntil));
+        return UnixTime.toDate(idData.validUntil);
+    }
+
+    private AuthToken(AuthTokenIdData idData, String privateKey) {
+        super(idData, privateKey);
     }
 
     public static AuthToken create(String privateKey, long duration, TimeUnit durationUnit) throws NumberFormatException {
@@ -54,15 +42,12 @@ public class AuthToken implements Serializable {
         );
     }
 
-    private static class IdData implements Serializable {
+    static class AuthTokenIdData implements Serializable {
 
         private String createdBy;
         private long validUntil;
 
-        //no-args constructor for GSON
-        private IdData() {}
-
-        private IdData(String createdBy, long validUntil) {
+        private AuthTokenIdData(String createdBy, long validUntil) {
             this.createdBy = createdBy;
             this.validUntil = validUntil;
         }
@@ -70,25 +55,13 @@ public class AuthToken implements Serializable {
 
     /**
      *
-     * @param privateKeyStr private key as a hex string, can contain '0x' prefix
+     * @param privateKey private key as a hex string, can contain '0x' prefix
      * @param validUntil - token expiration date (integer in Unix Time format)
      * @return AMB_TOKEN
      */
     //package local for tests
-    static AuthToken create(String privateKeyStr, long validUntil) throws NumberFormatException {
-
-        BigInteger privateKey;
-
-        try {
-            privateKey = Numeric.toBigInt(privateKeyStr/*can contain 0x prefix*/);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("private key isn't a valid hex string");
-        }
-
-        ECKeyPair keyPair = ECKeyPair.create(privateKey);
-        String address = Keys.toChecksumAddress(Keys.getAddress(keyPair)); // account address associated with private key
-
-        IdData idData = new IdData(address, validUntil);
-        return new AuthToken(Network.getObjectSignature(idData, privateKeyStr), idData);
+    static AuthToken create(String privateKey, long validUntil) throws NumberFormatException {
+        AuthTokenIdData idData = new AuthTokenIdData(Ethereum.getAddress(privateKey), validUntil);
+        return new AuthToken(idData, privateKey);
     }
 }
