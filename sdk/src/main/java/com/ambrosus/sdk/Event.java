@@ -200,6 +200,11 @@ public class Event extends Entity{
             return this;
         }
 
+        public Builder clearData() {
+            data = new JsonArray();
+            return this;
+        }
+
         public Builder setAccessLevel(int accessLevel) {
             this.accessLevel = accessLevel;
             return this;
