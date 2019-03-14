@@ -135,18 +135,24 @@ abstract class Ethereum {
 
     /**
      *
-     * @param privateKeyStr private key hex string, can contain 0x prefix
+     * @param privateKey private key hex string, can contain 0x prefix
      * @return
+     *
+     * @throws IllegalArgumentException if {@code privateKey} is not a valid hex string
      */
-    static String getAddress(String privateKeyStr) {
-        ECKeyPair keyPair = getEcKeyPair(privateKeyStr);
+    public static String getAddress(String privateKey) throws IllegalArgumentException {
+        ECKeyPair keyPair = getEcKeyPair(privateKey);
         return Keys.toChecksumAddress(Keys.getAddress(keyPair));
     }
 
     @NonNull
-    static ECKeyPair getEcKeyPair(String privateKeyStr) {
-        BigInteger privateKey = Numeric.toBigInt(privateKeyStr);
-        return ECKeyPair.create(privateKey);
+    static ECKeyPair getEcKeyPair(String privateKey) throws IllegalArgumentException {
+        try {
+            BigInteger privateKeyNumber = Numeric.toBigInt(privateKey/*can contain 0x prefix*/);
+            return ECKeyPair.create(privateKeyNumber);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("privateKey isn't a valid hex string");
+        }
     }
 
 
