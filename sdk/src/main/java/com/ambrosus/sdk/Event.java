@@ -181,9 +181,7 @@ public class Event extends Entity{
 
         private JsonArray data = new JsonArray();
 
-        public Builder() {}
-
-        public Builder(String assetId) {
+        public Builder(@NonNull String assetId) {
             setAssetId(assetId);
         }
 
@@ -225,7 +223,6 @@ public class Event extends Entity{
             return setUnixTime(UnixTime.get(date));
         }
 
-        //TODO: make it impossible to create Events without assetID but leave ability to change assetID on builder level
         public Event createEvent(@NonNull String privateKey){
             Assert.assertTrue(data.size() > 0, IllegalStateException.class, "You have to add at least 1 data object to build a valid Event");
             EventIdData idData = new EventIdData(
