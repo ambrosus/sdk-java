@@ -25,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class EventsIntegrationTest {
@@ -109,5 +110,16 @@ public class EventsIntegrationTest {
         }
 
         result.getRawData();
+    }
+
+    @Test
+    public void ensureAPIDoesntAllowEmptyDataEvents() throws Throwable{
+        Event event = TestData.getFromJson(getClass(), Event.class, "EmptyDataEvent.json");
+
+        try {
+            network.pushEvent(event).execute();
+        } catch (NetworkException networkException) {
+            assertEquals(networkException.code, 400);
+        }
     }
 }

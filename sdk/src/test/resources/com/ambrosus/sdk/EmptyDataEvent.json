@@ -1,0 +1,14 @@
+{
+  "eventId": "0x71b26587e003a563ac2043df81bbd3cf17bc986e72531b1e5594050a175d4d20",
+  "content": {
+    "data": [],
+    "signature": "0x85d1d7405c0739f1dc319a26e1579438c7f1ced8ecb05a82aa966fc9d77c399f7a3f66267b09383b91cc194897b0bbbfd52b43037d6aaae6ab73cfb4fa700d971b",
+    "idData": {
+      "assetId": "0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333",
+      "accessLevel": 0,
+      "dataHash": "0x2f6b6d4ced2f972a1b612d2e55eda7643ede22f33c492f0c837848fefa6ab6c6",
+      "createdBy": "0xFF1E60D7e4fe21C1817B8249C8cB8E52D1912665",
+      "timestamp": 1552554181
+    }
+  }
+}

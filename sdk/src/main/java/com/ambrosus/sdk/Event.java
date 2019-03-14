@@ -220,9 +220,9 @@ public class Event extends Entity{
             return setUnixTime(UnixTime.get(date));
         }
 
-        //TODO: throw exception when creating an Event with empty data array
         //TODO: make it impossible to create Events without assetID but leave ability to change assetID on builder level
         public Event createEvent(@NonNull String privateKey){
+            Assert.assertTrue(data.size() > 0, IllegalStateException.class, "You have to add at least 1 data object to build a valid Event");
             EventIdData idData = new EventIdData(
                     assetId,
                     Ethereum.getAddress(privateKey),
@@ -238,6 +238,5 @@ public class Event extends Entity{
     EventContent getContent() {
         return content;
     }
-
 
 }
