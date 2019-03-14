@@ -191,7 +191,7 @@ public class Event extends Entity{
             return this;
         }
 
-        public Builder addData(@NonNull String type, JsonObject object) {
+        public Builder addData(@NonNull String type, @NonNull JsonObject object) {
             JsonObject dataObject = object.deepCopy();
             dataObject.addProperty(Event.DATA_OBJECT_ATTR_TYPE, type);
             data.add(dataObject);
@@ -219,7 +219,7 @@ public class Event extends Entity{
          *
          * @param date
          */
-        public Builder setTimeStamp(Date date) {
+        public Builder setTimeStamp(@NonNull Date date) {
             return setUnixTime(UnixTime.get(date));
         }
 
