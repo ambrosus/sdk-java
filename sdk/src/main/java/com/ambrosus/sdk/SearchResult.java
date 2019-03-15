@@ -24,11 +24,11 @@ import java.util.Locale;
 
 public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
-    private Query<? extends Entity> query;
+    private Query<? extends T> query;
     private Date firstItemTimestamp;
     private Integer defaultPageSize;
 
-    SearchResult(Query<? extends Entity> query, NetworkSearchResult<T> source) {
+    SearchResult(Query<? extends T> query, NetworkSearchResult<T> source) {
         super(source);
         this.query = query;
         firstItemTimestamp = source.getFirstItemTimestamp();
@@ -38,7 +38,7 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
     private SearchResult(List<T> values, SearchResult<?> source) {
         super(values, source.getTotalCount());
-        this.query = source.query;
+        this.query = (Query<? extends T>) source.query;
         this.firstItemTimestamp = source.getFirstItemTimestamp();
         this.defaultPageSize = source.defaultPageSize;
     }
@@ -49,7 +49,7 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
     }
 
 
-    public Query<? extends Entity> getQuery() {
+    public Query<? extends T> getQuery() {
         return query;
     }
 
@@ -79,10 +79,11 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
     static <OutputType extends Entity, InputType extends Entity> SearchResult<OutputType> create(SearchResult<InputType> source, Class<OutputType> resultType, DataConverter<List<InputType>, List<OutputType>> adapter) throws Throwable {
 
+        //TODO we have to cover case like this: ambNetwork.findAMBEvents(new AssetInfoQueryBuilder().build()).execute() with unit-tests
         Assert.assertTrue(
-                resultType.equals(source.getQuery().resultType),
+                resultType.isAssignableFrom(source.getQuery().resultType),
                 IllegalArgumentException.class,
-                "resultType must match source.getQuery().resultType"
+                "resultType must be a super type source.getQuery().resultType"
         );
 
         return new SearchResult<>(adapter.convert(source.getValues()), source);

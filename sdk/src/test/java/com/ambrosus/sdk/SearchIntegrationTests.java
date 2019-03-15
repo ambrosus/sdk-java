@@ -89,5 +89,13 @@ public class SearchIntegrationTests {
             assertEquals(bigPageItemsList.subList(0, commonItemsCount), smallPageItemsList.subList(0, commonItemsCount));
         }
     }
-    
+
+    @Test
+    public void getSearchResultOfTypeBySubClassQuery() throws Throwable {
+        AMBNetwork network = new AMBNetwork();
+        SearchResult<AMBEvent> res = network.findAMBEvents(new AssetInfoQueryBuilder().build()).execute();
+        System.out.println(res);
+    }
+
+
 }

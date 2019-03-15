@@ -18,11 +18,11 @@ import com.ambrosus.sdk.utils.Assert;
 
 import java.util.Locale;
 
-public class PageQueryBuilder {
+public class PageQueryBuilder<T extends Entity> {
 
-    private final SearchResult<? extends Entity> firstPage;
+    private final SearchResult<T> firstPage;
 
-    public PageQueryBuilder(SearchResult<? extends Entity> firstPage) {
+    public PageQueryBuilder(SearchResult<T> firstPage) {
         Assert.assertTrue(
                 firstPage.getPage() == 0,
                 IllegalArgumentException.class,
@@ -37,7 +37,7 @@ public class PageQueryBuilder {
      * @return
      * @throws IllegalArgumentException if page is no in available pages range
      */
-    public Query getQueryForPage(int page) throws IllegalArgumentException {
+    public Query<? extends T> getQueryForPage(int page) throws IllegalArgumentException {
         Assert.assertTrue(
                 page >=0 && page < firstPage.getTotalPages(),
                 IllegalArgumentException.class,
@@ -46,7 +46,7 @@ public class PageQueryBuilder {
         );
         Assert.assertNotNull(firstPage.getPageSize(), IllegalStateException.class, "page size must be available for any search results with getTotalPages() > 1");
         //noinspection ConstantConditions
-        return new QueryBuilder(firstPage.getQuery())
+        return new QueryBuilder<>(firstPage.getQuery())
                 .to(firstPage.getFirstItemTimestamp())
                 .page(page)
                 .perPage(firstPage.getPageSize())

@@ -34,8 +34,8 @@ import com.ambrosus.ambviewer.utils.Representation
 import com.ambrosus.ambviewer.utils.RepresentationFactory
 import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Entity
+import com.ambrosus.sdk.GenericEventQueryBuilder
 import com.ambrosus.sdk.Query
-import com.ambrosus.sdk.QueryBuilder
 import com.ambrosus.sdk.model.AMBAssetInfo
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 
@@ -164,7 +164,7 @@ class SearchResultsListFragment : Fragment() {
 
     companion object {
 
-        private const val CACHE_REQUEST_THRESHOLD = QueryBuilder.MAX_PAGE_SIZE/2
+        private const val CACHE_REQUEST_THRESHOLD = GenericEventQueryBuilder.MAX_PAGE_SIZE/2
 
         private val ARG_SEARCH_QUERY = BundleArgument<Query<*>>("ARG_QUERY", Query::class.java)
 

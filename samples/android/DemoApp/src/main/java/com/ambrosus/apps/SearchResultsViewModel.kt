@@ -36,7 +36,7 @@ class SearchResultsViewModel(network: Network, private val query: Query<*>, cach
     private val errors = MutableLiveData<DataRequestException>()
 
     private var refreshing = false
-    private var pageQueryBuilder: PageQueryBuilder? = null
+    private var pageQueryBuilder: PageQueryBuilder<*>? = null
 
     fun getResults(): LiveData<List<SearchResult<out Entity>>> = results
     fun getErrors(): LiveData<DataRequestException> = errors

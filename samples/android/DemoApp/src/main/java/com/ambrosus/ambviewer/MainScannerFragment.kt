@@ -29,7 +29,6 @@ import com.ambrosus.apps.SearchResultsListFragment
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Query
-import com.ambrosus.sdk.QueryBuilder
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Identifier
