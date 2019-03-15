@@ -26,8 +26,10 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Event extends Entity{
 
@@ -179,7 +181,7 @@ public class Event extends Entity{
         private int accessLevel;
         private long timeStamp = UnixTime.get();
 
-        private JsonArray data = new JsonArray();
+        private Map<String, JsonObject> data = new HashMap<>();
 
         public Builder(@NonNull String assetId) {
             setAssetId(assetId);
@@ -192,14 +194,15 @@ public class Event extends Entity{
         }
 
         public Builder addData(@NonNull String type, @NonNull JsonObject object) {
+            Assert.assertNotNull(type, "Type argument can't be null");
             JsonObject dataObject = object.deepCopy();
             dataObject.addProperty(Event.DATA_OBJECT_ATTR_TYPE, type);
-            data.add(dataObject);
+            data.put(type, dataObject);
             return this;
         }
 
         public Builder clearData() {
-            data = new JsonArray();
+            data.clear();
             return this;
         }
 
@@ -230,9 +233,18 @@ public class Event extends Entity{
                     Ethereum.getAddress(privateKey),
                     timeStamp,
                     accessLevel,
-                    Network.getObjectHash(data)
+                    Network.getObjectHash(getDataAsArray())
             );
-            return new Event(new EventContent(idData, data, privateKey));
+            return new Event(new EventContent(idData, getDataAsArray(), privateKey));
+        }
+
+
+        private JsonArray getDataAsArray(){
+            JsonArray result = new JsonArray();
+            for (JsonObject dataObject : data.values()) {
+                result.add(dataObject);
+            }
+            return result;
         }
     }
 
