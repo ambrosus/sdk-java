@@ -54,6 +54,11 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
         return (BuilderType) this;
     }
 
+    /**
+     *
+     * @param page Zero-based page index
+     * @return
+     */
     public BuilderType page(int page) {
         params.set(PAGE_KEY, page);
         return (BuilderType) this;

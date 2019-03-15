@@ -53,7 +53,7 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
         return query;
     }
 
-    /** Zero based page number**/
+    /** Zero based page index**/
     public int getPage() {
         return query.getPage();
     }
