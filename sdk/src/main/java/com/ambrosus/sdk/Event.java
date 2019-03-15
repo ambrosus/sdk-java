@@ -85,7 +85,7 @@ public class Event extends Entity{
                 RestrictedDataAccessException.class,
                 String.format(
                         Locale.US,
-                        "You have to be authorized as %s (or one of its child accounts) and have access level greater or equal to %d",
+                        "You have to be authorized as %s (or one of its child accounts) and have account access level greater or equal to %d",
                         content.getIdData().getCreatedBy(),
                         content.getIdData().getAccessLevel()
                 )
