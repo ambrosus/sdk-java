@@ -135,11 +135,11 @@ public class Event extends Entity{
         //no-args constructor for GSON
         private EventIdData(){}
 
-        private EventIdData(@NonNull String assetId, @NonNull String createdBy, long timestamp, int accessLevel, String dataHash) {
+        private EventIdData(@NonNull String assetId, @NonNull String createdBy, long timestamp, int accessLevel, JsonArray data) {
             super(createdBy, timestamp);
             this.assetId = Assert.assertNotNull(assetId, "assetId == null");
             this.accessLevel = accessLevel;
-            this.dataHash = Assert.assertNotNull(dataHash, "dataHash == null");
+            this.dataHash = Network.getObjectHash(data);
         }
 
         String getAssetId() {
@@ -158,8 +158,18 @@ public class Event extends Entity{
         //no-args constructor for GSON
         private EventContent(){}
 
-        private EventContent(EventIdData idData, JsonArray data, String privateKey) {
-            super(idData, privateKey);
+        private EventContent(String assetId, long timestamp, int accessLevel, JsonArray data, String privateKey) {
+            super(
+                    new EventIdData(
+                            assetId,
+                            Ethereum.getAddress(privateKey),
+                            timestamp,
+                            accessLevel,
+                            data
+                    ),
+                    privateKey
+            );
+            Assert.assertTrue(data.size() > 0, IllegalStateException.class, "You have to add at least 1 data object to build a valid Event");
             this.data = Collections.unmodifiableList(GsonUtil.getAsObjectsList(data));
         }
 
@@ -229,17 +239,8 @@ public class Event extends Entity{
         }
 
         public Event createEvent(@NonNull String privateKey){
-            Assert.assertTrue(data.size() > 0, IllegalStateException.class, "You have to add at least 1 data object to build a valid Event");
-            EventIdData idData = new EventIdData(
-                    assetId,
-                    Ethereum.getAddress(privateKey),
-                    timeStamp,
-                    accessLevel,
-                    Network.getObjectHash(getDataAsArray())
-            );
-            return new Event(new EventContent(idData, getDataAsArray(), privateKey));
+            return new Event(new EventContent(assetId,  timeStamp, accessLevel, getDataAsArray(), privateKey));
         }
-
 
         private JsonArray getDataAsArray(){
             JsonArray result = new JsonArray();
