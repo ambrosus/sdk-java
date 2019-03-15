@@ -70,9 +70,9 @@ class SearchResultsListAdapter(
         return itemsCount
     }
 
-    private fun hasLastPage() = pages.last().page == pages.last().totalPages - 1
+    private fun hasLastPage() = pages.last().pageIndex == pages.last().totalPages - 1
 
-    private fun hasFirstPage() = pages.first().page == 0
+    private fun hasFirstPage() = pages.first().pageIndex == 0
 
     private fun getObjectsCount(): Int {
         var itemsCount = 0

@@ -24,7 +24,7 @@ public class PageQueryBuilder<T extends Entity> {
 
     public PageQueryBuilder(SearchResult<T> firstPage) {
         Assert.assertTrue(
-                firstPage.getPage() == 0,
+                firstPage.getPageIndex() == 0,
                 IllegalArgumentException.class,
                 "You can use only first page for this builder"
         );
