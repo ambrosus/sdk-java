@@ -193,6 +193,8 @@ public class Event extends Entity{
             return this;
         }
 
+        //TODO we have to mention in java-doc that event can't contain several data objects of the same type
+        //TODO we have to cover this behaviour with API integration test
         public Builder addData(@NonNull String type, @NonNull JsonObject object) {
             Assert.assertNotNull(type, "Type argument can't be null");
             JsonObject dataObject = object.deepCopy();
