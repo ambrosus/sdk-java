@@ -20,7 +20,7 @@ import com.ambrosus.sdk.utils.UnixTime;
 
 import java.util.Date;
 
-public class Asset extends Entity {
+public final class Asset extends Entity {
 
     private String assetId;
 

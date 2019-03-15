@@ -126,7 +126,7 @@ public class Network {
 
     @NonNull
     public NetworkCall<Event> pushEvent(Event event) {
-        return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), event), PermissionDeniedErrorHandler.INSTANCE);
+        return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), new Event(event)), PermissionDeniedErrorHandler.INSTANCE);
     }
 
 
