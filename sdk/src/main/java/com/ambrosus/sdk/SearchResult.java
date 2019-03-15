@@ -73,7 +73,7 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "%s, page: %d/%d, query: %s", super.toString(), getPage(), getTotalPages(), query.asMap());
+        return String.format(Locale.US, "%s, page: %d/%d, query: %s", super.toString(), getPage()+1, getTotalPages(), query.asMap());
 
     }
 
