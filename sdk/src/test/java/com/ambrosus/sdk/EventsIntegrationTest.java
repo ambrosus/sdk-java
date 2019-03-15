@@ -76,8 +76,7 @@ public class EventsIntegrationTest {
         testData.addProperty("testKey", "testValue");
         testData.addProperty("anotherKey", "anotherValue");
 
-        Event.Builder builder = new Event.Builder()
-                .setAssetId("0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333")
+        Event.Builder builder = new Event.Builder("0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333")
                 .addData("custom", testData);
         Event event = builder.createEvent(TestData.UNREGISTERED_PRIVATE_KEY);
 
