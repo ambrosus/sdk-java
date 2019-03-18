@@ -21,22 +21,16 @@ import com.ambrosus.sdk.utils.UnixTime;
 
 import java.util.Date;
 
-class IdData {
+class CreationData extends AccountData {
 
-    private String createdBy;
     private long timestamp;
 
     //no-argument contructor for GSON
-    IdData(){}
+    CreationData(){}
 
-    IdData(@NonNull String createdBy, long timestamp) {
-        this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
+    CreationData(@NonNull String createdBy, long timestamp) {
+        super(createdBy);
         this.timestamp = timestamp;
-    }
-
-    @NonNull
-    public String getCreatedBy() {
-        return createdBy;
     }
 
     Date getTimestamp() {

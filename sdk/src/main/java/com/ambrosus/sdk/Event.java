@@ -68,7 +68,7 @@ public class Event extends Entity{
     @NonNull
     @Override
     public String getAccountAddress() {
-        return content.getIdData().getCreatedBy();
+        return content.getIdData().getAccountAddress();
     }
 
     @NonNull
@@ -88,7 +88,7 @@ public class Event extends Entity{
                 String.format(
                         Locale.US,
                         "You have to be authorized as %s (or one of its child accounts) and have account access level greater or equal to %d",
-                        content.getIdData().getCreatedBy(),
+                        getAccountAddress(),
                         content.getIdData().getAccessLevel()
                 )
         );
@@ -126,7 +126,7 @@ public class Event extends Entity{
         throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing type key)");
     }
 
-    public static class EventIdData extends IdData {
+    public static class EventIdData extends CreationData {
 
         private String assetId;
         private int accessLevel;

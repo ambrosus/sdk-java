@@ -14,21 +14,26 @@
 
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.utils.GsonUtil;
-import com.ambrosus.sdk.utils.Strings;
+ import android.support.annotation.NonNull;
 
-import okio.ByteString;
+import com.ambrosus.sdk.utils.Assert;
+import com.ambrosus.sdk.utils.UnixTime;
 
-class Authorization {
+import java.util.Date;
 
-    static String getAMBTokenAuthHeader(AuthToken authToken) {
-        return "AMB_TOKEN "
-                + ByteString.encodeUtf8(GsonUtil.getLexNormalizedJsonStr(authToken, Network.GSON)).base64();
+class AccountData {
+
+    private String createdBy;
+
+    //no-argument contructor for GSON
+    AccountData(){}
+
+    AccountData(@NonNull String createdBy) {
+        this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
     }
 
-
-    static String getABMAuthHeader(String privateKey){
-        return "AMB " + Strings.getWithHexPrefix(privateKey);
+    @NonNull
+    String getAccountAddress() {
+        return createdBy;
     }
-
 }

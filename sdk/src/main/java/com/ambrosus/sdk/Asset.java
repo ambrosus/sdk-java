@@ -44,7 +44,7 @@ public final class Asset extends Entity {
     @NonNull
     @Override
     public String getAccountAddress() {
-        return content.idData.getCreatedBy();
+        return content.idData.getAccountAddress();
     }
 
     @NonNull
@@ -62,7 +62,7 @@ public final class Asset extends Entity {
         return metadata;
     }
 
-    private static class AssetIdData extends IdData {
+    private static class AssetIdData extends CreationData {
 
         private double sequenceNumber;
 

@@ -14,7 +14,9 @@
 
 package com.ambrosus.sdk;
 
-class SignedContent<T> {
+import com.ambrosus.sdk.utils.GsonUtil;
+
+class SignedContent<T extends AccountData> {
 
     private String signature;
     T idData;
@@ -25,5 +27,14 @@ class SignedContent<T> {
     SignedContent(T idData, String privateKey){
         signature = Network.getObjectSignature(idData, privateKey);
         this.idData = idData;
+    }
+
+    boolean matchesSignature() {
+        if(idData == null || signature == null) return false;
+        return Ethereum.signatureMatches(
+                GsonUtil.getLexNormalizedJsonStr(idData, Network.GSON),
+                idData.getAccountAddress(),
+                signature
+        );
     }
 }

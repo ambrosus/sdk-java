@@ -14,16 +14,21 @@
 
 package com.ambrosus.sdk;
 
+import com.ambrosus.sdk.utils.Assert;
+import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.UnixTime;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import okio.ByteString;
+
 public class AuthToken extends SignedContent<AuthToken.AuthTokenIdData> implements Serializable {
 
-    public String getAccount() {
-        return idData.createdBy;
+    public String getAccountAddress() {
+        return idData.getAccountAddress();
     }
 
     public Date getExpiration() {
@@ -34,6 +39,10 @@ public class AuthToken extends SignedContent<AuthToken.AuthTokenIdData> implemen
         super(idData, privateKey);
     }
 
+    public String getAsString() {
+        return ByteString.encodeUtf8(GsonUtil.getLexNormalizedJsonStr(this, Network.GSON)).base64();
+    }
+
     public static AuthToken create(String privateKey, long duration, TimeUnit durationUnit) throws NumberFormatException {
         return create(
                 privateKey,
@@ -42,13 +51,25 @@ public class AuthToken extends SignedContent<AuthToken.AuthTokenIdData> implemen
         );
     }
 
-    static class AuthTokenIdData implements Serializable {
+    public static AuthToken create(String tokenString) {
+        ByteString byteString = ByteString.decodeBase64(tokenString);
+        Assert.assertNotNull(byteString, IllegalArgumentException.class, "tokenString is not a valid Base64 encoded string");
+        String s = byteString.utf8();
+        try {
+            AuthToken authToken = Network.GSON.fromJson(s, AuthToken.class);
+            Assert.assertTrue(authToken.matchesSignature(), IllegalArgumentException.class, "authToken content doesn't matches it's signature");
+            return authToken;
+        } catch (JsonSyntaxException e) {
+            throw new IllegalArgumentException("tokenString is not a valid Base64 encoded AuthToken", e);
+        }
+    }
 
-        private String createdBy;
+    static class AuthTokenIdData extends AccountData implements Serializable {
+
         private long validUntil;
 
         private AuthTokenIdData(String createdBy, long validUntil) {
-            this.createdBy = createdBy;
+            super(createdBy);
             this.validUntil = validUntil;
         }
     }

@@ -95,7 +95,7 @@ class MainScannerFragment :
             null -> authorizationMessage.visibility = View.GONE
             else -> {
                 authorizationMessage.visibility = View.VISIBLE
-                authorizationMessage.setText("Authorized as ${authToken.account}");
+                authorizationMessage.setText("Authorized as ${authToken.accountAddress}");
             }
         }
     }

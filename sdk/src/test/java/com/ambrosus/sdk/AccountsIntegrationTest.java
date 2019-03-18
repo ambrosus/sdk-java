@@ -18,10 +18,6 @@ package com.ambrosus.sdk;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,8 +34,8 @@ public class AccountsIntegrationTest {
     public void getAccountTest() throws Throwable {
         AuthToken authToken = TestData.getAuthToken();
         network.authorize(authToken);
-        Account account = network.getAccount(authToken.getAccount()).execute();
-        Assert.assertEquals(authToken.getAccount(), account.getAddress());
+        Account account = network.getAccount(authToken.getAccountAddress()).execute();
+        Assert.assertEquals(authToken.getAccountAddress(), account.getAddress());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -52,7 +48,7 @@ public class AccountsIntegrationTest {
     public void getAccountTest_authorized_with_not_existing_account() throws Throwable {
         AuthToken authToken = AuthToken.create(TestData.UNREGISTERED_PRIVATE_KEY, 5, TimeUnit.DAYS);
         network.authorize(authToken);
-        network.getAccount(TestData.getAuthToken().getAccount()).execute();
+        network.getAccount(TestData.getAuthToken().getAccountAddress()).execute();
     }
 
 

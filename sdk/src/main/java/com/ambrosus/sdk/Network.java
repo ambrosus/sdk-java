@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.ByteString;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 //TODO it would be nice to add toJson() method
@@ -151,7 +152,7 @@ public class Network {
         return new NetworkCallWrapper<>(
                 service.getAccount(
                         address,
-                        Authorization.getAMBTokenAuthHeader(authToken)
+                        getAMBTokenAuthHeader(authToken)
                 ),
                 PermissionDeniedErrorHandler.INSTANCE, MissingEntityErrorHandler.INSTANCE
         );
@@ -167,7 +168,11 @@ public class Network {
 
 
     private String getOptionalAMBTokenAuthHeader() {
-        return authToken != null ? Authorization.getAMBTokenAuthHeader(authToken) : null;
+        return authToken != null ? getAMBTokenAuthHeader(authToken) : null;
+    }
+
+    static String getAMBTokenAuthHeader(AuthToken authToken) {
+        return "AMB_TOKEN " + authToken.getAsString();
     }
 
     static String getObjectHash(Object object){
