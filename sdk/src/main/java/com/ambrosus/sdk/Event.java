@@ -77,6 +77,10 @@ public class Event extends Entity{
         return content.getIdData().getTimestamp();
     }
 
+    public int getAccessLevel() {
+        return content.idData.accessLevel;
+    }
+
     public MetaData getMetadata() {
         return metadata;
     }
@@ -89,7 +93,7 @@ public class Event extends Entity{
                         Locale.US,
                         "You have to be authorized as %s (or one of its child accounts) and have account access level greater or equal to %d",
                         getAccountAddress(),
-                        content.getIdData().getAccessLevel()
+                        getAccessLevel()
                 )
         );
         return content.getData();
