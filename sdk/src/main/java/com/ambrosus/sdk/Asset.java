@@ -83,7 +83,7 @@ public final class Asset extends Entity {
         private long sequenceNumber;
 
         public Builder() {
-            setTimeStamp(new Date());
+            setTimestamp(new Date());
         }
 
         /**
@@ -91,7 +91,7 @@ public final class Asset extends Entity {
          * @param timeStamp - the number of seconds that have elapsed since 00:00:00 Thursday, 1 January 1970
          * @param sequenceNumber - any value, it's used to make possible to create different assets with the same timeStamp
          */
-        public void setUnixTimeStamp(long timeStamp, long sequenceNumber) {
+        public void setUnixTimestamp(long timeStamp, long sequenceNumber) {
             this.timeStamp = timeStamp;
             this.sequenceNumber = sequenceNumber;
         }
@@ -102,8 +102,8 @@ public final class Asset extends Entity {
          *
          * @param date
          */
-        public void setTimeStamp(Date date) {
-            setUnixTimeStamp(UnixTime.get(date), System.nanoTime());
+        public void setTimestamp(Date date) {
+            setUnixTimestamp(UnixTime.get(date), System.nanoTime());
         }
 
         public Asset createAsset(String privateKey) {
