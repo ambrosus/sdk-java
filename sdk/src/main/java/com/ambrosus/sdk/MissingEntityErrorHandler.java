@@ -23,8 +23,8 @@ class MissingEntityErrorHandler implements NetworkErrorHandler {
 
 
     @Override
-    public void handleNetworkError(int code, String message) throws NetworkException {
-        if(code == 404)
-            throw new EntityNotFoundException(code, message);
+    public void handleNetworkError(RequestFailedException reason) throws AmbrosusException {
+        if(reason.code == 404)
+            throw new EntityNotFoundException(reason);
     }
 }

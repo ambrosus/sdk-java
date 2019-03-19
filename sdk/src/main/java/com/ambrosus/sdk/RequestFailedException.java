@@ -14,13 +14,11 @@
 
 package com.ambrosus.sdk;
 
-import java.lang.Exception;
-
-public class NetworkException extends AmbrosusException {
+public class RequestFailedException extends RuntimeException  {
 
     public final int code;
 
-    public NetworkException(int code, String message) {
+    public RequestFailedException(int code, String message) {
         super(message);
         this.code = code;
     }

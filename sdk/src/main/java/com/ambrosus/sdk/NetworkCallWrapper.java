@@ -117,13 +117,15 @@ class NetworkCallWrapper<T> implements NetworkCall<T> {
 
             int code = response.code();
 
+            RequestFailedException failReason = new RequestFailedException(code, message);
+
             if(errorHandlers != null) {
                 for (NetworkErrorHandler errorHandler : errorHandlers) {
-                    errorHandler.handleNetworkError(code, message);
+                    errorHandler.handleNetworkError(failReason);
                 }
             }
 
-            new CommonNetworkErrorHandler().handleNetworkError(code, message);
+            throw failReason;
         }
     }
 }

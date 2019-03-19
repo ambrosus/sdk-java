@@ -14,9 +14,9 @@
 
 package com.ambrosus.sdk;
 
-public class PermissionDeniedException extends NetworkException {
+public class PermissionDeniedException extends AmbrosusException {
 
-    public PermissionDeniedException(int code, String message) {
-        super(code, message);
+    public PermissionDeniedException(RequestFailedException requestFailReason) {
+        super(requestFailReason);
     }
 }

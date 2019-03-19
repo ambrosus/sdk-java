@@ -22,8 +22,8 @@ class PermissionDeniedErrorHandler implements NetworkErrorHandler {
     private PermissionDeniedErrorHandler() {}
 
     @Override
-    public void handleNetworkError(int code, String message) throws NetworkException {
-        if(code == 403)
-            throw new PermissionDeniedException(code, message);
+    public void handleNetworkError(RequestFailedException reason) throws AmbrosusException {
+        if(reason.code == 403)
+            throw new PermissionDeniedException(reason);
     }
 }

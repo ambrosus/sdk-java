@@ -14,10 +14,8 @@
 
 package com.ambrosus.sdk;
 
-import retrofit2.Response;
+interface NetworkErrorHandler {
 
-public interface NetworkErrorHandler {
-
-    void handleNetworkError(int code, String message) throws NetworkException;
+    void handleNetworkError(RequestFailedException reason) throws AmbrosusException;
 
 }

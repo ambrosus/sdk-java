@@ -16,6 +16,10 @@ package com.ambrosus.sdk;
 
 public class AmbrosusException extends Exception {
 
+    public AmbrosusException(RequestFailedException requestFailReason) {
+        super(requestFailReason.getMessage(), requestFailReason);
+    }
+
     public AmbrosusException(String message) {
         super(message);
     }

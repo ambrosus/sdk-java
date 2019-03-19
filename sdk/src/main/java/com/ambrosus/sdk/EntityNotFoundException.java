@@ -14,14 +14,14 @@
 
 package com.ambrosus.sdk;
 
-public class EntityNotFoundException extends NetworkException {
+public class EntityNotFoundException extends AmbrosusException {
+
+    public EntityNotFoundException(RequestFailedException requestFailReason) {
+        super(requestFailReason);
+    }
 
     public EntityNotFoundException(String message) {
-        //request was OK but SDK wasn't able to find requested data
-        this(200, message);
+        super(message);
     }
 
-    EntityNotFoundException(int code, String message) {
-        super(code, message);
-    }
 }
