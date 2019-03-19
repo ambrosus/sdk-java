@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
  * (with {@link #execute) method or asynchronously (with {@link #enqueue} method.
  * It provides the same behaviour as <a href="https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html">Call</a> interface from Retrofit library
  *
- * @param <T> - type of the data which would be returned in the case of successfull excectuion of this request
+ * @param <T> - type of the data which would be returned in the case of successful excectuion of this request
  */
 public interface NetworkCall<T> extends Cloneable {
 
