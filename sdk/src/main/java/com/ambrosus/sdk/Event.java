@@ -130,7 +130,7 @@ public class Event extends Entity{
         throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing type key)");
     }
 
-    public static class EventIdData extends CreationData {
+    static class EventIdData extends CreationData {
 
         private String assetId;
         private int accessLevel;
