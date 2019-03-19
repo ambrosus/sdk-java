@@ -18,12 +18,27 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
+/**
+ * Super class for Assets and Events
+ */
 public abstract class Entity {
 
+    /**
+     * @return Content-addressable identifier of the Entity.
+     */
     @NonNull
     public abstract String getSystemId();
+
+    /**
+     * @return time stamp which was set by the user when creating this Entity. This timestamp is accurate to seconds because Ambrosus Network uses UnixTime format to keep this value
+     */
     @NonNull
     public abstract Date getTimestamp();
+
+
+    /**
+     * @return address of the account which was used to create this Entity
+     */
     @NonNull
     public abstract String getAccountAddress();
 
