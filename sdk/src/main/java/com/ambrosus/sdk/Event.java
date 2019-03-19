@@ -227,7 +227,7 @@ public class Event extends Entity{
             return this;
         }
 
-        public Builder setUnixTime(long unixTime) {
+        public Builder setUnixTimeStamp(long unixTime) {
             this.timeStamp = unixTime;
             return this;
         }
@@ -238,8 +238,8 @@ public class Event extends Entity{
          *
          * @param date
          */
-        public Builder setTimeStamp(@NonNull Date date) {
-            return setUnixTime(UnixTime.get(date));
+        public Builder setTimestamp(@NonNull Date date) {
+            return setUnixTimeStamp(UnixTime.get(date));
         }
 
         public Event createEvent(@NonNull String privateKey){
