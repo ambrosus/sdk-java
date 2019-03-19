@@ -14,10 +14,17 @@
 
 package com.ambrosus.sdk;
 
+/**
+ * Super class for all exceptions which might be thrown by SDK in case of client-side error
+ */
 public class AmbrosusException extends Exception {
 
     public AmbrosusException(RequestFailedException requestFailReason) {
         super(requestFailReason.getMessage(), requestFailReason);
+    }
+
+    public AmbrosusException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 
     public AmbrosusException(String message) {

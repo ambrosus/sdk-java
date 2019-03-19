@@ -14,9 +14,16 @@
 
 package com.ambrosus.sdk;
 
+/**
+ * Indicates that user doesn't have an account or necessary permissions to push or get some data from the network
+ */
 public class PermissionDeniedException extends AmbrosusException {
 
     public PermissionDeniedException(RequestFailedException requestFailReason) {
         super(requestFailReason);
+    }
+
+    public PermissionDeniedException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 }

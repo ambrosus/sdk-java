@@ -14,6 +14,9 @@
 
 package com.ambrosus.sdk;
 
+/**
+ * Indicates that Hermes Node and/or SDK weren't able to find an Event, Asset, or Account requested by user
+ */
 public class EntityNotFoundException extends AmbrosusException {
 
     public EntityNotFoundException(RequestFailedException requestFailReason) {
@@ -24,4 +27,7 @@ public class EntityNotFoundException extends AmbrosusException {
         super(message);
     }
 
+    public EntityNotFoundException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
 }

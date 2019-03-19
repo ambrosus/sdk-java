@@ -14,8 +14,21 @@
 
 package com.ambrosus.sdk;
 
-public class RequestFailedException extends RuntimeException  {
+import java.lang.Exception;
 
+/**
+ * Indicates that request to Ambrosus Node API had failed with some HTTP error.
+ * SDK is designed to handle all possible error responses which can be caused by client-side errors
+ * and throw an instance of @{link AmbrosusException} in that case. So an instance of NetworkException can be thrown only
+ * in the case of some error in SDK/Backend implementation.
+ *
+ * Detailed error message should be available with {@link #getMessage()} method. You can also check HTTP error code with {@link #code} field.
+ */
+public class RequestFailedException extends RuntimeException {
+
+    /**
+     * HTTP response status code
+     */
     public final int code;
 
     public RequestFailedException(int code, String message) {
