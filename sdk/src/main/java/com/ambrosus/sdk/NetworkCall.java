@@ -16,8 +16,22 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+/**
+ * NetworkCall interface represents a network request which can be executed synchronously
+ * (with {@link #execute) method or asynchronously (with {@link #enqueue} method.
+ * It provides the same behaviour as <a href="https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html">Call</a> interface from Retrofit library
+ *
+ * @param <T> - type of the data which would be returned in the case of successfull excectuion of this request
+ */
 public interface NetworkCall<T> extends Cloneable {
 
+    /**
+     * Synchronously executes request and return its response.
+     *
+     * @throws java.io.IOException if a connection problem occurred while communicating with the network
+     * @throws AmbrosusException in case of some client-side error
+     * @throws RuntimeException (and subclasses) which signal about an issue with SDK or Backend implementation
+     */
     @NonNull T execute() throws Throwable;
 
     /**
@@ -26,8 +40,16 @@ public interface NetworkCall<T> extends Cloneable {
      */
     void enqueue(@NonNull NetworkCallback<T> callback);
 
+    /**
+     * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain
+     * #enqueue(NetworkCallback) enqueued}. It is an error to execute or enqueue a call more than once.
+     */
     boolean isExecuted();
 
+    /**
+     * Cancel this call. An attempt will be made to cancel in-flight calls, and if the call has not
+     * yet been executed it never will be.
+     */
     void cancel();
 
     /** True if {@link #cancel()} was called. */
