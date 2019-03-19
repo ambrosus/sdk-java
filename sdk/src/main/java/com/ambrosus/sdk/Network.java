@@ -33,6 +33,18 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import okio.ByteString;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+/**
+ *  Network is a core class responsible for communication with AMB-Net.
+ *  It contains a number of get*(...), find*(...) and push*(...) methods which can be used to retrieve/push data from/to AMB-Net e.g.:
+ *
+ *  <code>
+ *  String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
+ *  Network network = new Network();
+ *  NetworkCall<Asset> networkCall = network.getAsset(assetId);
+ *  </code>
+ */
+
 //TODO it would be nice to add toJson() method
 public class Network {
 
