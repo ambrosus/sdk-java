@@ -38,15 +38,15 @@ public class Query<T extends Entity> implements Serializable {
         return params.copy();
     }
 
-    public @Nullable Integer getPageSize() {
+    @Nullable Integer getPageSize() {
         return AbstractQueryBuilder.getPageSize(params);
     }
 
-    public int getPage() {
+    int getPage() {
         return AbstractQueryBuilder.getPage(params);
     }
 
-    public Map<String, String> asMap() {
+    Map<String, String> asMap() {
         return params.asMap();
     }
 
