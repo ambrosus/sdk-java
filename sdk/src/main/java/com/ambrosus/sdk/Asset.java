@@ -20,6 +20,11 @@ import com.ambrosus.sdk.utils.UnixTime;
 
 import java.util.Date;
 
+/**
+ * This class represents primary elements moving through a supply chain. Assets are the nouns of the system.
+ * They can represent an ingredient, product, package of products or any other type of container.
+ * An Asset on its own function only as a handle for a {@link Event} stream.
+ */
 public final class Asset extends Entity {
 
     private String assetId;
@@ -53,6 +58,9 @@ public final class Asset extends Entity {
         return content.idData.getTimestamp();
     }
 
+    /**
+     * @return a number which is used to make it possible to keep several Assets with the same {@linkplain #getTimestamp() timestamp} and {@link #getAccountAddress() account address} on the network
+     */
     public double getSequenceNumber() {
         return content.idData.sequenceNumber;
     }
