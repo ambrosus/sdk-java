@@ -31,7 +31,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class Event extends Entity{
+/**
+ *  This class is designed to represent an Event.
+ *  <p>
+ *  Events describe all registered changes of state that occurred with the {@link Asset}.
+ *  E.g. measured temperature, noted big acceleration or changing pallets.
+ *  <p>
+ *  Every event contains an array of {@linkplain JsonObject} with information what actually happened.
+ *  Each item in this array is an object of a some type identified by a string constant.
+ *  You can get types of all available data objects with {@link #getDataTypes()} method.
+ *  Use {@link #getDataObject(String)} method to retrieve an object of certain type.
+ *  <p>
+ *  It's also possible to get all available data objects with {@link #getRawData()} method
+ */
+public class Event extends Entity {
 
     public static final String DATA_OBJECT_ATTR_TYPE = "type";
 
@@ -48,6 +61,10 @@ public class Event extends Entity{
     }
 
 
+    /**
+     * This constructor makes it possible to extend Event class in order to implement your own Event data model
+     * @param source
+     */
     protected Event(Event source){
         // it looks like it's more reliable to use copy constructor there instead of this(EventContent)
         this.eventId = source.eventId;
@@ -61,6 +78,10 @@ public class Event extends Entity{
         return eventId;
     }
 
+    /**
+     *
+     * @return Id of an asset to which this event is connected.
+     */
     public String getAssetId() {
         return content.getIdData().getAssetId();
     }
@@ -77,6 +98,9 @@ public class Event extends Entity{
         return content.getIdData().getTimestamp();
     }
 
+    /**
+     * @return access level of the event. It's not possible to get event data with {@link #getRawData()}, {@link #getDataTypes()}, {@link #getDataObject(String)} methods if access level of your account is lower than event's or if you are not {@linkplain Network#authorize(AuthToken) authenticated} as a holder of the account which was used to create this event
+     */
     public int getAccessLevel() {
         return content.idData.accessLevel;
     }
@@ -85,6 +109,22 @@ public class Event extends Entity{
         return metadata;
     }
 
+    /**
+     * Every event contains an array of {@link JsonObject} with information what actually happened.
+     * Each item in this array is a {@linkplain JsonObject} with required <code>type</code> field which should contain a valid string value
+     * You can get data for all events which {@linkplain #getAccessLevel() access level} belongs to [0; {@linkplain Account#getAccessLevel() your account accessLevel}] range if you are authenticated as a holder of {@linkplain #getAccountAddress() account} which was used to create this event or a holder of one of it's child accounts
+     * If you are not authenticated on the network with {@link Network#authorize(AuthToken)} method you can get only data for events which
+     * access level is set to 0.
+     *
+     * @return a list of {@linkplain JsonObject JsonObjects} associated with this event
+     * @throws RestrictedDataAccessException in the following cases:
+     *
+     * <ul>
+     * <li>if you are not {@linkplain Network#authorize(AuthToken) authenticated} and this event has {@linkplain #getAccessLevel() accessLevel} greater than 0
+     * <li>if you are not {@linkplain Network#authorize(AuthToken) authenticated} as a holder of {@linkplain #getAccountAddress() account} which was used to create this event or a holder of one of it's child accounts
+     * <li>if {@linkplain Account#getAccessLevel() access level} of your account is less than {@linkplain #getAccessLevel() access level} of this event
+     * </ul>
+     */
     public List<JsonObject> getRawData() throws RestrictedDataAccessException {
         Assert.assertNotNull(
                 content.getData(),
@@ -99,8 +139,25 @@ public class Event extends Entity{
         return content.getData();
     }
 
-    //we need to be sure about the order of dataTypes in some cases, so result is list
+
+
+    /**
+     * Returns list with types of all data objects available with {@link #getRawData()}.
+     * I.e: <p>
+     * <code>
+     *     [getDataObjectType(getRawData().get(0)),
+     *        ... ,
+     *      getDataObjectType(getRawData().get(getRawData().size()-1)]
+     * </code>
+     *
+     * @return list with <code>type</code> field values for {@linkplain #getRawData() all data objects} which this event contains
+     * @throws RestrictedDataAccessException under the same conditions as {@link #getRawData()} method
+     * @see #getDataObjectType(JsonObject)
+     * @see #getRawData()
+     *
+     */
     @NonNull
+    //we need to be sure about the order of dataTypes in some cases (i.e. for AMBEventImplementation), so result is list
     public List<String> getDataTypes() throws RestrictedDataAccessException {
         List<String> result = new ArrayList<>();
         for (JsonObject dataObject : getRawData()) {
@@ -109,6 +166,15 @@ public class Event extends Entity{
         return result;
     }
 
+
+    /**
+     * Searches for a data object of specified <code>type</code> in {@link #getRawData() raw data list}
+     * @param type - value of <code>type</code> field of required data object
+     * @return data object of specified type from {@link #getRawData() raw data list} or null if this event doesn't contain an object of this type
+     * @throws RestrictedDataAccessException under the same conditions as {@link #getRawData()} method
+     * @see #getRawData()
+     * @see #getDataObjectType(JsonObject)
+     */
     @Nullable
     public JsonObject getDataObject(String type) throws RestrictedDataAccessException {
         for (JsonObject dataObject : getRawData()) {
@@ -123,11 +189,17 @@ public class Event extends Entity{
         return super.toString() + String.format(Locale.US, "(%s)", getSystemId());
     }
 
-
-    public static String getDataObjectType(JsonObject dataObject) {
+    /**
+     * Returns value of the <code>type</code> field of the <code>dataObject</code>
+     * @param dataObject - {@link JsonObject} which <code>type</code> field value you want to get
+     * @return value of the <code>type</code> field of <code>dataObject</code>
+     * @throws IllegalArgumentException if <code>dataObject</code> doesn't contain <code>type</code> field
+     * @throws ClassCastException if <code>dataObject</code> has <code>type</code> field but this field doesn't contain a valid string value
+     */
+    public static String getDataObjectType(JsonObject dataObject) throws IllegalArgumentException, ClassCastException {
         if(dataObject.has(DATA_OBJECT_ATTR_TYPE))
             return dataObject.get(DATA_OBJECT_ATTR_TYPE).getAsString();
-        throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing type key)");
+        throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing \"type\" field)");
     }
 
     static class EventIdData extends CreationData {

@@ -94,6 +94,13 @@ public class Network {
         return new NetworkCallWrapper<>(service.getAsset(assetId), MissingEntityErrorHandler.INSTANCE);
     }
 
+    /**
+     * Creates a <code>NetworkCall&lt;Event&gt;</code> instance which can be used to fetch event with specific <code>eventId</code> from the Ambrosus Network
+     * {@link EntityNotFoundException} will be thrown during execution of this <code>NetworkCall</code> if event with such <code>eventId</code> doesn't exist
+     *
+     * @param eventId - unique event identifier
+     * @return <code>NetworkCall&lt;Event&gt;</code> which can be used to fetch event with specific <code>eventId</code> from the network
+     */
     @NonNull
     public NetworkCall<Event> getEvent(@NonNull String eventId) {
         return new NetworkCallWrapper<>(service.getEvent(eventId, getOptionalAMBTokenAuthHeader()), MissingEntityErrorHandler.INSTANCE);
