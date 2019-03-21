@@ -35,7 +35,7 @@ public class AssetsIntegrationTest {
 //
 //        try {
 //            SearchResult<Asset> result = networkCall.execute();
-//            for (Asset asset : result.getValues()) {
+//            for (Asset asset : result.getItems()) {
 //                if(expectedAssetID.equals(asset.getSystemId()))
 //                    return;
 //            }

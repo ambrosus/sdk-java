@@ -77,7 +77,7 @@ class SearchResultsListAdapter(
     private fun getObjectsCount(): Int {
         var itemsCount = 0
         for (page in pages) {
-            itemsCount += page.values.size
+            itemsCount += page.items.size
         }
         return itemsCount
     }
@@ -96,9 +96,9 @@ class SearchResultsListAdapter(
         var inPageIndex = index
 
         for (page in pages) {
-            if(inPageIndex < page.values.size)
-                return page.values[inPageIndex]
-            else inPageIndex -= page.values.size
+            if(inPageIndex < page.items.size)
+                return page.items[inPageIndex]
+            else inPageIndex -= page.items.size
         }
         throw IllegalArgumentException("we don't have enough items for $index")
     }
@@ -132,7 +132,7 @@ class SearchResultsListAdapter(
         if(!hasFirstPage()) objects.add(null)
 
         for (page in pages) {
-            objects.addAll(page.values)
+            objects.addAll(page.items)
         }
 
         if(!hasLastPage()) objects.add(null)

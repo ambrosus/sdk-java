@@ -47,7 +47,7 @@ class NetworkSearchResult<T extends Entity> {
     }
 
     @NonNull
-    public List<T> getValues() {
+    public List<T> getItems() {
         return values;
     }
 

@@ -67,7 +67,7 @@ public class ReadMeSamplesTest {
     public void searchForEvents() throws Throwable {
         SearchResult<Event> searchResult
                 = network.findEvents(new EventQueryBuilder().build()).execute();
-        List<Event> values = searchResult.getValues();
+        List<Event> values = searchResult.getItems();
 
         Query<Event> anotherQuery = new EventQueryBuilder()
                 .createdBy("0xFF1E60D7e4fe21C1817B8249C8cB8E52D1912665")
@@ -76,7 +76,7 @@ public class ReadMeSamplesTest {
 
         searchResult = network.findEvents(anotherQuery).execute();
 
-        values = searchResult.getValues();
+        values = searchResult.getItems();
         System.out.println(values);
     }
 
@@ -177,7 +177,7 @@ public class ReadMeSamplesTest {
                 .build();
 
         SearchResult<Event> eventSearchResult = network.findEvents(query).execute();
-        Event item = eventSearchResult.getValues().get(0);
+        Event item = eventSearchResult.getItems().get(0);
 
         //Using generic Event model + AssetInfoQueryBuilder and Identifier classes which contain constants from the code above
         Query<AMBAssetInfo> assetInfoQuery = new AssetInfoQueryBuilder()
@@ -185,12 +185,12 @@ public class ReadMeSamplesTest {
                 .build();
 
         eventSearchResult = network.findEvents(query).execute();
-        item = eventSearchResult.getValues().get(0);
+        item = eventSearchResult.getItems().get(0);
 
         //Using an instance of AMBNetwork class which you can use to query AssetInfo model
         AMBNetwork ambNetwork = new AMBNetwork();
         SearchResult<AMBAssetInfo> assetInfoSearchResult = ambNetwork.findAssetInfo(assetInfoQuery).execute();
-        AMBAssetInfo assetInfo = assetInfoSearchResult.getValues().get(0);
+        AMBAssetInfo assetInfo = assetInfoSearchResult.getItems().get(0);
     }
 
 }

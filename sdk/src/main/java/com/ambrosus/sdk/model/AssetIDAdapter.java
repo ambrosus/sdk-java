@@ -28,7 +28,7 @@ public class AssetIDAdapter implements DataConverter<SearchResult<Event>, List<S
     @Override
     public List<String> convert(SearchResult<Event> source) {
         Set<String> resultSet = new LinkedHashSet<>();
-        for (Event event : source.getValues()) {
+        for (Event event : source.getItems()) {
             resultSet.add(event.getAssetId());
         }
         List<String> resultList = new ArrayList<>(resultSet.size());

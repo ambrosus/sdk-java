@@ -105,7 +105,7 @@ class AssetActivity : AppCompatActivity() {
             )
         } else {
             if(eventsLoadResult.isSuccessful()) {
-                for (entity in eventsLoadResult.data.values) {
+                for (entity in eventsLoadResult.data.items) {
                     dataSetBuilder.add(entity as Event, ShortEventRepresentation.factory)
                 }
             } else

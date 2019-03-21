@@ -97,7 +97,7 @@ class SearchResultsViewModel(network: Network, private val query: Query<*>, cach
             get() {
                 var cachedItemsCount = 0
                 for (page in cachedPages) {
-                    cachedItemsCount += page.values.size
+                    cachedItemsCount += page.items.size
                 }
                 return cachedItemsCount
             }

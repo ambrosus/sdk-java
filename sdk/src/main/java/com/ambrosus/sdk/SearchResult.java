@@ -32,8 +32,8 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
         super(source);
         this.query = query;
         firstItemTimestamp = source.getFirstItemTimestamp();
-        if(query.getPageSize() == null && getTotalCount() > getValues().size())
-            defaultPageSize = getValues().size();
+        if(query.getPageSize() == null && getTotalCount() > getItems().size())
+            defaultPageSize = getItems().size();
     }
 
     private SearchResult(List<T> values, SearchResult<?> source) {
@@ -86,6 +86,6 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
                 "resultType must be a super type source.getQuery().resultType"
         );
 
-        return new SearchResult<>(adapter.convert(source.getValues()), source);
+        return new SearchResult<>(adapter.convert(source.getItems()), source);
     }
 }

@@ -144,14 +144,14 @@ class MainScannerFragment :
     override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Serializable) {
         if(!processError(result)) {
             val searchResult = result.data
-            val resultsList = result.data.values
+            val resultsList = result.data.items
             if(resultsList.isEmpty()) {
                 if(searchCriteria is String)
                     displayAssetLoading(searchCriteria)
                 else
                     displayError("Can't find any asset by $searchCriteria")
             } else if(resultsList.size == 1) {
-                displayAsset(searchResult.values[0])
+                displayAsset(searchResult.items[0])
             } else {
                 displayResultsList(searchResult.query)
             }

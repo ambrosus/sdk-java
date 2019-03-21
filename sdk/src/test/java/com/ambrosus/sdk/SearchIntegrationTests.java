@@ -60,26 +60,26 @@ public class SearchIntegrationTests {
             //requesting first page and checking items type
             SearchResult<? extends Entity> firstPage = network.find(query).execute();
 
-            Entity firstPageItem = firstPage.getValues().get(0);
+            Entity firstPageItem = firstPage.getItems().get(0);
             assertTrue(queriesMap.get(query).isInstance(firstPageItem));
 
-            ArrayList<Entity> bigPageItemsList = new ArrayList<>(firstPage.getValues());
+            ArrayList<Entity> bigPageItemsList = new ArrayList<>(firstPage.getItems());
             SearchResult<? extends Entity> secondPage = network.find(new PageQueryBuilder(firstPage).getQueryForPage(1)).execute();
-            bigPageItemsList.addAll(secondPage.getValues());
+            bigPageItemsList.addAll(secondPage.getItems());
 
             //querying same items using small pages
             int smallPageSize = firstPage.getPageSize() / 3;
-            int smallPagesCount = (firstPage.getValues().size() + secondPage.getValues().size()) / smallPageSize;
+            int smallPagesCount = (firstPage.getItems().size() + secondPage.getItems().size()) / smallPageSize;
 
             Query smallPageQuery = new QueryBuilder(query).perPage(smallPageSize).build();
             SearchResult<? extends Entity> smallPage = network.find(smallPageQuery).execute();
 
-            List<Entity> smallPageItemsList = new ArrayList<>(smallPage.getValues());
+            List<Entity> smallPageItemsList = new ArrayList<>(smallPage.getItems());
 
             PageQueryBuilder pageQueryBuilder = new PageQueryBuilder(smallPage);
             for(int pageIndex = 1; pageIndex < smallPagesCount; pageIndex++) {
                 SearchResult<? extends Entity> nextPage = network.find(pageQueryBuilder.getQueryForPage(pageIndex)).execute();
-                smallPageItemsList.addAll(nextPage.getValues());
+                smallPageItemsList.addAll(nextPage.getItems());
             }
 
             //comparing items which we get with small and big pages
