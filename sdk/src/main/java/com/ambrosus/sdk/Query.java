@@ -24,8 +24,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Query<T extends Entity> implements Serializable {
+/**
+ * This class represents a query which can be used to search for entities of <code>T</code> type.
+ * <br>For example you can {@linkplain Network#findEvents(Query) search for Events} using a <code>Query</code> instance parameterized with {@link Event} type ({@code Query<Event>})
+ * <br>You can also use {@link Network#find(Query)} method to search for any entities supported by a {@link Network} implementation.
+ * @param <T> type of the entities which can be found with this <code>Query</code> instance
+ * @see Network#findEvents(Query)
+ * @see Network#findAssets(Query)
+ * @see Network#find(Query)
+ */
+public final class Query<T extends Entity> implements Serializable {
 
+    /**
+     * A {@link Class} instance for type of the data model which can be found with this <code>Query</code>
+     */
     public final Class<T> resultType;
     private final Query.Params params;
 
