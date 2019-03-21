@@ -35,14 +35,20 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- *  Network is a core class responsible for communication with AMB-Net.
- *  It contains a number of get*(...), find*(...) and push*(...) methods which can be used to retrieve/push data from/to AMB-Net e.g.:
- *
- *  <code>
+ *  Network is a core class responsible for communication with Ambrosus Network.
+ *  It contains a number of get*(...), find*(...) and push*(...) methods which can be used to retrieve/push data from/to AMB-Net.
+ *  This <code>Network</code> implementation supports only generic {@link Event} and {@link Asset} data models.
+ *  But it can be extended in order to support custom data models.
+ *  You can use {@link com.ambrosus.sdk.model.AMBNetwork} as a sample of such implementation.
+ *  <p>
+ *  Usage example:
+ *  <pre><code>
  *  String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
  *  Network network = new Network();
  *  NetworkCall<Asset> networkCall = network.getAsset(assetId);
- *  </code>
+ *  Asset asset = networkCall.execute();
+ *  </code></pre>
+ *
  */
 
 //TODO it would be nice to add toJson() method
@@ -127,9 +133,35 @@ public class Network {
         );
     }
 
-    public NetworkCall<SearchResult<? extends Entity>> find(Query query) {
+    /**
+     * This method represents single endpoint to search for any {@link Entity} supported by this {@link Network} implementation.
+     *
+     * @param query a {@link Query} instance parametrized with a subclass of any {@link Entity} supported by this {@link Network} implementation.
+     *
+     * @return a {@link NetworkCall} instance parametrized with generalized {@link SearchResult} type.
+     *
+     * <br>Each {@link SearchResult#getItems() item} of this {@link SearchResult} would be a subclass of {@link Query#resultType}
+     * supported by this {@link Network} implementation.
+     *
+     * <br>E.g. each item of <code>assetSearchResult.getItems()</code> list is an instance of {@link Asset} class:
+     *
+     * <pre>{@code
+     * Network network = new Network();
+     * Query<Asset> assetQuery = new AssetQueryBuilder().build();
+     * SearchResult<? extends Entity> assetSearchResult = network.find(assetQuery).execute();}</pre>
+     *
+     * And each item of <code>ambEventSearchResult.getItems()</code> list is an instance of {@link Event} class
+     * (because {@link Event} is the only subclass of {@link com.ambrosus.sdk.model.AMBEvent AMBEvent} supported by this {@link Network} implementation):
+     *
+     * <pre>{@code
+     * Query<AMBEvent> ambEventQuery = new AMBEventQueryBuilder().build();
+     * SearchResult<? extends Entity> ambEventSearchResult = network.find(assetQuery).execute();}
+     *
+     * @throws IllegalArgumentException if {@link Query#resultType} is not a subclass of {@link Event} or {@link Asset} classes
+     */
+    public NetworkCall<SearchResult<? extends Entity>> find(Query<? extends Entity> query) throws IllegalArgumentException {
         if(Event.class.isAssignableFrom(query.resultType)) {
-            NetworkCall<SearchResult<Event>> eventsRequest = findEvents(query);
+            NetworkCall<SearchResult<Event>> eventsRequest = findEvents((Query<Event>)query);
             return (NetworkCall) eventsRequest;
         } else if(Asset.class.isAssignableFrom(query.resultType)) {
             NetworkCall<SearchResult<Asset>> assetsRequest = findAssets((Query<Asset>) query);
