@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 
 /**
- * Super class for Assets and Events
+ * Super class for data models supported by a {@link Network} implementation.
  */
 public abstract class Entity {
 
@@ -30,7 +30,7 @@ public abstract class Entity {
     public abstract String getSystemId();
 
     /**
-     * @return time stamp which was set by the user when creating this Entity. This timestamp is accurate to seconds because Ambrosus Network uses UnixTime format to keep this value
+     * @return timestamp which was set by the user when creating this Entity. This timestamp is accurate to seconds because Ambrosus Network uses UnixTime format to keep this value
      */
     @NonNull
     public abstract Date getTimestamp();
