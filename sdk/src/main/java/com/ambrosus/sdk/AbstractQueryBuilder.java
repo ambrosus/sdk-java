@@ -21,6 +21,42 @@ import com.ambrosus.sdk.utils.Assert;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * A set of *QueryBuilder classes is designed to create search {@linkplain Query queries}
+ * for {@linkplain Asset Assets}, {@linkplain Event Events} and subclasses of these data models.
+ * <br>AbstractQueryBuilder class is a root class of this hierarchy. It's responsible for configuring search criteria
+ * which is common for events and assets {@linkplain Query queries}.
+ *
+ * @param <BuilderType> type of the builder instance which would be returned by methods used to specify search criteria.
+ * <br>This parameter makes it possible to override this type with a subclass type for subclass implementation.
+ * <br>E.g:
+ * <pre>{@code
+ * class MyBuilder extends AbstractQueryBuilder<MyBuilder, Event> {
+ *     MyBuilder() {
+ *         super(Event.class);
+ *     }
+ * }
+ *
+ * //MyBuilder.from(Date) method below returns an instance of MyBuilder type
+ * //because we specified MyBuilder as BuilderType type parameter above
+ * MyBuilder instance = new MyBuilder().from(new Date());}</pre>
+ *
+ * @param <QueryType> type of the data model for which this builder (or subclass) specifies search criteria and builds {@linkplain Query queries}
+ * <br>For example if you want to define a builder for {@linkplain Query queries} configured to search for events you have to use Event type as a QueryType:
+ * <pre>{@code
+ * class MyBuilder extends AbstractQueryBuilder<MyBuilder, Event> {
+ *     MyBuilder() {
+ *         super(Event.class);
+ *     }
+ * }
+ *
+ * MyBuilder myBuilder = new MyBuilder();
+ * //build() method belows returns a query configured to search for Events:
+ * Query<Event> eventQuery = myBuilder.build();}</pre>
+ * See description of type parameter for {@link Query} class for details
+ * @see Query
+ *
+ */
 @SuppressWarnings("unchecked")
 abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<BuilderType, QueryType>, QueryType extends Entity> {
 
