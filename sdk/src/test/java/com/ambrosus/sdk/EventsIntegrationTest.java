@@ -90,7 +90,7 @@ public class EventsIntegrationTest {
             throw new RuntimeException(t);
         }
 
-        result.getRawData();
+        result.getUserData();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class EventsIntegrationTest {
             throw new RuntimeException(t);
         }
 
-        result.getRawData();
+        result.getUserData();
     }
 
     @Test

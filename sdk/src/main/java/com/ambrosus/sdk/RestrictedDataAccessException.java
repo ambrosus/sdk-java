@@ -16,7 +16,7 @@ package com.ambrosus.sdk;
 
 /**
  * Indicates that you are not {@link Network#authorize(AuthToken) authorized} by Ambrosus Network to get event data.
- * Possible reasons are listed in the description of {@link Event#getRawData()} method.
+ * Possible reasons are listed in the description of {@link Event#getUserData()} method.
  */
 public class RestrictedDataAccessException extends AmbrosusException {
 

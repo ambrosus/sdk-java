@@ -84,7 +84,7 @@ class EventActivity : AppCompatActivity() {
             dataSetBuilder.add("Content", SectionTitleRepresentation.factory)
 
             try {
-                val jsonContent = GsonBuilder().setPrettyPrinting().create().toJson(event.rawData)
+                val jsonContent = GsonBuilder().setPrettyPrinting().create().toJson(event.userData)
                 dataSetBuilder.add(jsonContent, TextRepresentation.factory)
             } catch (e: RestrictedDataAccessException) {
                 dataSetBuilder.add(mapOf(e.javaClass.name to (e.message as Any)), SectionRepresentation.factory)

@@ -42,7 +42,7 @@ import java.util.Map;
  *  You can get types of all available data objects with {@link #getDataTypes()} method.
  *  Use {@link #getDataObject(String)} method to retrieve an object of certain type.
  *  <p>
- *  It's also possible to get all available data objects with {@link #getRawData()} method
+ *  It's also possible to get all available data objects with {@link #getUserData()} method
  */
 public class Event extends Entity {
 
@@ -99,7 +99,7 @@ public class Event extends Entity {
     }
 
     /**
-     * @return access level of the event. It's not possible to get event data with {@link #getRawData()}, {@link #getDataTypes()}, {@link #getDataObject(String)} methods if access level of your account is lower than event's or if you are not {@linkplain Network#authorize(AuthToken) authenticated} as a holder of the account which was used to create this event
+     * @return access level of the event. It's not possible to get event data with {@link #getUserData()}, {@link #getDataTypes()}, {@link #getDataObject(String)} methods if access level of your account is lower than event's or if you are not {@linkplain Network#authorize(AuthToken) authenticated} as a holder of the account which was used to create this event
      */
     public int getAccessLevel() {
         return content.idData.accessLevel;
@@ -125,7 +125,7 @@ public class Event extends Entity {
      * <li>if {@linkplain Account#getAccessLevel() access level} of your account is less than {@linkplain #getAccessLevel() access level} of this event
      * </ul>
      */
-    public List<JsonObject> getRawData() throws RestrictedDataAccessException {
+    public List<JsonObject> getUserData() throws RestrictedDataAccessException {
         Assert.assertNotNull(
                 content.getData(),
                 RestrictedDataAccessException.class,
@@ -142,25 +142,25 @@ public class Event extends Entity {
 
 
     /**
-     * Returns list with types of all data objects available with {@link #getRawData()}.
+     * Returns list with types of all data objects available with {@link #getUserData()}.
      * I.e: <p>
      * <code>
-     *     [getDataObjectType(getRawData().get(0)),
+     *     [getDataObjectType(getUserData().get(0)),
      *        ... ,
-     *      getDataObjectType(getRawData().get(getRawData().size()-1)]
+     *      getDataObjectType(getUserData().get(getUserData().size()-1)]
      * </code>
      *
-     * @return list with <code>type</code> field values for {@linkplain #getRawData() all data objects} which this event contains
-     * @throws RestrictedDataAccessException under the same conditions as {@link #getRawData()} method
+     * @return list with <code>type</code> field values for {@linkplain #getUserData() all data objects} which this event contains
+     * @throws RestrictedDataAccessException under the same conditions as {@link #getUserData()} method
      * @see #getDataObjectType(JsonObject)
-     * @see #getRawData()
+     * @see #getUserData()
      *
      */
     @NonNull
     //we need to be sure about the order of dataTypes in some cases (i.e. for AMBEventImplementation), so result is list
     public List<String> getDataTypes() throws RestrictedDataAccessException {
         List<String> result = new ArrayList<>();
-        for (JsonObject dataObject : getRawData()) {
+        for (JsonObject dataObject : getUserData()) {
             result.add(getDataObjectType(dataObject));
         }
         return result;
@@ -168,16 +168,16 @@ public class Event extends Entity {
 
 
     /**
-     * Searches for a data object of specified <code>type</code> in {@link #getRawData() raw data list}
+     * Searches for a data object of specified <code>type</code> in {@link #getUserData() raw data list}
      * @param type - value of <code>type</code> field of required data object
-     * @return data object of specified type from {@link #getRawData() raw data list} or null if this event doesn't contain an object of this type
-     * @throws RestrictedDataAccessException under the same conditions as {@link #getRawData()} method
-     * @see #getRawData()
+     * @return data object of specified type from {@link #getUserData() raw data list} or null if this event doesn't contain an object of this type
+     * @throws RestrictedDataAccessException under the same conditions as {@link #getUserData()} method
+     * @see #getUserData()
      * @see #getDataObjectType(JsonObject)
      */
     @Nullable
     public JsonObject getDataObject(String type) throws RestrictedDataAccessException {
-        for (JsonObject dataObject : getRawData()) {
+        for (JsonObject dataObject : getUserData()) {
             if(type.equals(getDataObjectType(dataObject)))
                 return dataObject.deepCopy();
         }

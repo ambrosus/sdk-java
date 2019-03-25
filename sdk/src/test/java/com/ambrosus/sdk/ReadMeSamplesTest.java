@@ -139,7 +139,7 @@ public class ReadMeSamplesTest {
         Event privateEvent = network.getEvent(event.getSystemId()).execute();
 
         try {
-            List<JsonObject> data = privateEvent.getRawData();
+            List<JsonObject> data = privateEvent.getUserData();
         } catch (RestrictedDataAccessException e) {
             //we get this exception because
             //of querying event with accessLevel > 0
@@ -150,7 +150,7 @@ public class ReadMeSamplesTest {
 
             privateEvent = network.getEvent(event.getSystemId()).execute();
             //now you can get access to event data
-            System.out.println(privateEvent.getRawData());
+            System.out.println(privateEvent.getUserData());
         }
     }
 
