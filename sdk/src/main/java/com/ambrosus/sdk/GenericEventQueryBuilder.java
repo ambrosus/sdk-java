@@ -49,7 +49,7 @@ public class GenericEventQueryBuilder<BuilderType extends GenericEventQueryBuild
 
     /**
      * You can query {@linkplain Event events} by value of the field inside {@linkplain Event#getUserData() user data list}.
-     * Let's assume that there is an {@link Event} which contains following JSON object in the {@linkplain Event#getUserData() user data list}:
+     * Let's assume that there is an {@link Event} which contains the following JSON object in the {@linkplain Event#getUserData() user data list}:
      * <pre>{@code
      * {
      *   "type": "com.user.custom",
@@ -60,22 +60,40 @@ public class GenericEventQueryBuilder<BuilderType extends GenericEventQueryBuild
      * }}</pre>
      * In order to create a {@link Query} for all events containing
      * an object with "dataField" field which value is equal to "dataFieldValue"
-     * you need to configure EventQueryBuilder in the following way:
+     * you need to configure this builder in the following way:
      * <pre>{@code
      * Query<Event> query = new EventQueryBuilder().byDataObjectField("dataField", "dataFieldValue").build(); }</pre>
-     * It's also possible to create a {@link Query} for events by the value of "nestedField" of this data object:
+     * It's also possible to query {@linkplain Event events} by the value of "nestedField" of this data object:
      * <pre>{@code
      * Query<Event> query = new EventQueryBuilder().byDataObjectField("nestedObject.nestedField", "nestedFieldValue").build();}</pre>
      *
+     * You can specify several fields values at the same time.
+     * {@linkplain SearchResult Search result} will contain only {@linkplain Event events}
+     * which contain all specified fields with appropriate values in this case, e.g:
+     * <pre>{@code
+     * Query<Event> query = new EventQueryBuilder()
+     *             .byDataObjectField("dataField", "value")
+     *             .byDataObjectField("anotherField", "anotherValue")
+     *             .build();}</pre>
+     * This {@link Query} will return {@linkplain Event events}
+     * which have both "dataField" and "anotherField" in {@linkplain Event#getUserData() user data list}
+     * and it doesn't matter if these fields belongs to a single or several data objects.
+     * <p>
+     * It's not allowed to specify value of the same field several times.
+     * {@link IllegalStateException} will be thrown in this case.
+     *
      * @param fieldName name of the field of a data object inside {@linkplain Event#getUserData() user data list}.
-     * @param fieldValue value which must contain field specified by <code>fieldName</code> parameter in order to match this search criteria
+     * @param fieldValue value which must contain field specified by <code>fieldName</code> parameter in order to match this search criteria     *
+     *
      * @return this builder instance
+     *
+     * @throws IllegalStateException if you have already specified some value for <code>fieldName</code>
      */
     @NonNull
-    public BuilderType byDataObjectField(@NonNull String fieldName, @NonNull String fieldValue) {
+    public BuilderType byDataObjectField(@NonNull String fieldName, @NonNull String fieldValue) throws IllegalStateException {
         
         String queryKey = String.format(Locale.US, "data[%s]", Assert.assertNotNull(fieldName, "fieldName == null"));
-        
+
         //TODO add integration unit test to ensure that sever still doesn't allow to search for several values in the same field name
         String existingValue = params.getString(queryKey);
         if(existingValue != null)             
