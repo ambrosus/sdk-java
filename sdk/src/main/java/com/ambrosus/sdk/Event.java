@@ -110,7 +110,7 @@ public class Event extends Entity {
     }
 
     /**
-     * Every event contains an array of {@link JsonObject} with information what actually happened.
+     * Every event contains a list of {@link JsonObject} with information what actually happened.
      * Each item in this array is a {@linkplain JsonObject} with required <code>type</code> field which should contain a valid string value
      * You can get data for all events which {@linkplain #getAccessLevel() access level} belongs to [0; {@linkplain Account#getAccessLevel() your account accessLevel}] range if you are authenticated as a holder of {@linkplain #getAccountAddress() account} which was used to create this event or a holder of one of it's child accounts
      * If you are not authenticated on the network with {@link Network#authorize(AuthToken)} method you can get only data for events which
@@ -142,7 +142,7 @@ public class Event extends Entity {
 
 
     /**
-     * Returns list with types of all data objects available with {@link #getUserData()}.
+     * Returns list with types for all data objects which you can get with {@link #getUserData()} method.
      * I.e: <p>
      * <code>
      *     [getDataObjectType(getUserData().get(0)),
@@ -168,7 +168,7 @@ public class Event extends Entity {
 
 
     /**
-     * Searches for a data object of specified <code>type</code> in {@link #getUserData() raw data list}
+     * Searches for a data object of specified <code>type</code> in the {@linkplain #getUserData() user data list}
      * @param type - value of <code>type</code> field of required data object
      * @return data object of specified type from {@link #getUserData() raw data list} or null if this event doesn't contain an object of this type
      * @throws RestrictedDataAccessException under the same conditions as {@link #getUserData()} method
