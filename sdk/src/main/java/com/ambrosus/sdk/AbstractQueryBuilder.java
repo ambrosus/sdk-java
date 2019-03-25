@@ -68,8 +68,12 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
     private final Class<QueryType> queryType;
     final Query.Params params;
 
-    AbstractQueryBuilder(Class<QueryType> queryType) {
-        this.queryType = queryType;
+    /**
+     * This constructor is designed to use from subclasses implementation
+     * @param queryResultType an {@link Class} instance for <code>QueryType</code> type parameter
+     */
+    AbstractQueryBuilder(Class<QueryType> queryResultType) {
+        this.queryType = queryResultType;
         params = new Query.Params();
     }
 
@@ -78,12 +82,32 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
         this.params = query.getParams();
     }
 
+    /**
+     * Configures query to search for entities which {@link Entity#getTimestamp() timestamp} value
+     * is greater than or equal to the number of seconds in the provided <code>date</code> value.
+     * <p>
+     * So if you always use current time value as a timestamp for new entities (default behaviour)
+     * this method will configure a query to search for entities which where created after specified <code>date</code> (inclusive)
+     *
+     * @param date specifies minimum number of seconds for {@link Entity#getTimestamp() timestamp} field value of entities which you want to query
+     * @return this builder instance
+     */
     @NonNull
     public BuilderType from(@NonNull Date date) {
         params.set("fromTimestamp", date);
         return (BuilderType) this;
     }
 
+    /**
+     * Configures query to search for entities which {@link Entity#getTimestamp() timestamp} value
+     * is less than or equal to the number of seconds in the provided <code>date</code> value.
+     * <p>
+     * So if you always use current time value as a timestamp for new entities (default behaviour)
+     * this method will configure a query to search for entities which where created before specified <code>date</code> (inclusive)
+     *
+     * @param date specifies maximum number of seconds for {@link Entity#getTimestamp() timestamp} field value of entities which you want to query
+     * @return this builder instance
+     */
     @NonNull
     public BuilderType to(@NonNull Date date) {
         params.set("toTimestamp", date);
@@ -91,16 +115,31 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
     }
 
     /**
+     * By default SDK provides only first page from overall search result.
+     * With this method you can configure a query to fetch a page with a <code>pageIndex</code> index
+     * We recommend you do not use this method directly but use an instance of {@link PageQueryBuilder}
+     * to create {@linkplain Query queries} for other pages instead.
      *
-     * @param page Zero-based page index
-     * @return
+     * @param pageIndex zero-based index of the page which you want to query
+     * @return this builder instance
      */
-    public BuilderType page(int page) {
-        params.set(PAGE_KEY, page);
+    public BuilderType page(int pageIndex) {
+        params.set(PAGE_KEY, pageIndex);
         return (BuilderType) this;
     }
 
-    public BuilderType perPage(int perPage) {
+    /**
+     * Specifies maximum number of entities which you can get with new query.
+     * By default query relies on the server configuration for this parameter.
+     * For now server doesn't allow to query more than 100 entities at once and returns 100 entities by default.
+     * If you want to reset to default behaviour you can pass 0 as <code>perPage</code> value.
+     *
+     * @param perPage specifies maximum number of entities which you will get with new query (0 means use server configuration for this value)
+     * @return this builder instance
+     *
+     * @throws IllegalArgumentException if <code>perPage</code> value doesn't belong to the [0, 100] range
+     */
+    public BuilderType perPage(int perPage) throws IllegalArgumentException {
         Assert.assertTrue(
                 perPage >= 0 && perPage <= MAX_PAGE_SIZE,
                 IllegalArgumentException.class,
@@ -115,6 +154,12 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
         return (BuilderType) this;
     }
 
+
+    /**
+     * Configures query to search for entities which where created by account with <code>accountAddress</code> {@linkplain Entity#getAccountAddress() address}
+     * @param accountAddress specifies the address of account which was used to create entities
+     * @return this builder instance
+     */
     @NonNull
     public BuilderType createdBy(@NonNull String accountAddress) {
         params.set("createdBy", Assert.assertNotNull(accountAddress, "accountAddress == null"));
@@ -122,6 +167,12 @@ abstract class AbstractQueryBuilder<BuilderType extends AbstractQueryBuilder<Bui
     }
 
 
+    /**
+     * Creates a {@link Query} with a number of search criteria which match current configuration of the builder instance.
+     * This {@link Query} can be used to search for entities of <code>QueryType</code> type and its subtypes.
+     *
+     * @return {@link Query} with search criteria which match current configuration of the builder instance
+     */
     public Query<QueryType> build() {
         return new Query<>(queryType, params);
     }

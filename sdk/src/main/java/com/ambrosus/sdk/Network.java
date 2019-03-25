@@ -95,23 +95,38 @@ public class Network {
         service = retrofit.create(Service.class);
     }
 
+    /**
+     * This method is designed to fetch {@link Asset} with specified {@link Asset#getSystemId() assetId} from the network
+     * @param assetId unique {@linkplain Asset#getSystemId() asset identifier}
+     * @return {@link NetworkCall NetworkCall&lt;Asset&gt;} instance which can be used to fetch {@link Asset} with specified {@link Asset#getSystemId() assetId}
+     * <br>{@link EntityNotFoundException} will be thrown during execution of this {@link NetworkCall}
+     * if Network would not be able to find an {@link Asset} with {@linkplain Asset#getSystemId() systemId} which matches <code>assetId</code> parameter
+     */
     @NonNull
     public NetworkCall<Asset> getAsset(@NonNull String assetId) {
         return new NetworkCallWrapper<>(service.getAsset(assetId), MissingEntityErrorHandler.INSTANCE);
     }
 
     /**
-     * Creates a <code>NetworkCall&lt;Event&gt;</code> instance which can be used to fetch event with specific <code>eventId</code> from the Ambrosus Network
-     * {@link EntityNotFoundException} will be thrown during execution of this <code>NetworkCall</code> if event with such <code>eventId</code> doesn't exist
-     *
-     * @param eventId - unique event identifier
-     * @return <code>NetworkCall&lt;Event&gt;</code> which can be used to fetch event with specific <code>eventId</code> from the network
+     * This method is designed to fetch {@link Event} with specified {@link Event#getSystemId() eventId} from the network
+     * @param eventId unique {@linkplain Event#getSystemId() event identifier}
+     * @return {@link NetworkCall NetworkCall&lt;Event&gt;} instance which can be used to fetch {@link Event} with specified {@link Event#getSystemId() eventId}
+     * <br>{@link EntityNotFoundException} will be thrown during execution of this {@link NetworkCall}
+     * if Network would not be able to find an {@link Event} with {@linkplain Event#getSystemId() systemId} which matches <code>eventId</code> parameter
      */
     @NonNull
     public NetworkCall<Event> getEvent(@NonNull String eventId) {
         return new NetworkCallWrapper<>(service.getEvent(eventId, getOptionalAMBTokenAuthHeader()), MissingEntityErrorHandler.INSTANCE);
     }
 
+    /**
+     * This method is designed to search for {@linkplain Asset assets} which meets specified criteria.
+     *
+     * @param query specifies search criteria
+     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Asset&gt;&gt;} instance which can be used to get a search result
+     * @see AssetQueryBuilder
+     * @see Query
+     */
     @NonNull
     public NetworkCall<SearchResult<Asset>> findAssets(@NonNull Query<Asset> query) {
         return new BasicSearchRequestWrapper<>(
@@ -120,6 +135,14 @@ public class Network {
         );
     }
 
+    /**
+     * This method is designed to search for {@linkplain Event events} which meets specified criteria.
+     *
+     * @param query specifies search criteria
+     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Event&gt;&gt;} instance which can be used to get a search result
+     * @see EventQueryBuilder
+     * @see Query
+     */
     @NonNull
     public NetworkCall<SearchResult<Event>> findEvents(@NonNull Query<? extends Event> query) {
         return new BasicSearchRequestWrapper<>(
