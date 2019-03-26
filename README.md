@@ -17,7 +17,7 @@ This document itself, provides an overview of the core classes and key features 
   * [Event](#event)
   * [Private Key](#private-key)
 * [Key features](#key-features)
-  * [Retrieve asset/event by ID](#retrieve-asset/event-by-id)
+  * [Retrieve asset/event by ID](#retrieve asset/event by id)
   * [Search for assets/events satisfying provided criteria](#search-for-assets/events-satisfying-provided-criteria)
   * [Fetching next pages of a search result (pagination support)](#fetching-next-pages-of-a-search-result)
   * [Create assets and events](#create-assets-and-events)
