@@ -21,6 +21,7 @@ import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.UnixTime;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -281,11 +282,16 @@ public class Event extends Entity {
 
         //TODO we have to mention in java-doc that event can't contain several data objects of the same type
         //TODO we have to cover this behaviour with API integration test
-        public Builder addData(@NonNull String type, @NonNull JsonObject object) {
+        public Builder addData(@NonNull String type, @NonNull JsonObject dataObject) {
             Assert.assertNotNull(type, "Type argument can't be null");
-            JsonObject dataObject = object.deepCopy();
-            dataObject.addProperty(Event.DATA_OBJECT_ATTR_TYPE, type);
-            data.put(type, dataObject);
+
+            JsonElement typeField = dataObject.get("type");
+            if(typeField != null && !(typeField.isJsonPrimitive() && type.equals(typeField.getAsString())))
+                throw new IllegalArgumentException("dataObject contains type field and its value isn't equal to \"type\" argument");
+
+            JsonObject object = dataObject.deepCopy();
+            object.addProperty(Event.DATA_OBJECT_ATTR_TYPE, type);
+            data.put(type, object);
             return this;
         }
 
