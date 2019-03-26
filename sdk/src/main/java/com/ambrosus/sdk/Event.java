@@ -197,10 +197,30 @@ public class Event extends Entity {
      * @throws IllegalArgumentException if <code>dataObject</code> doesn't contain <code>type</code> field
      * @throws ClassCastException if <code>dataObject</code> has <code>type</code> field but this field doesn't contain a valid string value
      */
-    public static String getDataObjectType(JsonObject dataObject) throws IllegalArgumentException, ClassCastException {
-        if(dataObject.has(DATA_OBJECT_ATTR_TYPE))
-            return dataObject.get(DATA_OBJECT_ATTR_TYPE).getAsString();
-        throw new IllegalArgumentException("Invalid data object: " + dataObject.toString() + " (missing \"type\" field)");
+    //TODO move these methods to separate DataObject class
+    public static String getDataObjectType(JsonObject dataObject) throws IllegalArgumentException {
+        String type = getDataObjectTypeOrNull(dataObject);
+        Assert.assertNotNull(type, IllegalArgumentException.class, "Invalid data object: " + dataObject.toString() + " (missing \"type\" field)");
+        return type;
+    }
+
+    @Nullable
+    private static String getDataObjectTypeOrNull(JsonObject dataObject) throws IllegalArgumentException {
+        JsonElement typeField = dataObject.get(DATA_OBJECT_ATTR_TYPE);
+        if(typeField != null) {
+            Assert.assertTrue(
+                    typeField.isJsonPrimitive() && typeField.getAsJsonPrimitive().isString(),
+                    IllegalArgumentException.class,
+                    "Type field must contain a valid string value, but has: " + typeField.toString()
+            );
+            return typeField.getAsString();
+        }
+        return null;
+    }
+
+    private static JsonObject setDataObjectType(JsonObject dataObject, String type) {
+        dataObject.addProperty(Event.DATA_OBJECT_ATTR_TYPE, type);
+        return dataObject;
     }
 
     static class EventIdData extends CreationData {
@@ -282,16 +302,17 @@ public class Event extends Entity {
 
         //TODO we have to mention in java-doc that event can't contain several data objects of the same type
         //TODO we have to cover this behaviour with API integration test
-        public Builder addData(@NonNull String type, @NonNull JsonObject dataObject) {
+        public Builder addData(@NonNull String type, @NonNull JsonObject dataObject) throws IllegalArgumentException {
             Assert.assertNotNull(type, "Type argument can't be null");
 
-            JsonElement typeField = dataObject.get("type");
-            if(typeField != null && !(typeField.isJsonPrimitive() && type.equals(typeField.getAsString())))
-                throw new IllegalArgumentException("dataObject contains type field and its value isn't equal to \"type\" argument");
+            String dataObjectType = getDataObjectTypeOrNull(dataObject);
+            Assert.assertTrue(
+                    dataObjectType == null || type.equals(dataObjectType),
+                    IllegalArgumentException.class,
+                    "dataObject contains type field which value doesn't equal to type argument"
+            );
 
-            JsonObject object = dataObject.deepCopy();
-            object.addProperty(Event.DATA_OBJECT_ATTR_TYPE, type);
-            data.put(type, object);
+            data.put(type, setDataObjectType(dataObject.deepCopy(), type));
             return this;
         }
 
