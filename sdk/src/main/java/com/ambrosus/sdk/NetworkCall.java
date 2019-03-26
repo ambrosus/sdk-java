@@ -27,16 +27,21 @@ public interface NetworkCall<T> extends Cloneable {
 
     /**
      * Synchronously executes request and return its response.
+     * <p>
+     * If you want to execute this request asynchronously use {@link #enqueue(NetworkCallback)} method instead of this one.
      *
      * @throws java.io.IOException if a connection problem occurred while communicating with the network
      * @throws AmbrosusException in case of some client-side error
      * @throws RuntimeException (and subclasses) which signal about an issue with SDK or Backend implementation
+     * @see #enqueue(NetworkCallback)
      */
     @NonNull T execute() throws Throwable;
 
     /**
-     * Asynchronously send the request and notify {@code callback} of its response or if an error
-     * occurred talking to the server, creating the request, or processing the response.
+     * Asynchronously executes the request and notifies {@code callback} of its response or about an error
+     * which have happened during execution or processing the response.
+     * <p>
+     * If you want to execute this request synchronously use {@link #execute()} method instead this one.
      */
     void enqueue(@NonNull NetworkCallback<T> callback);
 

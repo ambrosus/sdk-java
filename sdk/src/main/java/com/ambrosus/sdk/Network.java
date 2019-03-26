@@ -33,7 +33,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import okio.ByteString;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+//TODO Add package-level description
 /**
  *  Network is a core class responsible for communication with Ambrosus Network.
  *  It contains a number of get*(...), find*(...) and push*(...) methods which can be used to retrieve/push data from/to AMB-Net.
@@ -123,7 +123,7 @@ public class Network {
      * This method is designed to search for {@linkplain Asset assets} which meets specified criteria.
      *
      * @param query specifies search criteria
-     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Asset&gt;&gt;} instance which can be used to get a search result
+     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Asset&gt;&gt;} instance which {@linkplain NetworkCall#execute() can be used} to get a {@linkplain SearchResult search result}
      * @see AssetQueryBuilder
      * @see Query
      */
@@ -139,7 +139,7 @@ public class Network {
      * This method is designed to search for {@linkplain Event events} which meets specified criteria.
      *
      * @param query specifies search criteria
-     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Event&gt;&gt;} instance which can be used to get a search result
+     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Event&gt;&gt;} instance which {@linkplain NetworkCall#execute() can be used} to get a {@linkplain SearchResult search result}
      * @see EventQueryBuilder
      * @see Query
      */

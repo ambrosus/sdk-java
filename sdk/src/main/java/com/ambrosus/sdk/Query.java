@@ -28,7 +28,11 @@ import java.util.Map;
  * This class represents a query which can be used to search for entities of <code>T</code> type.
  * For example you can {@linkplain Network#findEvents(Query) search for Events} using a <code>Query</code> instance parameterized with {@link Event} type ({@code Query<Event>}).
  * You can also use {@link Network#find(Query)} method to search for any entities supported by a {@link Network} implementation.
- * <br>Each <code>Query</code> encapsulates a number of search criteria. You can use any subclass of {@link AbstractQueryBuilder} class to build a query.
+ * <p>
+ * Each <code>Query</code> encapsulates search criteria and index of the page of overall search result which you can get using it.
+ * You can use any subclass of {@link AbstractQueryBuilder} class to build a query.
+ * As soon as you get a {@link SearchResult} instance with content of the first page
+ * you can use {@link PageQueryBuilder} to build queries which will give you content of other pages.
  *
  * @param <T> type of the entities which can be found with this <code>Query</code> instance
  * @see AssetQueryBuilder
@@ -37,6 +41,8 @@ import java.util.Map;
  * @see Network#findAssets(Query)
  * @see Network#find(Query)
  * @see GenericEventQueryBuilder
+ * @see SearchResult
+ * @see PageQueryBuilder
  */
 public final class Query<T extends Entity> implements Serializable {
 
