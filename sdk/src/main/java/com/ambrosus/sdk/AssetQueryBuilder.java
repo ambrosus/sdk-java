@@ -21,14 +21,14 @@ import java.util.Date;
  * In order to get a search result you need to:
  * <ol>
  * <li> specify your search criteria with public methods of this builder
- * <li> create a query instance with {@link AssetQueryBuilder#build()} method
- * <li> pass this query instance to {@link Network#findAssets(Query)} or {@link Network#find(Query)} methods in order to get a search result
+ * <li> create a query instance with {@link #build()} method
+ * <li> pass this query instance to {@link Network#findAssets(Query)} or {@link Network#find(Query)} methods
  * </ol>
- * @see AssetQueryBuilder#createdBy(String)
- * @see AssetQueryBuilder#from(Date)
- * @see AssetQueryBuilder#to(Date)
- * @see AssetQueryBuilder#page(int)
- * @see AssetQueryBuilder#perPage(int)
+ * @see #createdBy(String)
+ * @see #from(Date)
+ * @see #to(Date)
+ * @see #page(int)
+ * @see #perPage(int)
  * @see Network#findAssets(Query)
  * @see Network#find(Query)
  *
