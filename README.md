@@ -306,6 +306,7 @@ These classes might help you to build your own implementation of the Network cla
 
 **AMBAssetInfo** (JSON model)
 https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/model/AMBAssetInfo.java
+
 **AMBEvent**
 https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/model/AMBEvent.java
 
