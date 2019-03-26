@@ -111,9 +111,8 @@ public class Event extends Entity {
     }
 
     /**
-     * Every event contains a list of {@link JsonObject} with information what actually happened.
-     * Each item in this array is a {@linkplain JsonObject} with required <code>type</code> field which should contain a valid string value
-     * You can get data for all events which {@linkplain #getAccessLevel() access level} belongs to [0; {@linkplain Account#getAccessLevel() your account accessLevel}] range if you are authenticated as a holder of {@linkplain #getAccountAddress() account} which was used to create this event or a holder of one of it's child accounts
+     * Returns a list of {@link JsonObject} with information what actually happened.
+     * You can get this data for all events which {@linkplain #getAccessLevel() access level} belongs to range  of [0; {@linkplain Account#getAccessLevel() your account accessLevel}] if you are authenticated as a holder of {@linkplain #getAccountAddress() account} which was used to create this event or a holder of one of it's child accounts
      * If you are not authenticated on the network with {@link Network#authorize(AuthToken)} method you can get only data for events which
      * access level is set to 0.
      *
@@ -143,7 +142,7 @@ public class Event extends Entity {
 
 
     /**
-     * Returns list with types for all data objects which you can get with {@link #getUserData()} method.
+     * Returns list containing types for all data objects which you can get with {@link #getUserData()} method.
      * I.e: <p>
      * <code>
      *     [getDataObjectType(getUserData().get(0)),
@@ -151,7 +150,7 @@ public class Event extends Entity {
      *      getDataObjectType(getUserData().get(getUserData().size()-1)]
      * </code>
      *
-     * @return list with <code>type</code> field values for {@linkplain #getUserData() all data objects} which this event contains
+     * @return list of {@linkplain #getUserData() all data objects} types
      * @throws RestrictedDataAccessException under the same conditions as {@link #getUserData()} method
      * @see #getDataObjectType(JsonObject)
      * @see #getUserData()
@@ -170,8 +169,7 @@ public class Event extends Entity {
 
     /**
      * Searches for a data object of specified <code>type</code> in the {@linkplain #getUserData() user data list}
-     * @param type - value of <code>type</code> field of required data object
-     * @return data object of specified type from {@link #getUserData() raw data list} or null if this event doesn't contain an object of this type
+     * @return data object of specified type from {@link #getUserData() user data list} or null if this event doesn't contain an object of this type
      * @throws RestrictedDataAccessException under the same conditions as {@link #getUserData()} method
      * @see #getUserData()
      * @see #getDataObjectType(JsonObject)
@@ -191,11 +189,9 @@ public class Event extends Entity {
     }
 
     /**
-     * Returns value of the <code>type</code> field of the <code>dataObject</code>
-     * @param dataObject - {@link JsonObject} which <code>type</code> field value you want to get
-     * @return value of the <code>type</code> field of <code>dataObject</code>
-     * @throws IllegalArgumentException if <code>dataObject</code> doesn't contain <code>type</code> field
-     * @throws ClassCastException if <code>dataObject</code> has <code>type</code> field but this field doesn't contain a valid string value
+     * Returns type of the provided <code>dataObject</code>
+     * @throws IllegalArgumentException when it's not possible to determine <code>dataObject</code> type
+     * because it's missing <code>type</code> field or this field is not a valid string field
      */
     //TODO move these methods to separate DataObject class
     public static String getDataObjectType(JsonObject dataObject) throws IllegalArgumentException {
