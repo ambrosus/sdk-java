@@ -17,6 +17,7 @@ package com.ambrosus.sdk;
 import android.support.annotation.NonNull;
 
 import com.ambrosus.sdk.utils.Assert;
+import com.google.gson.JsonObject;
 
 import java.util.Date;
 import java.util.Locale;
@@ -88,6 +89,8 @@ public class GenericEventQueryBuilder<BuilderType extends GenericEventQueryBuild
      * @return this builder instance
      *
      * @throws IllegalStateException if you have already specified some value for <code>fieldName</code>
+     *
+     * @see Event#getUserData()
      */
     @NonNull
     public BuilderType byDataObjectField(@NonNull String fieldName, @NonNull String fieldValue) throws IllegalStateException {
@@ -103,8 +106,21 @@ public class GenericEventQueryBuilder<BuilderType extends GenericEventQueryBuild
         return (BuilderType) this;
     }
 
+    /**
+     * Configures query to search for {@linkplain Event events} which contain data object of specified <code>type</code> inside {@linkplain Event#getUserData() user data list}.
+     * <p>
+     * SDK keeps data object type in the <code>type</code> field of each data object.
+     * This method just requests {@linkplain Event events} which have at least one data object with specified value for the <code>type</code> field.
+     * This makes impossible to set this search criteria several times because
+     * it's not allowed to search for several values of the same field at the same time.
+     *
+     * @return this builder instance
+     * @throws IllegalStateException when you try to specify this search criteria several times for single builder instance
+     * @see Event#getDataObject(String)
+     * @see Event#getDataObjectType(JsonObject)
+     */
     @NonNull
-    public BuilderType byDataObjectType(@NonNull String type) {
+    public BuilderType byDataObjectType(@NonNull String type) throws IllegalStateException {
         byDataObjectField(Event.DATA_OBJECT_ATTR_TYPE, type);
         return (BuilderType) this;
     }
