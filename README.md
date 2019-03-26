@@ -17,15 +17,15 @@ This document itself, provides an overview of the core classes and key features 
   * [Event](#event)
   * [Private Key](#private-key)
 * [Key features](#key-features)
-  * [Retrieve asset/event by ID](#retrieve asset/event by id)
-  * [Search for assets/events satisfying provided criteria](#search-for-assets/events-satisfying-provided-criteria)
+  * [Retrieve asset/event by ID](#retrieve-assetevent-by-id)
+  * [Search for assets/events satisfying provided criteria](#search-for-assetsevents-satisfying-provided-criteria)
   * [Fetching next pages of a search result (pagination support)](#fetching-next-pages-of-a-search-result)
   * [Create assets and events](#create-assets-and-events)
   * [Create event with limited access and query content of this event](#create-event-with-limited-access-and-query-content-of-this-event)
   * [Configure Node API endpoint](#configure-node-api-endpoint)
   * [Using custom data models](#using-custom-data-models)
-  * [Example: Search for information about item which is marked with “3451080000324” EAN13 barcode.](#example)
-* [Demo app (Ambrosus Viewer)](#demo-app)
+  * [Example: Search for information about item which is marked with “3451080000324” EAN13 barcode.](#example-search-for-information-about-item-which-is-marked-with-3451080000324-ean13-barcode)
+* [Demo app (Ambrosus Viewer)](#demo-app-ambrosus-viewer)
 
 ## Getting started
 
