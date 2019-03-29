@@ -42,12 +42,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *  You can use {@link com.ambrosus.sdk.model.AMBNetwork} as a sample of such implementation.
  *  <p>
  *  Usage example:
- *  <pre><code>
+ *  <pre>{@code
  *  String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
  *  Network network = new Network();
  *  NetworkCall<Asset> networkCall = network.getAsset(assetId);
  *  Asset asset = networkCall.execute();
- *  </code></pre>
+ *  }</pre>
  *
  */
 
