@@ -17,8 +17,8 @@ package com.ambrosus.sdk;
 import android.support.annotation.NonNull;
 
 /**
- * NetworkCall interface represents a network request which can be executed synchronously
- * (with {@link #execute) method or asynchronously (with {@link #enqueue} method.
+ * NetworkCall interface represents a network request which can be executed {@linkplain #execute()} synchronously}
+ * or {@linkplain #enqueue(NetworkCallback)} asynchronously}.
  * It provides the same behaviour as <a href="https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html">Call</a> interface from Retrofit library
  *
  * @param <T> - type of the data which would be returned in the case of successful excectuion of this request

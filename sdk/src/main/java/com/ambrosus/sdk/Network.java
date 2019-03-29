@@ -178,7 +178,7 @@ public class Network {
      *
      * <pre>{@code
      * Query<AMBEvent> ambEventQuery = new AMBEventQueryBuilder().build();
-     * SearchResult<? extends Entity> ambEventSearchResult = network.find(assetQuery).execute();}
+     * SearchResult<? extends Entity> ambEventSearchResult = network.find(assetQuery).execute();}</pre>
      *
      * @throws IllegalArgumentException if {@link Query#resultType} is not a subclass of {@link Event} or {@link Asset} classes
      */
