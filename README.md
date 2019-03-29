@@ -80,7 +80,8 @@ dependencies {
 
 ## Overview of core classes and key concepts
 
-### [Network](sdk/src/main/java/com/ambrosus/sdk/Network.java) is a core class responsible for communication with AMB-NET. It contains a number of get*(...), find*(...) and push*(...) methods  which can be used to retrieve/push data models from/to AMB-NET eg.:
+### [Network](sdk/src/main/java/com/ambrosus/sdk/Network.java) 
+is a core class responsible for communication with AMB-NET. It contains a number of get*(...), find*(...) and push*(...) methods  which can be used to retrieve/push data models from/to AMB-NET eg.:
 
 ```java
 String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
@@ -88,7 +89,7 @@ Network network = new Network();
 NetworkCall<Asset> networkCall = network.getAsset(assetId);
 ```
 
-Each of these methods returns an instance of [NetworkCall<ResultType>](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) interface. It provides the same behaviour as [Call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html) interface from Retrofit library. So you have to perform this network call to get an actual data model of ResultType. You can do it synchronously by calling NetworkCall.execute() method or asynchronously by passing an instance of [NetworkCallBack<ResultType>](sdk/src/main/java/com/ambrosus/sdk/NetworkCallback.java) to NetworkCall.enqueue(NetworkCallBack<ResultType>) method. E.g:
+Each of these methods returns an instance of [NetworkCall<ResultType>](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) interface. It provides the same behaviour as [Call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html) interface from Retrofit library. So you have to perform this network call to get an actual data model of ResultType. You can do it synchronously by calling `NetworkCall.execute()` method or asynchronously by passing an instance of [NetworkCallBack<ResultType>](sdk/src/main/java/com/ambrosus/sdk/NetworkCallback.java) to `NetworkCall.enqueue(NetworkCallBack<ResultType>)` method. E.g:
 
 ```java
 //Synchronous execution   
@@ -141,7 +142,7 @@ Events are registries of any change of state that has occurred to an Asset; the 
 * WHEN (a timestamp of the Event indicating when it was originally created). 
 * WHY (indicating the business procedure and its purpose).
 
-Each item in this array is an object of a some type identified by a string constant. You can get types of all available data objects with Event.getDataTypes() method. You can use Event.getDataObject(String type) to retrieve an object of a certain type. 
+Each item in this array is an object of a some type identified by a string constant. You can get types of all available data objects with `Event.getDataTypes()` method. You can use `Event.getDataObject(String type)` to retrieve an object of a certain type. 
 
 ### Private Key
 
@@ -167,7 +168,7 @@ System.out.println(event.getSystemId());
 
 ### Search for assets/events satisfying provided criteria
  
-You can search for assets/events which match your criteria with **Network.findAssets(Query<Asset> query) / Network.findEvents(Query<Event> query)** methods. These methods return a [NetworkCall](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) instance of which the resultant type is defined as [SearchResult<Assetsdk/src/main/java/com/ambrosus/sdk/SearchResult.java>]() or **SearchResult<Event>** respectively. E.g:
+You can search for assets/events which match your criteria with `Network.findAssets(Query<Asset> query)` / `Network.findEvents(Query<Event> query)` methods. These methods return a [NetworkCall](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) instance of which the resultant type is defined as [SearchResult<Asset>](sdk/src/main/java/com/ambrosus/sdk/SearchResult.java) or `SearchResult<Event>` respectively. E.g:
 
 ```java
 SearchResult<Event> searchResult 
@@ -191,7 +192,7 @@ values = searchResult.getValues();
 
 ### Fetching next pages of a search result (pagination support)
 
-When you query for events or assets with **Network.findEvents(Query<Event> query)** / **Network.findAssets(Query<Asset> query)** methods sdk will return to you only the first page of the overall search result. This page can contain up to 100 data models. If your search results contain more than 100 data models you can access the subsequent pages using **PageQueryBuilder**:
+When you query for events or assets with `Network.findEvents(Query<Event> query)` / `Network.findAssets(Query<Asset> query)` methods sdk will return to you only the first page of the overall search result. This page can contain up to 100 data models. If your search results contain more than 100 data models you can access the subsequent pages using [PageQueryBuilder](sdk/src/main/java/com/ambrosus/sdk/PageQueryBuilder.java):
 
 ```java
 Query<Event> query = new EventQueryBuilder().createdBy("0x9A3Db936c94523ceb1CcC6C90461bc34a46E9dfE").build();
@@ -207,7 +208,7 @@ if(firstPage.getTotalPages() > 1) {
 
 ### Create assets and events
 
-You can create assets and events with the **Asset.Builder** and **Event.Builder** classes respectively. E.g:
+You can create assets and events with the `Asset.Builder` and `Event.Builder` classes respectively. E.g:
 
 ```java
 String privateKey = "<<Put your Private Key (link to private key section) here>>";
@@ -256,7 +257,7 @@ try {
  }
 ``` 
 
-In order to authenticate oneself as an account holder you have to create an AuthToken instance and provide it for the **Network** class instance. This will allow you to get data for all events with access level within your designated range of [0; your account accessLevel]
+In order to authenticate oneself as an account holder you have to create an [AuthToken](sdk/src/main/java/com/ambrosus/sdk/AuthToken.java) instance and provide it for the `Network` class instance. This will allow you to get data for all events with access level within your designated range of [0; your account accessLevel]
 
 ```java
 AuthToken authToken = AuthToken.create(privateKey, 1, TimeUnit.DAYS);
@@ -269,7 +270,7 @@ System.out.println(privateEvent.getRawData());
 
 ### Configure Node API endpoint
 
-It’s possible to use different network API endpoints. To do this, one must first create an instance of Configuration class, and then set the API endpoint for this instance with `url(String url)`{:.java} method. Once this has been done, it is then possible to create an instance of `Network` class using the following configuration:
+It’s possible to use different network API endpoints. To do this, one must first create an instance of Configuration class, and then set the API endpoint for this instance with `url(String url)` method. Once this has been done, it is then possible to create an instance of `Network` class using the following configuration:
 
 ```java
 Configuration configuration = new Configuration().url("https://hermes.ambrosus.com");
@@ -306,7 +307,7 @@ SearchResult<Event> eventSearchResult = network.findEvents(query).execute();
 Event item = eventSearchResult.getValues().get(0);
 ```
 
-It is also possible to do the same thing using a generic `Event` model + `AssetInfoQueryBuilder` and `Identifier` classes which contain constants from the code above:
+It is also possible to do the same thing using a generic `Event` model + [AssetInfoQueryBuilder](sdk/src/main/java/com/ambrosus/sdk/model/AssetInfoQueryBuilder.java) and [Identifier](sdk/src/main/java/com/ambrosus/sdk/model/Identifier.java) classes which contain constants from the code above:
 
 ```java
 Query<AMBAssetInfo> assetInfoQuery = new AssetInfoQueryBuilder()
