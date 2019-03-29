@@ -1,10 +1,10 @@
 # Ambrosus Java/Android SDK
 
-The Ambrosus Java/Android development kit makes it easy for developers to interact with the Ambrosus Network via the Ambrosus Node API (https://ambrosus.docs.apiary.io/#). It is designed to encapsulate most of the Ambrosus Network and Node API implementation details and to also allow third-party developers to focus on the underlying business logic implementation of their respective solutions. 
+The Ambrosus Java/Android development kit makes it easy for developers to interact with the Ambrosus Network via the [Ambrosus Node API](https://ambrosus.docs.apiary.io/#). It is designed to encapsulate most of the Ambrosus Network and Node API implementation details and to also allow third-party developers to focus on the underlying business logic implementation of their respective solutions. 
 
 When it comes to software requirements, both Java/Android SDK versions require Java 8. Meanwhile, the Android version is also compatible with Android API 19+ (Android 4.4).
 
-This document itself, provides an overview of the core classes and key features of the Java/Android SDK. It functions to introduce the key concepts of the Ambrosus Network, and to also provide a step by step guide to creating, retrieving, and searching for assets and events (among other features). The document begins by explaining how to get started with Java 6+. Next, an overview of the key concepts within the Ambrosus Network is provided (for those in need of a more thorough introduction to the basic concepts of the Ambrosus Network please refer to: https://tech.ambrosus.com/#core). Third, the key features of the Java/Android SDK are explained: such features range from retrieving assets and events by ID’s to using custom data models. Finally, to conclude the Ambrosus Viewer is included as a Demo App for prospective developers to make use of. 
+This document itself, provides an overview of the core classes and key features of the Java/Android SDK. It functions to introduce the key concepts of the Ambrosus Network, and to also provide a step by step guide to creating, retrieving, and searching for assets and events (among other features). The document begins by explaining how to get started with AmbrosusSDK on different platforms. Next, an overview of the key concepts within the Ambrosus Network is provided (for those in need of a more thorough introduction to the basic concepts of the Ambrosus Network please refer to: https://tech.ambrosus.com/#core). Third, the key features of the Java/Android SDK are explained: such features range from retrieving assets and events by ID’s to using custom data models. Finally, to conclude the Ambrosus Viewer is included as a Demo App for prospective developers to make use of.
 
 * [Getting started](#getting-started)
   * [Java 8](#java-8)
@@ -80,11 +80,7 @@ dependencies {
 
 ## Overview of core classes and key concepts
 
-### Network
-
-https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/Network.java
-
-is a core class responsible for communication with AMB-NET. It contains a number of get*(...), find*(...) and push*(...) methods  which can be used to retrieve/push data models from/to AMB-NET eg.:
+### [Network](sdk/src/main/java/com/ambrosus/sdk/Network.java) is a core class responsible for communication with AMB-NET. It contains a number of get*(...), find*(...) and push*(...) methods  which can be used to retrieve/push data models from/to AMB-NET eg.:
 
 ```java
 String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
@@ -92,10 +88,7 @@ Network network = new Network();
 NetworkCall<Asset> networkCall = network.getAsset(assetId);
 ```
 
-Each of these methods returns an instance of NetworkCall<ResultType> interface. It provides the same behaviour as 
-**Call** (https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html) 
-
-interface from Retrofit library. So you have to perform this network call to get an actual data model of ResultType. You can do it synchronously by calling NetworkCall.execute() method or asynchronously by passing an instance of **NetworkCallBack<ResultType>** to **NetworkCall.enqueue(NetworkCallBack<ResultType> callback)** method. E.g:
+Each of these methods returns an instance of [NetworkCall<ResultType>](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) interface. It provides the same behaviour as [Call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html) interface from Retrofit library. So you have to perform this network call to get an actual data model of ResultType. You can do it synchronously by calling NetworkCall.execute() method or asynchronously by passing an instance of [NetworkCallBack<ResultType>](sdk/src/main/java/com/ambrosus/sdk/NetworkCallback.java) to NetworkCall.enqueue(NetworkCallBack<ResultType>) method. E.g:
 
 ```java
 //Synchronous execution   
@@ -126,24 +119,19 @@ networkCall.enqueue(new NetworkCallback<Asset>() {
 On Android, callbacks will be executed on the main thread. On the JVM, callbacks will happen on a thread responsible for network communication. 
 
 All samples below will execute network calls synchronously in order to minimize the amount of sample code. It is important to keep in mind that you cannot execute these calls synchronously on the Android main thread because it would lead to  
-**NetworkOnMainThreadException** (https://developer.android.com/reference/android/os/NetworkOnMainThreadException) 
+[NetworkOnMainThreadException](https://developer.android.com/reference/android/os/NetworkOnMainThreadException) 
 
-### Asset
-
-(https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/Asset.java)
+### [Asset](sdk/src/main/java/com/ambrosus/sdk/Asset.java)
 
 Assets are the primary objects of analysis being monitored or traced over time; a stationary water sensor, a logistics pallet, a crate of milk, a steak, etc. As the ‘nouns’ of the system, Assets can represent an ingredient, product, package of products or any other type of container.
 Importantly, an Asset functions as a handle of Events and possesses an idData structure containing the following pieces of information:
 
 * The AMB-ID of the Asset 
 * User Address
-* Minimal Access Level Required to View the Private Data 
 * Timestamp 
 * Hash of the Data Field 
 
-### Event
-
-(https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/Event.java)
+### [Event](sdk/src/main/java/com/ambrosus/sdk/Event.java)
 
 Events are registries of any change of state that has occurred to an Asset; the temperature, humidity, location, acceleration, quality check, etc. When registered in AMB-NET, an event will always contain the following array of JSON objects: 
 
@@ -157,7 +145,7 @@ Each item in this array is an object of a some type identified by a string const
 
 ### Private Key
 
-A private key is a hex string representation of a 32 byte sequences. In order to use a private key in the Ambrosus Ecosystem, you must first register an account (https://dashboard.hermes.ambrosus-test.com/signup) on the Ambrosus Network. With the private key required to create an Ambrosus Account, you can then start creating assets or events on the network. Additionally, you can also use this private key to create an AuthToken which will allow you to query content of events with restricted access.
+A private key is a hex string representation of a 32 byte sequences. In order to use a private key in the Ambrosus Ecosystem, you must first [register an account](https://dashboard.hermes.ambrosus-test.com/signup) on the Ambrosus Network. With the private key required to create an Ambrosus Account, you can then start creating assets or events on the network. Additionally, you can also use this private key to create an AuthToken which will allow you to query content of events with restricted access.
 
 Within the Java SDK itself, private keys are used to sign off on the content of Events, Assets and AuthTokens. Meanwhile, AMB-NET verifies these signatures with your public key when you try to push an event/asset to the network or query the content of protected events.
 
@@ -179,7 +167,7 @@ System.out.println(event.getSystemId());
 
 ### Search for assets/events satisfying provided criteria
  
-You can search for assets/events which match your criteria with **Network.findAssets(Query<Asset> query) / Network.findEvents(Query<Event> query)** methods. These methods return a **NetworkCall** instance of which the resultant type is defined as **SearchResult<Asset>** or **SearchResult<Event>** respectively. E.g:
+You can search for assets/events which match your criteria with **Network.findAssets(Query<Asset> query) / Network.findEvents(Query<Event> query)** methods. These methods return a [NetworkCall](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) instance of which the resultant type is defined as [SearchResult<Assetsdk/src/main/java/com/ambrosus/sdk/SearchResult.java>]() or **SearchResult<Event>** respectively. E.g:
 
 ```java
 SearchResult<Event> searchResult 
@@ -253,7 +241,7 @@ Event event = builder.createEvent(privateKey);
 network.pushEvent(event).execute();
 ```
 
-After such measures have been taken, it is not possible to get json data from this event until you are authorized as a holder of an account which was used to create the event or, conversely, if you are a holder of one of its child accounts:
+After such measures have been taken, it is not possible to get json data from this event until you are authorized as a holder of an account which was used to create the event or as holder of one of its child accounts:
 
 ```java
 Event privateEvent = network.getEvent(event.getSystemId()).execute();
@@ -281,40 +269,24 @@ System.out.println(privateEvent.getRawData());
 
 ### Configure Node API endpoint
 
-It’s possible to use different network API endpoints. To do this, one must first create an instance of Configuration class, and then set the API endpoint for this instance with url(String url) method. Once this has been done, it is then possible to create an instance of Network class using the following configuration:
+It’s possible to use different network API endpoints. To do this, one must first create an instance of Configuration class, and then set the API endpoint for this instance with `url(String url)`{:.java} method. Once this has been done, it is then possible to create an instance of `Network` class using the following configuration:
 
 ```java
 Configuration configuration = new Configuration().url("https://hermes.ambrosus.com");
 Network network = new Network(configuration);
 ```
 
-Altogether, you can create several network instances linked to different API endpoints and use them to query data from different sources.
+Altogether, you can create several `Network` instances linked to different API endpoints and use them to query data from different sources.
 
 ### Using custom data models
 
-You can introduce your own data models by extending the generic Event model class. The Ambrosus development kit contains a set of helper classes: 
+You can introduce your own data models by extending the generic [Event](sdk/src/main/java/com/ambrosus/sdk/Event.java) model class. The Ambrosus development kit contains a set of helper classes: [NetworkCallAdapter](sdk/src/main/java/com/ambrosus/sdk/NetworkCallAdapter.java), [SearchRequestAdapter](sdk/src/main/java/com/ambrosus/sdk/SearchRequestAdapter.java), [GenericEventQueryBuilder](sdk/src/main/java/com/ambrosus/sdk/GenericEventQueryBuilder.java)
 
-**NetworkCallAdapter** (https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/NetworkCallAdapter.java)
-
-**SearchRequestAdapter**
-(https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/SearchRequestAdapter.java)
-
-**GenericEventQueryBuilder**
-(https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/GenericEventQueryBuilder.java)
-
-These classes might help you to build your own implementation of the Network class which operates with your own data models. You can use **AMBNetwork** class https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/model/AMBNetwork.java as a sample of such an implementation. We use this class in our demo apps and it operates with data models that we use for demos: 
-
-**AMBAssetInfo** (JSON model)
-https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/model/AMBAssetInfo.java
-
-**AMBEvent**
-https://github.com/ambrosus/sdk-java-new/blob/master/sdk/src/main/java/com/ambrosus/sdk/model/AMBEvent.java
+These classes might help you to build your own implementation of the `Network` class which operates with your own data models. You can use [AMBNetwork](sdk/src/main/java/com/ambrosus/sdk/model/AMBNetwork.java) class  as a sample of such an implementation. We use this class in our demo apps and it operates with data models that we use for demos: [AMBAssetInfo](sdk/src/main/java/com/ambrosus/sdk/model/AMBAssetInfo.java) [JSON model](https://github.com/ambrosus/sdk-javascript/blob/master/docs-old/AmbrosusEventEntryTypes.md#asset-informations), [AMBEvent](sdk/src/main/java/com/ambrosus/sdk/model/AMBEvent.java)
 
 ### Example: Search for information about item which is marked with “3451080000324” EAN13 barcode.
 
-Assumption: each item on the network has a corresponding Event which contains information about the item in the following json format:
-
-(https://github.com/ambrosus/sdk-javascript/blob/master/docs-old/AmbrosusEventEntryTypes.md)
+Assumption: each item on the network has a corresponding `Event` which contains information about the item in the [following json format](https://github.com/ambrosus/sdk-javascript/blob/master/docs-old/AmbrosusEventEntryTypes.md)
 
 Using the generic Event model:
 
@@ -334,7 +306,7 @@ SearchResult<Event> eventSearchResult = network.findEvents(query).execute();
 Event item = eventSearchResult.getValues().get(0);
 ```
 
-It is also possible to do the same thing using a generic Event model + **AssetInfoQueryBuilder** and Identifier classes which contain constants from the code above:
+It is also possible to do the same thing using a generic `Event` model + `AssetInfoQueryBuilder` and `Identifier` classes which contain constants from the code above:
 
 ```java
 Query<AMBAssetInfo> assetInfoQuery = new AssetInfoQueryBuilder()
@@ -345,7 +317,7 @@ eventSearchResult = network.findEvents(query).execute();
 item = eventSearchResult.getValues().get(0);
 ```
 
-Finally, it can also be done with an instance of **AMBNetwork** class which you can use to query AssetInfo model:
+Finally, it can also be done with an instance of [AMBNetwork](sdk/src/main/java/com/ambrosus/sdk/model/AMBNetwork.java) class which you can use to query [AssetInfo](sdk/src/main/java/com/ambrosus/sdk/model/AMBAssetInfo.java) model:
 
 ```java
 AMBNetwork ambNetwork = new AMBNetwork();
@@ -355,9 +327,6 @@ AMBAssetInfo assetInfo = assetInfoSearchResult.getValues().get(0);
 
 ## Demo app (Ambrosus Viewer)
 
-The Ambrosus Viewer
-(https://github.com/ambrosus/sdk-java-new/tree/master/samples/android/DemoApp)
-
-is an Android application which allows users to scan a Barcode, QR Code, [or other 1D or 2D symbology - in development] and get details about an item moving through an industrial process.
+The [Ambrosus Viewer](https://github.com/ambrosus/sdk-java-new/tree/master/samples/android/DemoApp) is an Android application which allows users to scan a Barcode, QR Code, [or other 1D or 2D symbology - in development] and get details about an item moving through an industrial process.
 
 By using the Ambrosus Viewer, any business, customer, or regulatory authority, has the opportunity to learn about the scanned item: its origins, quality controls (if applicable), and other details such as temperature, weight, creation date, and more. When combined into a single string of Events, it is possible to see a timeline detailing all things that have happened to the particular asset in question, from the date of its creation to it arrival at its end destination.
