@@ -331,5 +331,5 @@ To see details about sample assets with the Ambrosus Viewer, scan any of the fol
 
 | EAN-13 | GTIN | QR |
 | :---: | :---: | :---: |
-| [EAN-13 Sample](EAN13-3451080000324.png) | [GTIN Sample](GTIN-91239921335467786.png) | [QR-Sample](QR-0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae.png) |
+| [EAN-13 Sample](sdk/EAN13-3451080000324.png) | [GTIN Sample](sdk/GTIN-91239921335467786.png) | [QR-Sample](sdk/QR-0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae.png) |
 |[List of assets with 3451080000324 EAN-13 identifier](https://gateway-test.ambrosus.com/events?data[type]=ambrosus.asset.identifiers&data[identifiers.EAN13]=3451080000324)|[List of assets with 91239921335467786 GTIN identifier](https://gateway-test.ambrosus.com/events?data[type]=ambrosus.asset.identifiers&data[identifiers.GTIN]=91239921335467786)|[PURE DARK CHOCOLATE BAR 92%](https://amb.to/0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae)|
