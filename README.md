@@ -26,6 +26,7 @@ This document itself, provides an overview of the core classes and key features 
   * [Using custom data models](#using-custom-data-models)
   * [Example: Search for information about item which is marked with “3451080000324” EAN13 barcode.](#example-search-for-information-about-item-which-is-marked-with-3451080000324-ean13-barcode)
 * [Demo app (Ambrosus Viewer)](#demo-app-ambrosus-viewer)
+  * [Sample Symbologies](#sample-symbologies)
 
 ## Getting started
 
@@ -323,3 +324,12 @@ AMBAssetInfo assetInfo = assetInfoSearchResult.getValues().get(0);
 The [Ambrosus Viewer](https://github.com/ambrosus/sdk-java-new/tree/master/samples/android) is an Android application which allows users to scan a Barcode, QR Code, [or other 1D or 2D symbology - in development] and get details about an item moving through an industrial process.
 
 By using the Ambrosus Viewer, any business, customer, or regulatory authority, has the opportunity to learn about the scanned item: its origins, quality controls (if applicable), and other details such as temperature, weight, creation date, and more. When combined into a single string of Events, it is possible to see a timeline detailing all things that have happened to the particular asset in question, from the date of its creation to it arrival at its end destination.
+
+### Sample Symbologies
+
+To see details about sample assets with the Ambrosus Viewer, scan any of the following codes from the app:
+
+| EAN-13 | GTIN | QR |
+| :---: | :---: | :---: |
+| [EAN-13 Sample](EAN13-3451080000324.png) | [GTIN Sample](GTIN-91239921335467786.png) | [QR-Sample](QR-0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae.png) |
+|[List of assets with 3451080000324 EAN-13 identifier](https://gateway-test.ambrosus.com/events?data[type]=ambrosus.asset.identifiers&data[identifiers.EAN13]=3451080000324)|[List of assets with 91239921335467786 GTIN identifier](https://gateway-test.ambrosus.com/events?data[type]=ambrosus.asset.identifiers&data[identifiers.GTIN]=91239921335467786)|[PURE DARK CHOCOLATE BAR 92%](https://amb.to/0x602023f73ab25f0c95a3cf4e92c9cb2f4c9c09dbd3ca6e167d362de6e7f1eeae)|
