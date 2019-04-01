@@ -320,6 +320,6 @@ AMBAssetInfo assetInfo = assetInfoSearchResult.getValues().get(0);
 
 ## Demo app (Ambrosus Viewer)
 
-The [Ambrosus Viewer](https://github.com/ambrosus/sdk-java-new/tree/master/samples/android/DemoApp) is an Android application which allows users to scan a Barcode, QR Code, [or other 1D or 2D symbology - in development] and get details about an item moving through an industrial process.
+The [Ambrosus Viewer](https://github.com/ambrosus/sdk-java-new/tree/master/samples/android) is an Android application which allows users to scan a Barcode, QR Code, [or other 1D or 2D symbology - in development] and get details about an item moving through an industrial process.
 
 By using the Ambrosus Viewer, any business, customer, or regulatory authority, has the opportunity to learn about the scanned item: its origins, quality controls (if applicable), and other details such as temperature, weight, creation date, and more. When combined into a single string of Events, it is possible to see a timeline detailing all things that have happened to the particular asset in question, from the date of its creation to it arrival at its end destination.
