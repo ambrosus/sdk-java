@@ -2,7 +2,7 @@
 
 The Ambrosus Java/Android development kit makes it easy for developers to interact with the Ambrosus Network via the [Ambrosus Node API](https://ambrosus.docs.apiary.io/#). It is designed to encapsulate most of the Ambrosus Network and Node API implementation details and to also allow third-party developers to focus on the underlying business logic implementation of their respective solutions. 
 
-When it comes to software requirements, both Java/Android SDK versions require Java 8. Meanwhile, the Android version is also compatible with Android API 19+ (Android 4.4).
+When it comes to software requirements, both Java/Android SDK versions require Java 8. Android version is compatible with Android API 19+ (Android 4.4).
 
 This document itself, provides an overview of the core classes and key features of the Java/Android SDK. It functions to introduce the key concepts of the Ambrosus Network, and to also provide a step by step guide to creating, retrieving, and searching for assets and events (among other features). The document begins by explaining how to get started with AmbrosusSDK on different platforms. Next, an overview of the key concepts within the Ambrosus Network is provided (for those in need of a more thorough introduction to the basic concepts of the Ambrosus Network please refer to: https://tech.ambrosus.com/#core). Third, the key features of the Java/Android SDK are explained: such features range from retrieving assets and events by ID’s to using custom data models. Finally, to conclude the Ambrosus Viewer is included as a Demo App for prospective developers to make use of.
 
@@ -134,15 +134,7 @@ Importantly, an Asset functions as a handle of Events and possesses an idData st
 
 ### [Event](sdk/src/main/java/com/ambrosus/sdk/Event.java)
 
-Events are registries of any change of state that has occurred to an Asset; the temperature, humidity, location, acceleration, quality check, etc. When registered in AMB-NET, an event will always contain the following array of JSON objects: 
-
-* WHAT (relating to the AMB-ID of the Asset in Question)
-* WHERE (the location of where the Event was taken from based upon latitude or longitude coordinates or GLN). 
-* WHO (the device, application, or user that created the Event in question). 
-* WHEN (a timestamp of the Event indicating when it was originally created). 
-* WHY (indicating the business procedure and its purpose).
-
-Each item in this array is an object of a some type identified by a string constant. You can get types of all available data objects with `Event.getDataTypes()` method. You can use `Event.getDataObject(String type)` to retrieve an object of a certain type. 
+Events are registries of any change of state that has occurred to an Asset. E.g. measured temperature, noted big acceleration or changing pallets. Every `Event` has an array of JSON objects with information what actually happened. Each item in this array is an object of a some type identified by a string constant. You can get types of all available data objects with `Event.getDataTypes()` method. You can use `Event.getDataObject(String type)` to retrieve an object of a certain type.
 
 ### Private Key
 
