@@ -62,7 +62,7 @@ allprojects {
 }
 ```
 
-1. Enable support for Java 8 features in app (module) level build.gradle
+2. Enable support for Java 8 features in app (module) level build.gradle
 
 ```gradle
 android {
@@ -73,7 +73,7 @@ android {
 }
 ```
 
-1. Declare dependency:
+3. Declare dependency:
 
 ```gradle
 dependencies {
@@ -81,8 +81,8 @@ dependencies {
 }
 ```
 
-1. Enable multidex feature according to these [instructions](https://developer.android.com/studio/build/multidex#mdex-gradle).
-1. Add `INTERNET` permission to your manifest file:
+4. Enable multidex feature according to these [instructions](https://developer.android.com/studio/build/multidex#mdex-gradle).
+5. Add `INTERNET` permission to your manifest file:
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET"
