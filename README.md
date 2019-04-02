@@ -85,7 +85,7 @@ dependencies {
 5. Add `INTERNET` permission to your manifest file:
 
 ```xml
-<uses-permission android:name="android.permission.INTERNET"
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 ## Overview of core classes and key concepts
