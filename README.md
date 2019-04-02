@@ -52,7 +52,7 @@ dependencies {
 
 ### Android
 
-Add staging repository to the project level (root) build.gradle script
+1. Add staging repository to the project level (root) build.gradle script
 
 ```gradle
 allprojects {
@@ -62,7 +62,7 @@ allprojects {
 }
 ```
 
-Enable support for Java 8 features in app (module) level build.gradle
+1. Enable support for Java 8 features in app (module) level build.gradle
 
 ```gradle
 android {
@@ -73,12 +73,19 @@ android {
 }
 ```
 
-Declare dependency:
+1. Declare dependency:
 
 ```gradle
 dependencies {
     implementation 'com.ambrosus.sdk:core-android:0.0.1'
 }
+```
+
+1. Enable multidex feature according to these [instructions](https://developer.android.com/studio/build/multidex#mdex-gradle).
+1. Add `INTERNET` permission to your manifest file:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"
 ```
 
 ## Overview of core classes and key concepts
