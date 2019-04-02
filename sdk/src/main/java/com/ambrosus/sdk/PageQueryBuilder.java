@@ -18,13 +18,13 @@ import com.ambrosus.sdk.utils.Assert;
 
 import java.util.Locale;
 
-public class PageQueryBuilder {
+public class PageQueryBuilder<T extends Entity> {
 
-    private final SearchResult<? extends Entity> firstPage;
+    private final SearchResult<T> firstPage;
 
-    public PageQueryBuilder(SearchResult<? extends Entity> firstPage) {
+    public PageQueryBuilder(SearchResult<T> firstPage) {
         Assert.assertTrue(
-                firstPage.getPage() == 0,
+                firstPage.getPageIndex() == 0,
                 IllegalArgumentException.class,
                 "You can use only first page for this builder"
         );
@@ -33,24 +33,28 @@ public class PageQueryBuilder {
 
     /**
      *
-     * @param page - zero based page number (first page has index equal to 0)
+     * @param pageIndex - zero based page index (first page has index equal to 0)
      * @return
      * @throws IllegalArgumentException if page is no in available pages range
      */
-    public Query getQueryForPage(int page) throws IllegalArgumentException {
+    public Query<? extends T> getQueryForPage(int pageIndex) throws IllegalArgumentException {
         Assert.assertTrue(
-                page >=0 && page < firstPage.getTotalPages(),
+                pageIndex >=0 && pageIndex < firstPage.getTotalPages(),
                 IllegalArgumentException.class,
-                String.format(Locale.US, "page has to be in range [0, %d) but got %d", firstPage.getTotalPages(), page)
+                String.format(Locale.US, "page has to be in range [0, %d) but got %d", firstPage.getTotalPages(), pageIndex)
 
         );
-        Assert.assertNotNull(firstPage.getPageSize(), IllegalStateException.class, "page size must be available for any search results with getTotalPages() > 1");
-        //noinspection ConstantConditions
-        return new QueryBuilder(firstPage.getQuery())
+
+        QueryBuilder<? extends T> queryBuilder = new QueryBuilder<>(firstPage.getQuery())
                 .to(firstPage.getFirstItemTimestamp())
-                .page(page)
-                .perPage(firstPage.getPageSize())
-                .build();
+                .page(pageIndex);
+
+        if(firstPage.getPageSize() != null)
+            queryBuilder.perPage(firstPage.getPageSize());
+        else if(pageIndex > 0) // it's ok if firstPage.getPageSize()==0 for first page of the search result if this search result has only 1 page
+            throw new IllegalStateException("page size must be available for any search results with getTotalPages() > 1");
+
+        return queryBuilder.build();
     }
 
     public int getTotalPages() {

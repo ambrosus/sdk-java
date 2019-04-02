@@ -35,15 +35,15 @@ public class TestData {
 
     private static final Gson gson = new Gson();
 
-    public static InputStream getTestResource(Class callerClass, String resourceName){
+    private static InputStream getTestResource(Class callerClass, String resourceName){
         return callerClass.getResourceAsStream(resourceName);
     }
 
-    public static AuthToken getAuthToken(){
+    static AuthToken getAuthToken(){
         return getFromJson(TestData.class, AuthToken.class, "AuthToken.json");
     }
 
-    public static <T> T getFromJson(Class callerClass, Class<T> resultType, String jsonResource) {
+    static <T> T getFromJson(Class callerClass, Class<T> resultType, String jsonResource) {
         try(InputStreamReader in = getTestResourceReader(callerClass, jsonResource)) {
             return gson.fromJson(in, resultType);
         } catch (IOException e) {
@@ -51,7 +51,7 @@ public class TestData {
         }
     }
 
-    public static InputStreamReader getTestResourceReader(Class callerClass, String resourceName) {
+    static InputStreamReader getTestResourceReader(Class callerClass, String resourceName) {
         return new InputStreamReader(getTestResource(callerClass, resourceName));
     }
 }

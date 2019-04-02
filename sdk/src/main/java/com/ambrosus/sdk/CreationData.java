@@ -14,15 +14,26 @@
 
 package com.ambrosus.sdk;
 
-import java.lang.Exception;
+import android.support.annotation.NonNull;
 
-public class NetworkException extends AmbrosusException {
+import com.ambrosus.sdk.utils.Assert;
+import com.ambrosus.sdk.utils.UnixTime;
 
-    public final int code;
+import java.util.Date;
 
-    public NetworkException(int code, String message) {
-        super(message);
-        this.code = code;
+class CreationData extends AccountData {
+
+    private long timestamp;
+
+    //no-argument contructor for GSON
+    CreationData(){}
+
+    CreationData(@NonNull String createdBy, long timestamp) {
+        super(createdBy);
+        this.timestamp = timestamp;
     }
 
+    Date getTimestamp() {
+        return UnixTime.toDate(timestamp);
+    }
 }

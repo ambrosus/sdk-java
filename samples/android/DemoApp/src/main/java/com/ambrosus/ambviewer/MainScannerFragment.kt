@@ -29,7 +29,6 @@ import com.ambrosus.apps.SearchResultsListFragment
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Query
-import com.ambrosus.sdk.QueryBuilder
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Identifier
@@ -96,7 +95,7 @@ class MainScannerFragment :
             null -> authorizationMessage.visibility = View.GONE
             else -> {
                 authorizationMessage.visibility = View.VISIBLE
-                authorizationMessage.setText("Authorized as ${authToken.account}");
+                authorizationMessage.setText("Authorized as ${authToken.accountAddress}");
             }
         }
     }
@@ -145,14 +144,14 @@ class MainScannerFragment :
     override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Serializable) {
         if(!processError(result)) {
             val searchResult = result.data
-            val resultsList = result.data.values
+            val resultsList = result.data.items
             if(resultsList.isEmpty()) {
                 if(searchCriteria is String)
                     displayAssetLoading(searchCriteria)
                 else
                     displayError("Can't find any asset by $searchCriteria")
             } else if(resultsList.size == 1) {
-                displayAsset(searchResult.values[0])
+                displayAsset(searchResult.items[0])
             } else {
                 displayResultsList(searchResult.query)
             }

@@ -20,35 +20,47 @@ import com.ambrosus.sdk.utils.UnixTime;
 
 import java.util.Date;
 
-public class Asset extends Entity {
+/**
+ * This class represents primary elements moving through a supply chain. Assets are the nouns of the system.
+ * They can represent an ingredient, product, package of products or any other type of container.
+ * An Asset on its own function only as a handle for a {@link Event} stream.
+ */
+public final class Asset extends Entity {
 
     private String assetId;
 
-    private AssetContent content;
+    private SignedContent<AssetIdData> content;
     private MetaData metadata;
 
     //no-args constructor for Gson
-    Asset(){}
+    private Asset(){}
 
-    Asset(AssetContent content) {
+    private Asset(SignedContent<AssetIdData> content) {
         this.assetId = Network.getObjectHash(content);
         this.content = content;
     }
 
     @NonNull
-    public String getSystemId() {
+    @Override
+    final public String getSystemId() {
         return assetId;
     }
 
     @NonNull
-    public String getAccount() {
-        return content.idData.getCreatedBy();
+    @Override
+    public String getAccountAddress() {
+        return content.idData.getAccountAddress();
     }
 
-    public Date getTimestamp() {
+    @NonNull
+    @Override
+    final public Date getTimestamp() {
         return content.idData.getTimestamp();
     }
 
+    /**
+     * @return a number which is used to make it possible to keep several Assets with the same {@linkplain #getTimestamp() timestamp} and {@link #getAccountAddress() account address} on the network
+     */
     public double getSequenceNumber() {
         return content.idData.sequenceNumber;
     }
@@ -58,30 +70,16 @@ public class Asset extends Entity {
         return metadata;
     }
 
-    static class AssetContent extends ContentField {
-
-        private AssetIdData idData;
-
-        //no args constructor for GSON
-        AssetContent(){super();}
-
-        private static AssetContent create(AssetIdData idData, String privateKey){
-            AssetContent result = ContentField.create(AssetContent.class, idData, privateKey);
-            result.idData = idData;
-            return result;
-        }
-    }
-
-    static class AssetIdData extends IdData {
+    private static class AssetIdData extends CreationData {
 
         private double sequenceNumber;
 
-        //no-argument contructor for GSON
+        //no-args constructor for GSON
         private AssetIdData(){
             super();
         }
 
-        AssetIdData(String createdBy, long timeStamp, long sequenceNumber) {
+        private AssetIdData(String createdBy, long timeStamp, long sequenceNumber) {
             super(createdBy, timeStamp);
             this.sequenceNumber = sequenceNumber;
         }
@@ -93,7 +91,7 @@ public class Asset extends Entity {
         private long sequenceNumber;
 
         public Builder() {
-            setTimeStamp(new Date());
+            setTimestamp(new Date());
         }
 
         /**
@@ -101,7 +99,7 @@ public class Asset extends Entity {
          * @param timeStamp - the number of seconds that have elapsed since 00:00:00 Thursday, 1 January 1970
          * @param sequenceNumber - any value, it's used to make possible to create different assets with the same timeStamp
          */
-        public void setUnixTimeStamp(long timeStamp, long sequenceNumber) {
+        public void setUnixTimestamp(long timeStamp, long sequenceNumber) {
             this.timeStamp = timeStamp;
             this.sequenceNumber = sequenceNumber;
         }
@@ -112,14 +110,17 @@ public class Asset extends Entity {
          *
          * @param date
          */
-        public void setTimeStamp(Date date) {
-            setUnixTimeStamp(UnixTime.get(date), System.nanoTime());
+        public void setTimestamp(Date date) {
+            setUnixTimestamp(UnixTime.get(date), System.nanoTime());
         }
 
         public Asset createAsset(String privateKey) {
-            String address = Ethereum.getAddress(privateKey);
-            AssetIdData assetIdData = new AssetIdData(address, timeStamp, sequenceNumber);
-            return new Asset(AssetContent.create(assetIdData, privateKey));
+            AssetIdData assetIdData = new AssetIdData(
+                    Ethereum.getAddress(privateKey),
+                    timeStamp,
+                    sequenceNumber
+            );
+            return new Asset(new SignedContent<>(assetIdData, privateKey));
         }
     }
 }

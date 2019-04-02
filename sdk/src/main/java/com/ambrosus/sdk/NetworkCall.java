@@ -16,18 +16,45 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+/**
+ * NetworkCall interface represents a network request which can be executed {@linkplain #execute()} synchronously}
+ * or {@linkplain #enqueue(NetworkCallback)} asynchronously}.
+ * It provides the same behaviour as <a href="https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html">Call</a> interface from Retrofit library
+ *
+ * @param <T> - type of the data which would be returned in the case of successful excectuion of this request
+ */
 public interface NetworkCall<T> extends Cloneable {
 
+    /**
+     * Synchronously executes request and return its response.
+     * <p>
+     * If you want to execute this request asynchronously use {@link #enqueue(NetworkCallback)} method instead of this one.
+     *
+     * @throws java.io.IOException if a connection problem occurred while communicating with the network
+     * @throws AmbrosusException in case of some client-side error
+     * @throws RuntimeException (and subclasses) which signal about an issue with SDK or Backend implementation
+     * @see #enqueue(NetworkCallback)
+     */
     @NonNull T execute() throws Throwable;
 
     /**
-     * Asynchronously send the request and notify {@code callback} of its response or if an error
-     * occurred talking to the server, creating the request, or processing the response.
+     * Asynchronously executes the request and notifies {@code callback} of its response or about an error
+     * which have happened during execution or processing the response.
+     * <p>
+     * If you want to execute this request synchronously use {@link #execute()} method instead this one.
      */
     void enqueue(@NonNull NetworkCallback<T> callback);
 
+    /**
+     * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain
+     * #enqueue(NetworkCallback) enqueued}. It is an error to execute or enqueue a call more than once.
+     */
     boolean isExecuted();
 
+    /**
+     * Cancel this call. An attempt will be made to cancel in-flight calls, and if the call has not
+     * yet been executed it never will be.
+     */
     void cancel();
 
     /** True if {@link #cancel()} was called. */

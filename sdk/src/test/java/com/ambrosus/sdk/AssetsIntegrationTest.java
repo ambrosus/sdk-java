@@ -35,7 +35,7 @@ public class AssetsIntegrationTest {
 //
 //        try {
 //            SearchResult<Asset> result = networkCall.execute();
-//            for (Asset asset : result.getValues()) {
+//            for (Asset asset : result.getItems()) {
 //                if(expectedAssetID.equals(asset.getSystemId()))
 //                    return;
 //            }
@@ -82,10 +82,8 @@ public class AssetsIntegrationTest {
 
     @Test(expected = PermissionDeniedException.class)
     public void pushAsset() throws Throwable {
-        String privateKey = "0x864ba4c90a04dcaadeaa06d1621855879aaa37c70012d544475a9862c9460515";
-        Asset asset = new Asset.Builder().createAsset(privateKey);
+        Asset asset = new Asset.Builder().createAsset(TestData.UNREGISTERED_PRIVATE_KEY);
         Network network = new Network();
-        Asset resultAsset = network.pushAsset(asset, privateKey).execute();
-        System.out.println();
+        network.pushAsset(asset).execute();
     }
 }

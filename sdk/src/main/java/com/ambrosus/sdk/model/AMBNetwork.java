@@ -53,7 +53,7 @@ public class AMBNetwork extends Network {
         return new NetworkCallAdapter<>(assetInfoSearchRequest, new DataConverter<SearchResult<AMBAssetInfo>, AMBAssetInfo>() {
             @Override
             public AMBAssetInfo convert(SearchResult<AMBAssetInfo> source) throws Throwable {
-                List<AMBAssetInfo> resultsList = source.getValues();
+                List<AMBAssetInfo> resultsList = source.getItems();
                 if(resultsList.isEmpty())
                     throw new EntityNotFoundException("Cant find AssetInfo for asset: " + assetID);
                 if(resultsList.size() > 1)

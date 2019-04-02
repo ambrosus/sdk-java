@@ -14,13 +14,27 @@
 
 package com.ambrosus.sdk;
 
-public class CommonNetworkErrorHandler implements NetworkErrorHandler {
+import com.ambrosus.sdk.utils.GsonUtil;
 
-    @Override
-    public void handleNetworkError(int code, String message) throws NetworkException {
-        throw new NetworkException(
-                code,
-                "Unexpected HTTP error, code: " + code + (message != null ? " (" + message + ')' : "")
+class SignedContent<T extends AccountData> {
+
+    private String signature;
+    T idData;
+
+    //no args constructor for GSON and sub-classes
+    SignedContent(){}
+
+    SignedContent(T idData, String privateKey){
+        signature = Network.getObjectSignature(idData, privateKey);
+        this.idData = idData;
+    }
+
+    boolean matchesSignature() {
+        if(idData == null || signature == null) return false;
+        return Ethereum.signatureMatches(
+                GsonUtil.getLexNormalizedJsonStr(idData, Network.GSON),
+                idData.getAccountAddress(),
+                signature
         );
     }
 }

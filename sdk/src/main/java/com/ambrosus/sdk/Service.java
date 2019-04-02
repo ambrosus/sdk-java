@@ -45,7 +45,7 @@ interface Service {
             "Content-Type:application/json",
             "Accept:application/json"
     })
-    Call<Asset> createAsset(@Header("Authorization") String token, @Body Asset body);
+    Call<Asset> createAsset(@Body Asset body);
 
     @POST("assets/{assetId}/events")
     @Headers({

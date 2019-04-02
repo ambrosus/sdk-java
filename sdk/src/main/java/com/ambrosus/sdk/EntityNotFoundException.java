@@ -14,14 +14,20 @@
 
 package com.ambrosus.sdk;
 
-public class EntityNotFoundException extends NetworkException {
+/**
+ * Indicates that Hermes Node and/or SDK weren't able to find an Event, Asset, or Account requested by user
+ */
+public class EntityNotFoundException extends AmbrosusException {
 
-    public EntityNotFoundException(String message) {
-        //request was OK but SDK wasn't able to find requested data
-        this(200, message);
+    public EntityNotFoundException(RequestFailedException requestFailReason) {
+        super(requestFailReason);
     }
 
-    EntityNotFoundException(int code, String message) {
-        super(code, message);
+    public EntityNotFoundException(String message) {
+        super(message);
+    }
+
+    public EntityNotFoundException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 }

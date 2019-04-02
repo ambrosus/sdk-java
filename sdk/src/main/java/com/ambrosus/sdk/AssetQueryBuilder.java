@@ -14,6 +14,25 @@
 
 package com.ambrosus.sdk;
 
+import java.util.Date;
+
+/**
+ * Creates {@linkplain Query queries} to search for {@linkplain Asset assets} which meet specific search criteria.
+ * In order to get a search result you need to:
+ * <ol>
+ * <li> specify your search criteria with public methods of this builder
+ * <li> create a query instance with {@link #build()} method
+ * <li> pass this query instance to {@link Network#findAssets(Query)} or {@link Network#find(Query)} methods
+ * </ol>
+ * @see #createdBy(String)
+ * @see #from(Date)
+ * @see #to(Date)
+ * @see #page(int)
+ * @see #perPage(int)
+ * @see Network#findAssets(Query)
+ * @see Network#find(Query)
+ *
+ */
 public class AssetQueryBuilder extends AbstractQueryBuilder<AssetQueryBuilder, Asset> {
 
     public AssetQueryBuilder() {

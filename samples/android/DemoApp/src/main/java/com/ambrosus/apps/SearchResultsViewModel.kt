@@ -18,7 +18,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import android.util.Log
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Network
 import com.ambrosus.sdk.NetworkCall
@@ -27,7 +26,6 @@ import com.ambrosus.sdk.PageQueryBuilder
 import com.ambrosus.sdk.Query
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.utils.Assert
-import java.util.Collections
 import java.util.LinkedList
 
 class SearchResultsViewModel(network: Network, private val query: Query<*>, cacheSize: Int = DEFAULT_CACHE_SIZE) : ViewModel() {
@@ -36,7 +34,7 @@ class SearchResultsViewModel(network: Network, private val query: Query<*>, cach
     private val errors = MutableLiveData<DataRequestException>()
 
     private var refreshing = false
-    private var pageQueryBuilder: PageQueryBuilder? = null
+    private var pageQueryBuilder: PageQueryBuilder<*>? = null
 
     fun getResults(): LiveData<List<SearchResult<out Entity>>> = results
     fun getErrors(): LiveData<DataRequestException> = errors
@@ -86,20 +84,20 @@ class SearchResultsViewModel(network: Network, private val query: Query<*>, cach
         val headPage: Int
             get() {
                 ensureInitialized()
-                return cachedPages[0].page
+                return cachedPages[0].pageIndex
             }
 
         val tailPage: Int
             get() {
                 ensureInitialized()
-                return cachedPages[cachedPages.size - 1].page
+                return cachedPages[cachedPages.size - 1].pageIndex
             }
 
         private val cachedItemsCount: Int
             get() {
                 var cachedItemsCount = 0
                 for (page in cachedPages) {
-                    cachedItemsCount += page.values.size
+                    cachedItemsCount += page.items.size
                 }
                 return cachedItemsCount
             }

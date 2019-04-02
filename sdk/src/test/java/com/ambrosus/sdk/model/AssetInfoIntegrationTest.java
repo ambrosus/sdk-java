@@ -14,8 +14,15 @@
 
 package com.ambrosus.sdk.model;
 
+import com.ambrosus.sdk.Asset;
+import com.ambrosus.sdk.Event;
+import com.ambrosus.sdk.Network;
 import com.ambrosus.sdk.NetworkCall;
+import com.ambrosus.sdk.TestData;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -24,6 +31,13 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class AssetInfoIntegrationTest {
+
+    private Network network;
+
+    @Before
+    public void setUpNetwork(){
+        network = new Network();
+    }
 
     @Test
     public void testAssetInfoIntegration(){
@@ -43,5 +57,72 @@ public class AssetInfoIntegrationTest {
             throw new RuntimeException(throwable);
         }
     }
+
+//    @Test
+//    public void pushAssetInfo() throws Throwable {
+//        String privateKey = TestData.UNREGISTERED_PRIVATE_KEY;
+//
+//        Asset asset = new Asset.Builder().createAsset(privateKey);
+//
+//        network.pushAsset(asset).execute();
+//
+//        String assetInfo = "{\n" +
+//                "            \"type\": \"ambrosus.asset.info\",\n" +
+//                "            \"name\": \"PURE DARK CHOCOLATE BAR 9123%\",\n" +
+//                "            \"assetType\": \"ambrosus.assetTypes.batch\",\n" +
+//                "            \"images\": {\n" +
+//                "              \"default\": {\n" +
+//                "                \"url\": \"https://madecasse.com/wp-content/uploads/2016/10/92-dark-chocolate-hero-2.jpg\"\n" +
+//                "              },\n" +
+//                "              \"WEB-CHOCOLATE-BARS\": {\n" +
+//                "                \"url\": \"https://madecasse.com/wp-content/uploads/2016/10/WEB-CHOCOLATE-BARS.jpg\"\n" +
+//                "              },\n" +
+//                "              \"?format=750w\": {\n" +
+//                "                \"url\": \"https://static1.squarespace.com/static/585c5b5a9de4bb6fe48becb4/t/5a930c178165f549b5be0c2c/1519586329653/?format=750w\"\n" +
+//                "              }\n" +
+//                "            },\n" +
+//                "            \"size\": \"2.64 oz.\",\n" +
+//                "            \"Product Information\": {\n" +
+//                "              \"attributes\": \"No-GMOs, Vegan, Gluten Free, Kosher, Soy Free\",\n" +
+//                "              \"ingredients\": \"Organic cocoa beans, organic sugar, organic cocoa butter\",\n" +
+//                "              \"Brand\": \"Madecasse\"\n" +
+//                "            },\n" +
+//                "            \"Batch Information\": {\n" +
+//                "              \"Origin\": \"Madagascar\"\n" +
+//                "            }\n" +
+//                "          }";
+//
+//        String identifiers = " {\n" +
+//                "            \"type\": \"ambrosus.asset.identifiers\",\n" +
+//                "            \"identifiers\": {\n" +
+//                "              \"ambrosus_batchId\": [\n" +
+//                "                \"0xb9224ff5b50bfa9cf5651ce1262a7400882cadc8f6e8a8b9a1e24ef95763e4be\"\n" +
+//                "              ],\n" +
+//                "              \"gtin\": [\n" +
+//                "                \"1043345532\"\n" +
+//                "              ],\n" +
+//                "              \"rfid\": [\n" +
+//                "                \"E2001AC16987B6305024DED8\"\n" +
+//                "              ],\n" +
+//                "              \"ean13\": [\n" +
+//                "                \"3451080000324\"\n" +
+//                "              ],\n" +
+//                "              \"batchId\": [\n" +
+//                "                \"0x....\"\n" +
+//                "              ],\n" +
+//                "              \"Lot\": [\n" +
+//                "                \"6126L70313EJ184\"\n" +
+//                "              ]\n" +
+//                "            }\n" +
+//                "          }";
+//
+//
+//        Event.Builder builder = new Event.Builder(asset.getSystemId())
+//                .addData("ambrosus.asset.info", new Gson().fromJson(assetInfo, JsonObject.class))
+//                .addData("ambrosus.asset.identifiers", new Gson().fromJson(identifiers, JsonObject.class));
+//
+//        Event event = builder.createEvent(privateKey);
+//        network.pushEvent(event).execute();
+//    }
 
 }

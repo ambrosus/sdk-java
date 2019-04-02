@@ -14,6 +14,8 @@
 
 package com.ambrosus.sdk;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -38,13 +40,14 @@ class NetworkCallWrapper<T> implements NetworkCall<T> {
         this.errorHandlers = errorHandlers;
     }
 
+    @NonNull
     @Override
     public T execute() throws Throwable {
         return getResponseResult(retrofitCall.execute());
     }
 
     @Override
-    public void enqueue(final NetworkCallback<T> callback) {
+    public void enqueue(@NonNull final NetworkCallback<T> callback) {
         retrofitCall.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
@@ -80,6 +83,7 @@ class NetworkCallWrapper<T> implements NetworkCall<T> {
         return retrofitCall.isCanceled();
     }
 
+    @NonNull
     @Override
     public NetworkCall<T> clone() {
         //TODO: need to check clone result with unit test, I did an error in its implementation
@@ -113,13 +117,15 @@ class NetworkCallWrapper<T> implements NetworkCall<T> {
 
             int code = response.code();
 
+            RequestFailedException failReason = new RequestFailedException(code, message);
+
             if(errorHandlers != null) {
                 for (NetworkErrorHandler errorHandler : errorHandlers) {
-                    errorHandler.handleNetworkError(code, message);
+                    errorHandler.handleNetworkError(failReason);
                 }
             }
 
-            new CommonNetworkErrorHandler().handleNetworkError(code, message);
+            throw failReason;
         }
     }
 }

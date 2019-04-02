@@ -14,32 +14,26 @@
 
 package com.ambrosus.sdk;
 
-import android.support.annotation.NonNull;
+ import android.support.annotation.NonNull;
 
 import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.UnixTime;
 
 import java.util.Date;
 
-class IdData {
+class AccountData {
 
     private String createdBy;
-    private long timestamp;
 
     //no-argument contructor for GSON
-    IdData(){}
+    AccountData(){}
 
-    IdData(@NonNull String createdBy, long timestamp) {
+    AccountData(@NonNull String createdBy) {
         this.createdBy = Assert.assertNotNull(createdBy, "createdBy==null");
-        this.timestamp = timestamp;
     }
 
     @NonNull
-    public String getCreatedBy() {
+    String getAccountAddress() {
         return createdBy;
-    }
-
-    Date getTimestamp() {
-        return UnixTime.toDate(timestamp);
     }
 }

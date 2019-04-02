@@ -30,8 +30,27 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.ByteString;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+//TODO Add package-level description
+/**
+ *  Network is a core class responsible for communication with Ambrosus Network.
+ *  It contains a number of get*(...), find*(...) and push*(...) methods which can be used to retrieve/push data from/to AMB-Net.
+ *  This <code>Network</code> implementation supports only generic {@link Event} and {@link Asset} data models.
+ *  But it can be extended in order to support custom data models.
+ *  You can use {@link com.ambrosus.sdk.model.AMBNetwork} as a sample of such implementation.
+ *  <p>
+ *  Usage example:
+ *  <pre>{@code
+ *  String assetId = "0x88181e5e517df33d71637b3f906df2e27759fdcbb38456a46544e42b3f9f00a2";
+ *  Network network = new Network();
+ *  NetworkCall<Asset> networkCall = network.getAsset(assetId);
+ *  Asset asset = networkCall.execute();
+ *  }</pre>
+ *
+ */
+
 //TODO it would be nice to add toJson() method
 public class Network {
 
@@ -67,16 +86,38 @@ public class Network {
         service = retrofit.create(Service.class);
     }
 
+    /**
+     * This method is designed to fetch {@link Asset} with specified {@link Asset#getSystemId() assetId} from the network
+     * @param assetId unique {@linkplain Asset#getSystemId() asset identifier}
+     * @return {@link NetworkCall NetworkCall&lt;Asset&gt;} instance which can be used to fetch {@link Asset} with specified {@link Asset#getSystemId() assetId}
+     * <br>{@link EntityNotFoundException} will be thrown during execution of this {@link NetworkCall}
+     * if Network would not be able to find an {@link Asset} with {@linkplain Asset#getSystemId() systemId} which matches <code>assetId</code> parameter
+     */
     @NonNull
     public NetworkCall<Asset> getAsset(@NonNull String assetId) {
         return new NetworkCallWrapper<>(service.getAsset(assetId), MissingEntityErrorHandler.INSTANCE);
     }
 
+    /**
+     * This method is designed to fetch {@link Event} with specified {@link Event#getSystemId() eventId} from the network
+     * @param eventId unique {@linkplain Event#getSystemId() event identifier}
+     * @return {@link NetworkCall NetworkCall&lt;Event&gt;} instance which can be used to fetch {@link Event} with specified {@link Event#getSystemId() eventId}
+     * <br>{@link EntityNotFoundException} will be thrown during execution of this {@link NetworkCall}
+     * if Network would not be able to find an {@link Event} with {@linkplain Event#getSystemId() systemId} which matches <code>eventId</code> parameter
+     */
     @NonNull
     public NetworkCall<Event> getEvent(@NonNull String eventId) {
         return new NetworkCallWrapper<>(service.getEvent(eventId, getOptionalAMBTokenAuthHeader()), MissingEntityErrorHandler.INSTANCE);
     }
 
+    /**
+     * This method is designed to search for {@linkplain Asset assets} which meets specified criteria.
+     *
+     * @param query specifies search criteria
+     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Asset&gt;&gt;} instance which {@linkplain NetworkCall#execute() can be used} to get a {@linkplain SearchResult search result}
+     * @see AssetQueryBuilder
+     * @see Query
+     */
     @NonNull
     public NetworkCall<SearchResult<Asset>> findAssets(@NonNull Query<Asset> query) {
         return new BasicSearchRequestWrapper<>(
@@ -85,6 +126,14 @@ public class Network {
         );
     }
 
+    /**
+     * This method is designed to search for {@linkplain Event events} which meets specified criteria.
+     *
+     * @param query specifies search criteria
+     * @return {@link NetworkCall NetworkCall&lt;SearchResult&lt;Event&gt;&gt;} instance which {@linkplain NetworkCall#execute() can be used} to get a {@linkplain SearchResult search result}
+     * @see EventQueryBuilder
+     * @see Query
+     */
     @NonNull
     public NetworkCall<SearchResult<Event>> findEvents(@NonNull Query<? extends Event> query) {
         return new BasicSearchRequestWrapper<>(
@@ -98,9 +147,35 @@ public class Network {
         );
     }
 
-    public NetworkCall<SearchResult<? extends Entity>> find(Query query) {
+    /**
+     * This method represents single endpoint to search for any {@link Entity} supported by this {@link Network} implementation.
+     *
+     * @param query a {@link Query} instance parametrized with a subclass of any {@link Entity} supported by this {@link Network} implementation.
+     *
+     * @return a {@link NetworkCall} instance parametrized with generalized {@link SearchResult} type.
+     *
+     * <br>Each {@link SearchResult#getItems() item} of this {@link SearchResult} would be a subclass of {@link Query#resultType}
+     * supported by this {@link Network} implementation.
+     *
+     * <br>E.g. each item of <code>assetSearchResult.getItems()</code> list is an instance of {@link Asset} class:
+     *
+     * <pre>{@code
+     * Network network = new Network();
+     * Query<Asset> assetQuery = new AssetQueryBuilder().build();
+     * SearchResult<? extends Entity> assetSearchResult = network.find(assetQuery).execute();}</pre>
+     *
+     * And each item of <code>ambEventSearchResult.getItems()</code> list is an instance of {@link Event} class
+     * (because {@link Event} is the only subclass of {@link com.ambrosus.sdk.model.AMBEvent AMBEvent} supported by this {@link Network} implementation):
+     *
+     * <pre>{@code
+     * Query<AMBEvent> ambEventQuery = new AMBEventQueryBuilder().build();
+     * SearchResult<? extends Entity> ambEventSearchResult = network.find(assetQuery).execute();}</pre>
+     *
+     * @throws IllegalArgumentException if {@link Query#resultType} is not a subclass of {@link Event} or {@link Asset} classes
+     */
+    public NetworkCall<SearchResult<? extends Entity>> find(Query<? extends Entity> query) throws IllegalArgumentException {
         if(Event.class.isAssignableFrom(query.resultType)) {
-            NetworkCall<SearchResult<Event>> eventsRequest = findEvents(query);
+            NetworkCall<SearchResult<Event>> eventsRequest = findEvents((Query<Event>)query);
             return (NetworkCall) eventsRequest;
         } else if(Asset.class.isAssignableFrom(query.resultType)) {
             NetworkCall<SearchResult<Asset>> assetsRequest = findAssets((Query<Asset>) query);
@@ -111,13 +186,13 @@ public class Network {
 
 
     @NonNull
-    public NetworkCall<Asset> pushAsset(Asset asset, String privateKey) {
-        return new NetworkCallWrapper<>(service.createAsset(Authorization.getABMAuthHeader(privateKey), asset), PermissionDeniedErrorHandler.INSTANCE);
+    public NetworkCall<Asset> pushAsset(Asset asset) {
+        return new NetworkCallWrapper<>(service.createAsset(asset), PermissionDeniedErrorHandler.INSTANCE);
     }
 
     @NonNull
     public NetworkCall<Event> pushEvent(Event event) {
-        return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), event));
+        return new NetworkCallWrapper<>(service.createEvent(event.getAssetId(), new Event(event)), PermissionDeniedErrorHandler.INSTANCE);
     }
 
 
@@ -142,7 +217,7 @@ public class Network {
         return new NetworkCallWrapper<>(
                 service.getAccount(
                         address,
-                        Authorization.getAMBTokenAuthHeader(authToken)
+                        getAMBTokenAuthHeader(authToken)
                 ),
                 PermissionDeniedErrorHandler.INSTANCE, MissingEntityErrorHandler.INSTANCE
         );
@@ -158,7 +233,11 @@ public class Network {
 
 
     private String getOptionalAMBTokenAuthHeader() {
-        return authToken != null ? Authorization.getAMBTokenAuthHeader(authToken) : null;
+        return authToken != null ? getAMBTokenAuthHeader(authToken) : null;
+    }
+
+    static String getAMBTokenAuthHeader(AuthToken authToken) {
+        return "AMB_TOKEN " + authToken.getAsString();
     }
 
     static String getObjectHash(Object object){

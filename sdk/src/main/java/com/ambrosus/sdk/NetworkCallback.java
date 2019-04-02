@@ -16,13 +16,26 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+/**
+ * This interface provides you with results of asynchronous execution of a {@link NetworkCall}
+ * One and only one method will be invoked when execution of a {@link NetworkCall} will be finished or failed
+ * On Android, callback methods will be invoked on the main thread.
+ * On the JVM, callbacks will happen on a thread responsible for network communication.
+ *
+ * @param <T> type of the data which would be passed to {@link #onSuccess(NetworkCall, Object)} method
+ */
+
+//TODO Retrofit Callbacks methods are executed using the {@link Retrofit} callback executor. It would be nice to provide an alternative inside Network configuration
 public interface NetworkCallback<T> {
 
+    /**
+     * Invoked in case of successful asynchronous execution of corresponding {@link NetworkCall}
+     */
     void onSuccess(@NonNull NetworkCall<T> call, @NonNull T result);
 
     /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
+     * Invoked when some exception occurred while performing corresponding {@link NetworkCall}
+     * You can get the same types of exception as when performing {@link NetworkCall#execute()} method
      */
-    void onFailure(@NonNull NetworkCall<T> call, @NonNull Throwable t);
+    void onFailure(@NonNull NetworkCall<T> call, @NonNull Throwable error);
 }

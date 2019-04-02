@@ -46,11 +46,17 @@ class NetworkSearchResult<T extends Entity> {
         return values.size() > 0 ? values.get(0).getTimestamp() : null;
     }
 
+    /**
+     * @return items of a {@linkplain SearchResult#getPageIndex() page} contained in this <code>SearchResult</code>
+     */
     @NonNull
-    public List<T> getValues() {
+    public List<T> getItems() {
         return values;
     }
 
+    /**
+     * @return total number of entities which match search criteria specified with the {@link Query}
+     */
     public int getTotalCount() {
         return totalCount;
     }

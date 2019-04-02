@@ -25,6 +25,6 @@ class EventSearchResultAdapter<T extends Event> implements DataConverter<SearchR
 
     @Override
     public List<T> convert(SearchResult<Event> result) {
-        return eventFactory.processEvents(result.getValues());
+        return eventFactory.processEvents(result.getItems());
     }
 }

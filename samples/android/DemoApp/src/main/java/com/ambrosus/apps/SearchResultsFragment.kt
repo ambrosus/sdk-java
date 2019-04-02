@@ -22,7 +22,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,8 +34,8 @@ import com.ambrosus.ambviewer.utils.Representation
 import com.ambrosus.ambviewer.utils.RepresentationFactory
 import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Entity
+import com.ambrosus.sdk.GenericEventQueryBuilder
 import com.ambrosus.sdk.Query
-import com.ambrosus.sdk.QueryBuilder
 import com.ambrosus.sdk.model.AMBAssetInfo
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 
@@ -137,7 +136,7 @@ class SearchResultsListFragment : Fragment() {
             val assetInfo = data as AMBAssetInfo
             ViewUtils.setText(itemView, R.id.title, assetInfo.name ?: "no title")
             ViewUtils.setText(itemView, R.id.assetID, assetInfo.assetId)
-            ViewUtils.setText(itemView, R.id.authorID, Html.fromHtml(fragment.resources.getString(R.string.assetCreator, assetInfo.authorId)))
+            ViewUtils.setText(itemView, R.id.authorID, Html.fromHtml(fragment.resources.getString(R.string.assetCreator, assetInfo.accountAddress)))
 
             if(!assetInfo.images.isEmpty()) {
                 val url = assetInfo.images.entries.iterator().next().value.get("url")
@@ -165,7 +164,7 @@ class SearchResultsListFragment : Fragment() {
 
     companion object {
 
-        private const val CACHE_REQUEST_THRESHOLD = QueryBuilder.MAX_PAGE_SIZE/2
+        private const val CACHE_REQUEST_THRESHOLD = GenericEventQueryBuilder.MAX_PAGE_SIZE/2
 
         private val ARG_SEARCH_QUERY = BundleArgument<Query<*>>("ARG_QUERY", Query::class.java)
 

@@ -14,9 +14,9 @@
 
 package com.ambrosus.sdk;
 
-public class QueryBuilder extends AbstractQueryBuilder<QueryBuilder, Entity> {
+class QueryBuilder<T extends Entity> extends AbstractQueryBuilder<QueryBuilder<T>, T> {
 
-    public QueryBuilder(Query<? extends Entity> query) {
+    QueryBuilder(Query<T> query) {
         super(query);
     }
 }

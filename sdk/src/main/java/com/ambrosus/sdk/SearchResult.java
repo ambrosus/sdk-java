@@ -22,23 +22,39 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * This class represents results of some search request for data models of <code>T</code> type (or some subtype of <code>T</code> type).
+ * <p>
+ * Each <code>SearchResult</code> instance includes content of one page of overall search result.
+ * You can get this content with {@link #getItems()} method.
+ * It will give you items of the first page
+ * if you didn't get this search result using a query created by {@link PageQueryBuilder} for another page
+ * and you didn't specify an index of the page for this query directly with {@link AbstractQueryBuilder#page(int)} method.
+ *
+ * @param <T> type or supertype of the data which were requested from the Network.
+ * Each item which you can get with {@link #getItems()} method will be an instance of this type.
+ * But all that items can be an instance of the same subtype of <code>T</code>
+ * if you used generic {@link Network#find(Query)} method to get this <code>SearchResult</code>.
+ * In this case you can check {@link Query#resultType resultType} field of the query
+ * {@linkplain #getQuery() which was used to get this SearchResult} to get a real type for these items.
+ */
 public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
-    private Query<? extends Entity> query;
+    private Query<? extends T> query;
     private Date firstItemTimestamp;
     private Integer defaultPageSize;
 
-    SearchResult(Query<? extends Entity> query, NetworkSearchResult<T> source) {
+    SearchResult(Query<? extends T> query, NetworkSearchResult<T> source) {
         super(source);
         this.query = query;
         firstItemTimestamp = source.getFirstItemTimestamp();
-        if(query.getPageSize() == null && getTotalCount() > getValues().size())
-            defaultPageSize = getValues().size();
+        if(query.getPageSize() == null && getTotalCount() > getItems().size())
+            defaultPageSize = getItems().size();
     }
 
     private SearchResult(List<T> values, SearchResult<?> source) {
         super(values, source.getTotalCount());
-        this.query = source.query;
+        this.query = (Query<? extends T>) source.query;
         this.firstItemTimestamp = source.getFirstItemTimestamp();
         this.defaultPageSize = source.defaultPageSize;
     }
@@ -48,23 +64,38 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
         return firstItemTimestamp;
     }
 
-
-    public Query<? extends Entity> getQuery() {
+    /**
+     * Returns a {@link Query} which was used to get this <code>SearchResult</code>.
+     * You can pass this {@link Query} to one of the {@link Network}{@code .find*(Query<?>)} methods
+     * to repeat this search request and get a fresh version of its search result.
+     *
+     * @return a {@link Query} which was used to get this <code>SearchResult</code>
+     * @see Network#findEvents(Query)
+     * @see Network#findAssets(Query)
+     * @see Network#find(Query)
+     *
+     */
+    public Query<? extends T> getQuery() {
         return query;
     }
 
-    /** Zero based page number**/
-    public int getPage() {
+    /**
+     * @return a zero-based index of the page which {@link #getItems() items} this <code>SearchResult</code> contains.
+     * You can use {@link PageQueryBuilder} to build a query for <code>SearchResult</code> which contains items for other page.
+     */
+    public int getPageIndex() {
         return query.getPage();
     }
 
-    public @Nullable Integer getPageSize(){
+    @Nullable Integer getPageSize(){
         Integer queryPageSize = query.getPageSize();
         return queryPageSize != null ? queryPageSize : defaultPageSize;
     }
 
     /**
-     * @return Total number of search result pages. Even if there are no results at all it will return 1 which means "one empty page"
+     * @return total number of the pages which content meets search criteria specified by the {@link #getQuery() Query}.
+     * Even if there are no entities which meets your search criteria you can get a <code>SearchResult</code>
+     * with one empty page. So this method never returns a value which is less than 1.
      */
     public int getTotalPages() {
         Integer pageSize = getPageSize();
@@ -73,18 +104,18 @@ public class SearchResult<T extends Entity> extends NetworkSearchResult<T> {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "%s, page: %d/%d, query: %s", super.toString(), getPage(), getTotalPages(), query.asMap());
-
+        return String.format(Locale.US, "%s, page: %d/%d, query: %s", super.toString(), getPageIndex()+1, getTotalPages(), query.asMap());
     }
 
     static <OutputType extends Entity, InputType extends Entity> SearchResult<OutputType> create(SearchResult<InputType> source, Class<OutputType> resultType, DataConverter<List<InputType>, List<OutputType>> adapter) throws Throwable {
 
+        //TODO we have to cover case like this: ambNetwork.findAMBEvents(new AssetInfoQueryBuilder().build()).execute() with unit-tests
         Assert.assertTrue(
-                resultType.equals(source.getQuery().resultType),
+                resultType.isAssignableFrom(source.getQuery().resultType),
                 IllegalArgumentException.class,
-                "resultType must match source.getQuery().resultType"
+                "resultType must be a super type source.getQuery().resultType"
         );
 
-        return new SearchResult<>(adapter.convert(source.getValues()), source);
+        return new SearchResult<>(adapter.convert(source.getItems()), source);
     }
 }

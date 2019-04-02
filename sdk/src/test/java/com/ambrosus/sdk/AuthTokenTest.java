@@ -14,6 +14,7 @@
 
 package com.ambrosus.sdk;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -26,13 +27,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-public class AuthorizationTest {
+public class AuthTokenTest {
 
     @Test
-    public void getAMBAuthHeaderTest(){
+    public void getAsStringTest(){
         //fake private key
         final String privateKey = "0xc104ec10ff80d8111b972470fe2e61fa960149a16c01a4214d15167c29ff4e4c";
-        final String validToken = "AMB_TOKEN eyJpZERhdGEiOnsiY3JlYXRlZEJ5IjoiMHhmRGJmQjJENTc1NTBkN0QwNTQxNzA0NzkyRjJhNzc4N0ZhOUZGMkFhIiwidmFsaWRVbnRpbCI6MTU3NzgzNjgwMH0sInNpZ25hdHVyZSI6IjB4MjI1NGM0MDlhZTg0MTg0OTViYmUyYWNjNjY1MmY4OTQ2OGMwNGIyYmE4OTM2OTJmMWNmOGVhZjE2NTZkMmQxZDQ1MjUwZDFmMThjYWQzZTM2NGFlNGRjNTYwZjIxNjk2NGVlZTNhMGNmMGIxYmQ4MDliMjIwYThkZjNhMTZkMTkxYyJ9";
+        final String validTokenString = "eyJpZERhdGEiOnsiY3JlYXRlZEJ5IjoiMHhmRGJmQjJENTc1NTBkN0QwNTQxNzA0NzkyRjJhNzc4N0ZhOUZGMkFhIiwidmFsaWRVbnRpbCI6MTU3NzgzNjgwMH0sInNpZ25hdHVyZSI6IjB4MjI1NGM0MDlhZTg0MTg0OTViYmUyYWNjNjY1MmY4OTQ2OGMwNGIyYmE4OTM2OTJmMWNmOGVhZjE2NTZkMmQxZDQ1MjUwZDFmMThjYWQzZTM2NGFlNGRjNTYwZjIxNjk2NGVlZTNhMGNmMGIxYmQ4MDliMjIwYThkZjNhMTZkMTkxYyJ9";
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(0);
@@ -41,7 +42,14 @@ public class AuthorizationTest {
 
         AuthToken authToken = AuthToken.create(privateKey, validUntil);
 
-        assertEquals(validToken, Authorization.getAMBTokenAuthHeader(authToken));
+        assertEquals(validTokenString, authToken.getAsString());
+    }
+
+    @Test
+    public void createAuthTokenFromString(){
+        String tokenString = "eyJpZERhdGEiOnsiY3JlYXRlZEJ5IjoiMHhmRGJmQjJENTc1NTBkN0QwNTQxNzA0NzkyRjJhNzc4N0ZhOUZGMkFhIiwidmFsaWRVbnRpbCI6MTU3NzgzNjgwMH0sInNpZ25hdHVyZSI6IjB4MjI1NGM0MDlhZTg0MTg0OTViYmUyYWNjNjY1MmY4OTQ2OGMwNGIyYmE4OTM2OTJmMWNmOGVhZjE2NTZkMmQxZDQ1MjUwZDFmMThjYWQzZTM2NGFlNGRjNTYwZjIxNjk2NGVlZTNhMGNmMGIxYmQ4MDliMjIwYThkZjNhMTZkMTkxYyJ9";
+        AuthToken authToken = AuthToken.create(tokenString);
+        Assert.assertEquals(tokenString, authToken.getAsString());
     }
 
 }

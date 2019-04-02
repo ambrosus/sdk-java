@@ -42,7 +42,7 @@ public class AMBEvent extends Event {
     private static final HashSet<String> AMBROSUS_SERVICE_TYPES = new HashSet<String>(){
         {
             add("ambrosus.asset.redirection");
-            add("ambrosus.asset.identifiers");
+            add(Identifier.DATA_OBJECT_TYPE_ASSET_IDENTIFIERS);
             add("ambrosus.asset.branding");
         }
     };

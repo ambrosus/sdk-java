@@ -14,24 +14,12 @@
 
 package com.ambrosus.sdk.model;
 
-import com.ambrosus.sdk.Asset;
-import com.ambrosus.sdk.AssetQueryBuilder;
-import com.ambrosus.sdk.Entity;
 import com.ambrosus.sdk.Event;
-import com.ambrosus.sdk.EventQueryBuilder;
 import com.ambrosus.sdk.NetworkCall;
-import com.ambrosus.sdk.PageQueryBuilder;
-import com.ambrosus.sdk.Query;
 import com.ambrosus.sdk.SearchResult;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -55,7 +43,7 @@ public class AMBEventIntegrationTest {
         NetworkCall<SearchResult<Event>> networkCall = network.findEvents(searchParamsBuilder.build());
 
         SearchResult<Event> result = networkCall.execute();
-        for (Event event : result.getValues()) {
+        for (Event event : result.getItems()) {
             if(expectedAssetID.equals(event.getAssetId()))
                 return;
         }
@@ -72,7 +60,7 @@ public class AMBEventIntegrationTest {
 
         try {
             SearchResult<AMBEvent> ambEvents = networkCall.execute();
-            assertEquals(9, ambEvents.getValues().size());
+            assertEquals(9, ambEvents.getItems().size());
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

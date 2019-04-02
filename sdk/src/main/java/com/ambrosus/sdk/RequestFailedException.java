@@ -14,21 +14,26 @@
 
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.utils.GsonUtil;
-import com.ambrosus.sdk.utils.Strings;
+import java.lang.Exception;
 
-import okio.ByteString;
+/**
+ * Indicates that request to Ambrosus Node API had failed with some HTTP error.
+ * SDK is designed to handle all possible error responses which can be caused by client-side errors
+ * and throw an instance of @{link AmbrosusException} in that case. So an instance of NetworkException can be thrown only
+ * in the case of some error in SDK/Backend implementation.
+ *
+ * Detailed error message should be available with {@link #getMessage()} method. You can also check HTTP error code with {@link #code} field.
+ */
+public class RequestFailedException extends RuntimeException {
 
-class Authorization {
+    /**
+     * HTTP response status code
+     */
+    public final int code;
 
-    static String getAMBTokenAuthHeader(AuthToken authToken) {
-        return "AMB_TOKEN "
-                + ByteString.encodeUtf8(GsonUtil.getLexNormalizedJsonStr(authToken, Network.GSON)).base64();
-    }
-
-
-    static String getABMAuthHeader(String privateKey){
-        return "AMB " + Strings.getWithHexPrefix(privateKey);
+    public RequestFailedException(int code, String message) {
+        super(message);
+        this.code = code;
     }
 
 }

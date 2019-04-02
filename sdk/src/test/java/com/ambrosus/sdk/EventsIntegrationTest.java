@@ -18,13 +18,10 @@ import com.google.gson.JsonObject;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class EventsIntegrationTest {
@@ -53,6 +50,13 @@ public class EventsIntegrationTest {
 //        }
 //    }
 
+    @Test
+    public void getEventById() throws Throwable {
+        final String eventId = "0x36fe3d701297e0ede30456241594f19b60c07ae4e629f5a11a944d46567efafe";
+        Event event = network.getEvent(eventId).execute();
+        System.out.println(event.getSystemId());
+    }
+
     @Test(expected = EntityNotFoundException.class)
     public void getEventById_notFoundException() throws Throwable {
         final String eventID = "notPossible";
@@ -60,24 +64,19 @@ public class EventsIntegrationTest {
         networkCall.execute();
     }
 
-    @Test
+
     //TODO for some reason I got incorrect error from server for the "0x58e2e95dc3c1367ec3b849cbdf89a6a9a1b11848484561e79a5c9cfd5c9b771b\n" assetID (with \n" at the end). Need to check whats going wrong.
-    public void pushEvent() {
+    @Test(expected = PermissionDeniedException.class)
+    public void pushEvent() throws Throwable {
         JsonObject testData = new JsonObject();
         testData.addProperty("testKey", "testValue");
         testData.addProperty("anotherKey", "anotherValue");
 
-        Event.Builder builder = new Event.Builder()
-                .setAssetId("0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333")
+        Event.Builder builder = new Event.Builder("0x4f3cb3aafe426a045714fc55e1166cfc003091c2780e6855af75a8209d3c1333")
                 .addData("custom", testData);
         Event event = builder.createEvent(TestData.UNREGISTERED_PRIVATE_KEY);
 
-        try {
-            Event result = network.pushEvent(event).execute();
-            System.out.println();
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
+        network.pushEvent(event).execute();
     }
 
     @Test(expected = RestrictedDataAccessException.class)
@@ -91,7 +90,7 @@ public class EventsIntegrationTest {
             throw new RuntimeException(t);
         }
 
-        result.getRawData();
+        result.getUserData();
     }
 
     @Test
@@ -105,6 +104,17 @@ public class EventsIntegrationTest {
             throw new RuntimeException(t);
         }
 
-        result.getRawData();
+        result.getUserData();
+    }
+
+    @Test
+    public void ensureAPIDoesntAllowEmptyDataEvents() throws Throwable{
+        Event event = TestData.getFromJson(getClass(), Event.class, "EmptyDataEvent.json");
+
+        try {
+            network.pushEvent(event).execute();
+        } catch (RequestFailedException requestFailedException) {
+            assertEquals(requestFailedException.code, 400);
+        }
     }
 }
