@@ -36,6 +36,8 @@ This document itself, provides an overview of the core classes and key features 
 
 ```gradle
 repositories {
+    jcenter()
+    google()
     maven { url 'https://oss.sonatype.org/content/groups/staging' }  
 }
 
