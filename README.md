@@ -104,7 +104,7 @@ try {
 
 //Asynchronous execution
 
-networkCall.enqueue(new NetworkCallback<Asset>() {
+networkCall.clone().enqueue(new NetworkCallback<Asset>() {
     @Override
     public void onSuccess(@NonNull NetworkCall<Asset> call, @NonNull Asset asset) {
         //request was performed successfully
@@ -164,14 +164,11 @@ System.out.println(event.getSystemId());
 You can search for assets/events which match your criteria with `Network.findAssets(Query<Asset> query)` / `Network.findEvents(Query<Event> query)` methods. These methods return a [NetworkCall](sdk/src/main/java/com/ambrosus/sdk/NetworkCall.java) instance of which the resultant type is defined as [SearchResult<Asset>](sdk/src/main/java/com/ambrosus/sdk/SearchResult.java) or `SearchResult<Event>` respectively. E.g:
 
 ```java
-SearchResult<Event> searchResult 
-= network.findEvents(new EventQueryBuilder().build()).execute();
-
-SearchResult class represents a page of search results with up to 100 result data models. You can get a list of these data models with SearchResult.getValues() method:
-
-List<Event> values = searchResult.getValues();
-
-You can specify search criteria with EventQueryBuilder and AssetQueryBuilder classes, e.g:
+SearchResult<Event> searchResult = network.findEvents(new EventQueryBuilder().build()).execute();
+```
+SearchResult class represents a page of search results with up to 100 result data models. You can get a list of these data models with SearchResult.getItems() method:
+```java
+List<Event> values = searchResult.getItems();
 
 Query<Event> anotherQuery = new EventQueryBuilder()
         .createdBy("0xFF1E60D7e4fe21C1817B8249C8cB8E52D1912665")
@@ -180,7 +177,7 @@ Query<Event> anotherQuery = new EventQueryBuilder()
 
 searchResult = network.findEvents(anotherQuery).execute();
 
-values = searchResult.getValues();
+values = searchResult.getItems();
 ```
 
 ### Fetching next pages of a search result (pagination support)
@@ -241,7 +238,7 @@ After such measures have been taken, it is not possible to get json data from th
 Event privateEvent = network.getEvent(event.getSystemId()).execute();
 
 try {
-    List<JsonObject> data = privateEvent.getRawData();
+    List<JsonObject> data = privateEvent.getUserData();
 } catch (RestrictedDataAccessException e) {
    System.out.println(e.getMessage());
     //we get this exception because
@@ -258,16 +255,17 @@ network.authorize(authToken);
 
 privateEvent = network.getEvent(event.getSystemId()).execute();
 //now you can get access to event data
-System.out.println(privateEvent.getRawData());
+System.out.println(privateEvent.getUserData());
 ```
 
 ### Configure Node API endpoint
 
-It’s possible to use different network API endpoints. To do this, one must first create an instance of Configuration class, and then set the API endpoint for this instance with `url(String url)` method. Once this has been done, it is then possible to create an instance of `Network` class using the following configuration:
+It's possible to use different network API endpoints. To do this, one must first create an instance of Configuration class, and then set the API endpoint for this instance with `url(String url)` method. Once this has been done, it is then possible to create an instance of `Network` class using the following configuration:
 
 ```java
 Configuration configuration = new Configuration().url("https://hermes.ambrosus.com");
 Network network = new Network(configuration);
+SearchResult<Event> result = network.findEvents(new EventQueryBuilder().build()).execute();
 ```
 
 Altogether, you can create several `Network` instances linked to different API endpoints and use them to query data from different sources.
@@ -280,7 +278,7 @@ These classes might help you to build your own implementation of the `Network` c
 
 ### Example: Search for information about item which is marked with “3451080000324” EAN13 barcode.
 
-Assumption: each item on the network has a corresponding `Event` which contains information about the item in the [following json format](https://github.com/ambrosus/sdk-javascript/blob/master/docs-old/AmbrosusEventEntryTypes.md)
+Assumption: each item on the network has a corresponding `Event` which contains information about the item in the [following json format](https://github.com/ambrosus/sdk-javascript/blob/master/docs-old/AmbrosusEventEntryTypes.md).
 
 Using the generic Event model:
 
@@ -297,7 +295,7 @@ Query<Event> query = new EventQueryBuilder()
         .build();
 
 SearchResult<Event> eventSearchResult = network.findEvents(query).execute();
-Event item = eventSearchResult.getValues().get(0);
+Event item = eventSearchResult.getItems().get(0);
 ```
 
 It is also possible to do the same thing using a generic `Event` model + [AssetInfoQueryBuilder](sdk/src/main/java/com/ambrosus/sdk/model/AssetInfoQueryBuilder.java) and [Identifier](sdk/src/main/java/com/ambrosus/sdk/model/Identifier.java) classes which contain constants from the code above:
@@ -308,7 +306,7 @@ Query<AMBAssetInfo> assetInfoQuery = new AssetInfoQueryBuilder()
         .build();
 
 eventSearchResult = network.findEvents(query).execute();
-item = eventSearchResult.getValues().get(0);
+item = eventSearchResult.getItems().get(0);
 ```
 
 Finally, it can also be done with an instance of [AMBNetwork](sdk/src/main/java/com/ambrosus/sdk/model/AMBNetwork.java) class which you can use to query [AssetInfo](sdk/src/main/java/com/ambrosus/sdk/model/AMBAssetInfo.java) model:
@@ -316,7 +314,7 @@ Finally, it can also be done with an instance of [AMBNetwork](sdk/src/main/java/
 ```java
 AMBNetwork ambNetwork = new AMBNetwork();
 SearchResult<AMBAssetInfo> assetInfoSearchResult = ambNetwork.findAssetInfo(assetInfoQuery).execute();
-AMBAssetInfo assetInfo = assetInfoSearchResult.getValues().get(0);
+AMBAssetInfo assetInfo = assetInfoSearchResult.getItems().get(0);
 ```
 
 ## Demo app (Ambrosus Viewer)
