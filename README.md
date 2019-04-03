@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.ambrosus.sdk:core:2.0.0'    
+    implementation 'com.ambrosus.sdk:core:2.0.1'    
 }
 ```
 
@@ -77,7 +77,7 @@ android {
 
 ```gradle
 dependencies {
-    implementation 'com.ambrosus.sdk:core-android:2.0.0'
+    implementation 'com.ambrosus.sdk:core-android:2.0.1'
 }
 ```
 
