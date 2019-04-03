@@ -24,13 +24,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.ByteString;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 //TODO Add package-level description
@@ -57,11 +54,45 @@ public class Network {
     static final Gson GSON;
     static {
         GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, typeOfSrc, context) -> {
-            DecimalFormat df = new DecimalFormat("#.#########");
-            df.setRoundingMode(RoundingMode.CEILING);
-            return new JsonPrimitive(df.format(src));
+            Number resultNumber;
+            resultNumber = Math.ceil(src) == Math.floor(src) ? new PlainLong(src.longValue()) : src;
+            return new JsonPrimitive(resultNumber);
         });
         GSON = gsonBuilder.create();
+    }
+
+    private static class PlainLong extends Number {
+
+        private final Long value;
+
+        private PlainLong(Long value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value.toString();
+        }
+
+        @Override
+        public int intValue() {
+            return value.intValue();
+        }
+
+        @Override
+        public long longValue() {
+            return value;
+        }
+
+        @Override
+        public float floatValue() {
+            return value.floatValue();
+        }
+
+        @Override
+        public double doubleValue() {
+            return value.doubleValue();
+        }
     }
 
     private final Service service;
