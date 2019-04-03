@@ -10,6 +10,16 @@ repositories {
     google()
 }
 
+/*this is a workaround for "JUnit tests missing resources in classpath when run from Android Studio" issue
+see https://developer.android.com/studio/known-issues, https://issuetracker.google.com/issues/36988115
+*/
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/java/test"
+}
+
+processTestResources.dependsOn copyTestResources
+
 //we keep SONATYPE_PASSWORD and signing.password in local.properties file
 File localProperties = file('./local.properties')
 if (localProperties.exists()) {
