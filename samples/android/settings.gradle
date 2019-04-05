@@ -1,2 +1,2 @@
-include ':DemoApp', ':sdk'
+include ':DemoApp', 'BasicViewer', ':sdk'
 project(':sdk').projectDir = new File('./../../sdk')
