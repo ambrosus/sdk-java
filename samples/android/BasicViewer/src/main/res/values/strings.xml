@@ -14,4 +14,6 @@
 
     <string name="assetCreator"><font color='#9198BB'>by </font><font color='#0143BA'>%s</font></string>
 
+    <string name="txtCopyright">\u00A9 2018 Ambrosus. All rights reserved.</string>
+
 </resources>

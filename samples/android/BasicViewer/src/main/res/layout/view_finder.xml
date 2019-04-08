@@ -28,11 +28,15 @@
 
         android:src="@drawable/crosshair"/>
 
-    <TextView android:id="@+id/zxing_status_view"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="bottom|center_horizontal"
-              android:background="@color/zxing_transparent"
-              android:text="@string/zxing_msg_default_status"
-              android:textColor="@color/zxing_status_text"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="39dp"
+
+        android:textSize="11sp"
+        android:textColor="#8492A6"
+
+        android:text="@string/txtCopyright"/>
 </merge>

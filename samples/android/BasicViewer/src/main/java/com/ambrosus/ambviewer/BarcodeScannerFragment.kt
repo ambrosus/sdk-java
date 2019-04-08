@@ -65,7 +65,6 @@ class BarcodeScannerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeAndStartBarcodeScanning()
-        view.findViewById<TextView>(R.id.zxing_status_view).text = null
     }
 
     override fun onPause() {
