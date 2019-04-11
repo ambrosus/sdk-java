@@ -42,11 +42,6 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            updateBackButtonState()
-        }
 
         FragmentSwitchHelper.addChild(this, MainScannerFragment(), R.id.contentContainer)
     }
@@ -63,10 +58,6 @@ class MainActivity : AppCompatActivity(),
                 .setNegativeButton(getString(R.string.dialog_cancel), { dialog, which -> dialog.dismiss() })
                 .setPositiveButton(getString(R.string.dialog_quit), { dialog, which -> finish() }).show()
 
-    }
-
-    fun updateBackButtonState(){
-        supportActionBar!!.setDisplayHomeAsUpEnabled(canGoBack())
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
