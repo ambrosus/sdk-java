@@ -14,6 +14,19 @@
 
     <string name="assetCreator"><font color='#9198BB'>by </font><font color='#0143BA'>%s</font></string>
 
+    <string name="txtScanBarcode">Scan a product barcode</string>
     <string name="txtCopyright">\u00A9 2018 Ambrosus. All rights reserved.</string>
+
+    <string name="txtLoadingAsset">Loading asset…</string>
+    <string name="txtHmm">Hmm…</string>
+
+    <string name="txtFoundNothing">Not sure we know anything about that.</string>
+    <string name="txtTapForNewScan">Tap anywhere for a new scan</string>
+
+    <string name="txtHuh">Huh</string>
+    <string name="txtError">Unfortunately something went wrong…</string>
+    <string name="txtRetry">Try again</string>
+
+    <string name="txtGoogleSearch">Search in Google</string>
 
 </resources>

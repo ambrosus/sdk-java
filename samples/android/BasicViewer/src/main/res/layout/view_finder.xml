@@ -27,16 +27,4 @@
         android:layout_gravity="center"
 
         android:src="@drawable/crosshair"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="39dp"
-
-        android:textSize="11sp"
-        android:textColor="#8492A6"
-
-        android:text="@string/txtCopyright"/>
 </merge>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginBottom="20dp"
+
+        android:src="@drawable/error_mark"
+
+        android:layout_above="@+id/laserLine"/>
+
+
+    <include
+        android:id="@+id/laserLine"
+        android:visibility="invisible"
+        layout="@layout/view_error_laser_line"/>
+
+
+    <TextView
+        android:id="@+id/mainText"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="28dp"
+
+        android:layout_below="@+id/laserLine"
+        android:layout_centerHorizontal="true"
+
+        android:textAppearance="@style/SFProDisplayBold"
+
+        android:text="@string/txtHuh"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/mainText"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="4dp"
+
+        android:textAppearance="@style/SFProTextRegular"
+
+        android:text="@string/txtError"/>
+
+    <TextView
+        android:id="@+id/identifier"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/googleSearch"
+
+        android:layout_marginBottom="12dp"
+
+        android:textAppearance="@style/SFProTextRegular"
+        android:textColor="@android:color/white"
+
+        android:text="EAN-13: 3452352345423452"/>
+
+    <TextView
+        android:id="@+id/googleSearch"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginBottom="40dp"
+
+        android:textAppearance="@style/BottomBlueText"
+
+        android:text="@string/txtRetry"/>
+
+</RelativeLayout>

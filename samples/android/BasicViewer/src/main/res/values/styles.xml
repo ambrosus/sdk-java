@@ -66,4 +66,23 @@
     <!--<item name="android:background">@color/black_overlay</item>-->
     <!--</style>-->
 
+    <style name="SFProDisplayBold" parent="@style/TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/san_francisco_pro_display_bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="SFProTextRegular" parent="@style/TextAppearance.AppCompat.Small">
+        <item name="android:textColor">#C0CCDA</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/san_francisco_pro_text_regular</item>
+    </style>
+
+    <style name="BottomBlueText" parent="@style/TextAppearance.AppCompat.Small">>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1667FC</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
 </resources>
