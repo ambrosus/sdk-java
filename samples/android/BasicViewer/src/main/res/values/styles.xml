@@ -66,16 +66,19 @@
     <!--<item name="android:background">@color/black_overlay</item>-->
     <!--</style>-->
 
-    <style name="SFProDisplayBold" parent="@style/TextAppearance.AppCompat.Small">
+    <style name="SFProDisplayBold" parent="@android:style/Widget.Holo.Light.TextView">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:fontFamily">@font/san_francisco_pro_display_bold</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:lines">1</item>
     </style>
 
-    <style name="SFProTextRegular" parent="@style/TextAppearance.AppCompat.Small">
+    <style name="SFProTextRegular" parent="@android:style/Widget.Holo.Light.TextView">
         <item name="android:textColor">#C0CCDA</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/san_francisco_pro_text_regular</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">middle</item>
     </style>
 
     <style name="BottomBlueText" parent="@style/TextAppearance.AppCompat.Small">>
