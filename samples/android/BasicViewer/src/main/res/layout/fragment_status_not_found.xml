@@ -12,7 +12,7 @@
 
         android:layout_marginBottom="20dp"
 
-        android:src="@drawable/error_mark"
+        android:src="@drawable/not_found_mark"
 
         android:layout_above="@+id/laserLine"/>
 
