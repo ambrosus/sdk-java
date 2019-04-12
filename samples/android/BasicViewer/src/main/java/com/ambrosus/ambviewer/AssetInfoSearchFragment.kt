@@ -18,18 +18,13 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.ambrosus.ambviewer.utils.BundleArgument
-import com.ambrosus.apps.SearchResultsViewModel
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Query
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.AssetInfoQueryBuilder
 import com.ambrosus.sdk.model.Identifier
-import kotlinx.android.synthetic.main.fragment_status.*
 import java.io.Serializable
 
 class AssetInfoSearchFragment : Fragment() {
@@ -37,7 +32,7 @@ class AssetInfoSearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().getResults().observe(this, Observer {
-            getListener()?.onSearchResult(it!!, getSearchCriteria())
+            getListener()?.onSearchResult(it!!, getIdentifier())
         });
     }
 
@@ -48,58 +43,38 @@ class AssetInfoSearchFragment : Fragment() {
         ).get(SingleSearchResultViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_status, container, false);
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        loadingMessage.text = "Searching for AMBAssetInfo (${getSearchCriteria()})"
-    }
+//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+//        return inflater.inflate(R.layout.fragment_status, container, false);
+//    }
+//
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        loadingMessage.text = "Searching for AMBAssetInfo (${getIdentifier()})"
+//    }
 
     private fun getQuery() : Query<AMBAssetInfo> {
-        val searchCriteria = getSearchCriteria()
+        val identifier = getIdentifier()
         val queryBuilder = AssetInfoQueryBuilder();
-        when(searchCriteria) {
-            is String -> queryBuilder.forAsset(searchCriteria)
-            is Identifier -> queryBuilder.byIdentifier(searchCriteria)
+        when(identifier) {
+            is Id -> queryBuilder.forAsset(identifier.value)
+            else -> queryBuilder.byIdentifier(identifier)
         }
         return queryBuilder.build();
     }
 
     private fun getListener() = parentFragment as? SearchResultListener
 
-    fun getSearchCriteria() = ARG_SEARCH_CRITERIA.get(this)
+    private fun getIdentifier() = ARG_IDENTIFIER.get(this)
 
     interface SearchResultListener {
 
-        fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Serializable)
+        fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Identifier)
 
     }
 
     companion object {
-
-        private val ARG_SEARCH_CRITERIA = BundleArgument<Serializable>("ARG_SEARCH_CRITERIA", Serializable::class.java)
-
-        fun createFor(assetID: String): AssetInfoSearchFragment {
-            return createForCriteria(assetID)
-        }
-
-        fun createFor(identifier: Identifier): AssetInfoSearchFragment {
-            return createForCriteria(identifier)
-        }
-
-        private fun getArgumentsByCriteria(searchCriteria: Serializable): Bundle {
-            return ARG_SEARCH_CRITERIA.put(Bundle(), searchCriteria)
-        }
-
-        private fun createForCriteria(searchCriteria: Serializable): AssetInfoSearchFragment {
-            val result = AssetInfoSearchFragment()
-            result.arguments = getArgumentsByCriteria(searchCriteria)
-            return result;
-        }
-
-
+        fun createFor(identifier: Identifier): AssetInfoSearchFragment =
+                ARG_IDENTIFIER.putTo(AssetInfoSearchFragment(), identifier)
     }
 
 }

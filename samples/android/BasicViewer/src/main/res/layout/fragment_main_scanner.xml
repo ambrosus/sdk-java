@@ -9,17 +9,19 @@
     <FrameLayout
         android:id="@+id/scannerContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_above="@+id/statusContainer"/>
+        android:layout_height="match_parent"/>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/advancedMainUI"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
         android:visibility="visible">
 
         <TextView
+            android:id="@+id/scanBarcodeHint"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -45,6 +47,8 @@
             android:layout_height="0dp"/>
 
         <TextView
+            android:id="@+id/copyright"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -64,17 +68,20 @@
     <FrameLayout
         android:id="@+id/statusContainer"
 
-        android:background="@android:color/black"
-
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
         android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:gravity="center"
 
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
 
             android:layout_gravity="center"
 

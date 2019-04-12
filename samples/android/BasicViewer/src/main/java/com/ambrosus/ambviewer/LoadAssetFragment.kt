@@ -18,52 +18,47 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.ambrosus.sdk.Asset
-import com.ambrosus.sdk.EntityNotFoundException
-import kotlinx.android.synthetic.main.fragment_status.*
+import com.ambrosus.sdk.model.Identifier
 
 class LoadAssetFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().asset.observe(this, Observer {
-            getListener()?.onLoadResult(it!!)
+            getListener()?.onLoadResult(it!!, getAssetIdentifier())
         });
     }
 
     private fun getListener() = parentFragment as? LoadResultListener
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_status, container, false);
-    }
+//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+//        return inflater.inflate(R.layout.fragment_status, container, false);
+//    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        loadingMessage.text = "Loading Asset ${getAssetId()}"
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        loadingMessage.text = "Loading Asset ${getAssetId()}"
+//    }
 
     private fun getViewModel(): AssetViewModel {
         return ViewModelProviders.of(
                 this,
-                AssetViewModelFactory(getAssetId(), AMBSampleApp.network)
+                AssetViewModelFactory(getAssetIdentifier().value, AMBSampleApp.network)
         ).get(AssetViewModel::class.java)
     }
 
-    private fun getAssetId() = ARG_ID.get(this)
+    private fun getAssetIdentifier() = ARG_IDENTIFIER.get(this) as Id
 
     companion object {
 
-        fun createFor(assetID: String): LoadAssetFragment {
-            return ARG_ID.putTo(LoadAssetFragment(), assetID)
+        fun createFor(assetIdentifier: Id): LoadAssetFragment {
+            return ARG_IDENTIFIER.putTo(LoadAssetFragment(), assetIdentifier)
         }
-
     }
 
     interface LoadResultListener {
-        fun onLoadResult(result: LoadResult<Asset>)
+        fun onLoadResult(result: LoadResult<Asset>, assetIdentifier: Id)
     }
 
 }

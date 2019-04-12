@@ -13,6 +13,7 @@ import com.ambrosus.ambviewer.utils.RepresentationAdapter
 import com.ambrosus.ambviewer.utils.RepresentationFactory
 import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Event
+import com.ambrosus.sdk.model.Identifier
 import com.ambrosus.sdk.model.Location
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
@@ -21,6 +22,15 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import com.google.zxing.BarcodeFormat
+
+
+private val identifiersDisplayPrefix = mapOf(
+        "EAN13" to "EAN-13", //we use Identifiers type like in barcodeFormatsIdentifierTypes there
+        "EAN8" to "EAN-8"
+)
+
+fun getUserFriendlyIdentifierText(identifier: Identifier) = "${identifiersDisplayPrefix[identifier.type] ?: identifier.type}: ${identifier.value}"
 
 fun addSection(dataSetBuilder: RepresentationAdapter.DataSetBuilder, title: String, data: Map<String, JsonElement>) {
     if(!data.isEmpty()) {

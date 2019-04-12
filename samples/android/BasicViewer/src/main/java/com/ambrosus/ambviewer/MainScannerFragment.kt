@@ -16,7 +16,8 @@ package com.ambrosus.ambviewer
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.Html
+import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -28,6 +29,7 @@ import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.apps.SearchResultsListFragment
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.Entity
+import com.ambrosus.sdk.EntityNotFoundException
 import com.ambrosus.sdk.Query
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
@@ -37,7 +39,7 @@ import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import kotlinx.android.synthetic.main.fragment_main_scanner.*
-import java.io.Serializable
+import kotlinx.android.synthetic.main.view_finder.*
 
 class MainScannerFragment :
         Fragment(),
@@ -45,6 +47,8 @@ class MainScannerFragment :
         BarcodeCallback,
         AssetInfoSearchFragment.SearchResultListener,
         LoadAssetFragment.LoadResultListener {
+
+    private val TAG = javaClass.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,66 +105,84 @@ class MainScannerFragment :
     }
 
     override fun handleBackKey(): Boolean {
+        removeCurActionFragment()
         return removeCurStatusFragment()
     }
 
+    private val barcodeFormatsIdentifierTypes = mapOf(
+            BarcodeFormat.EAN_13 to "EAN13",
+            BarcodeFormat.EAN_8 to "EAN8",
+            BarcodeFormat.CODE_128 to "GTIN"
+    )
+
     override fun barcodeResult(code: BarcodeResult?) {
-
-        val supportedIdentifiers = mapOf(
-                BarcodeFormat.EAN_13 to "EAN13",
-                BarcodeFormat.EAN_8 to "EAN8",
-                BarcodeFormat.CODE_128 to "GTIN"
-        )
-
         val barcodeFormat = code!!.barcodeFormat
         val barcodeText = code.text
 
-        var searchFragment: AssetInfoSearchFragment? = null
-
+        var supportedIdentifier: Identifier? =
         if (barcodeFormat == BarcodeFormat.QR_CODE && barcodeText.startsWith("https://amb.to/0x")) {
-            searchFragment = AssetInfoSearchFragment.createFor(barcodeText.replace("https://amb.to/", ""))
-        } else if (supportedIdentifiers.contains(barcodeFormat)) {
-            searchFragment = AssetInfoSearchFragment.createFor(Identifier(supportedIdentifiers[barcodeFormat], barcodeText))
-        }
+            Id(barcodeText.replace("https://amb.to/", ""))
+        } else if (barcodeFormatsIdentifierTypes.contains(barcodeFormat)) {
+            Identifier(barcodeFormatsIdentifierTypes[barcodeFormat], barcodeText)
+        } else null
 
-        if(searchFragment != null) {
-            displayStatusFragment(searchFragment)
+        if(supportedIdentifier != null) {
+            searchFor(supportedIdentifier)
         } else {
-            displayError("Unknown barcode data format.")
+            displayNotFound(Identifier(barcodeFormat.toString(), barcodeText));
         }
+    }
+
+    private fun searchFor(assetIdentifier: Identifier) {
+        displayLoadingStatus(assetIdentifier)
+        performAction(AssetInfoSearchFragment.createFor(assetIdentifier))
+    }
+
+    private fun displayLoadingStatus(assetIdentifier: Identifier){
+        displayStatusFragment(
+                LoadingStatusFragment.createFor(assetIdentifier)
+        )
+    }
+
+    private fun displayNotFound(assetIdentifier: Identifier) {
+        displayStatusFragment(
+                NotFoundStatusFragment.createFor(assetIdentifier)
+        )
     }
 
     private fun displayError(message: String) {
-        removeCurStatusFragment()
-        BarcodeScannerFragment.get(this).stopScanning()
-        statusMessage.text = Html.fromHtml(message + "<br><br><b>Tap to continue.</b>")
-        statusContainer.setOnClickListener {
-            BarcodeScannerFragment.get(this).startScanning()
-            statusMessage.text = "Place a barcode inside viewfinder rectangle to scan it"
-            statusContainer.setOnClickListener(null)
-        }
+        Log.e(TAG, message);
+        displayStatusFragment(ErrorStatusFragment())
     }
 
-    override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Serializable) {
-        if(!processError(result)) {
+    override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Identifier) {
+        removeCurActionFragment() //removing fragment which performed search
+        if(!processError(result, searchCriteria)) {
             val searchResult = result.data
             val resultsList = result.data.items
             if(resultsList.isEmpty()) {
-                if(searchCriteria is String)
-                    displayAssetLoading(searchCriteria)
+                if(searchCriteria is Id)
+                    loadAsset(searchCriteria)
                 else
-                    displayError("Can't find any asset by $searchCriteria")
-            } else if(resultsList.size == 1) {
+                    displayNotFound(searchCriteria)
+            } else if(resultsList.size > 0) {
                 displayAsset(searchResult.items[0])
-            } else {
-                displayResultsList(searchResult.query)
             }
+//            else {
+//                displayResultsList(searchResult.query)
+//            }
         }
     }
 
-    private fun processError(result: LoadResult<*>): Boolean {
+
+    private fun processError(result: LoadResult<*>, assetIdentifier: Identifier): Boolean {
         if(!result.isSuccessful()) {
-            displayError(AMBSampleApp.errorHandler.getErrorDescription(result.error))
+            if(result.error !is EntityNotFoundException) {
+                Log.e(TAG, "Can't perform request due to: ", result.error)
+                displayError(AMBSampleApp.errorHandler.getErrorDescription(result.error))
+            } else {
+                displayNotFound(assetIdentifier)
+            }
         }
         return !result.isSuccessful()
     }
@@ -170,24 +192,67 @@ class MainScannerFragment :
         FragmentSwitchHelper.showNextFragment(this, SearchResultsListFragment.create(query))
     }
 
-    override fun onLoadResult(result: LoadResult<Asset>) {
-        if(!processError(result))
+    override fun onLoadResult(result: LoadResult<Asset>, assetIdentifier: Id) {
+        removeCurActionFragment() //removing fragment which performed loading
+        if(!processError(result, assetIdentifier)) {
             displayAsset(result.data)
+        }
     }
 
-    private fun displayAssetLoading(assetId: String){
-        displayStatusFragment(LoadAssetFragment.createFor(assetId))
-    }
-
-    private fun removeCurStatusFragment(): Boolean {
-        BarcodeScannerFragment.get(this).startScanning()
-        return FragmentSwitchHelper.goBack(this, R.id.statusContainer)
+    private fun loadAsset(assetIdentifier: Id){
+        performAction(LoadAssetFragment.createFor(assetIdentifier))
     }
 
     private fun displayStatusFragment(fragment: Fragment) {
         removeCurStatusFragment()
+        switchViewFinderVisibility(View.INVISIBLE)
+        if(fragment is NotFoundStatusFragment || fragment is ErrorStatusFragment) {
+            switchAdvancedUIVisibility(View.INVISIBLE)
+        }
         BarcodeScannerFragment.get(this).stopScanning()
         FragmentSwitchHelper.addChild(this, fragment, R.id.statusContainer, true, true)
+    }
+
+    private fun removeCurStatusFragment(): Boolean {
+        BarcodeScannerFragment.get(this).startScanning()
+
+        switchViewFinderVisibility(View.VISIBLE)
+        switchAdvancedUIVisibility(View.VISIBLE)
+
+        return FragmentSwitchHelper.goBack(this, R.id.statusContainer)
+    }
+
+    private fun switchViewFinderVisibility(visibility: Int) {
+        zxing_viewfinder_view.visibility = visibility
+        statusContainer.setBackgroundColor(
+                ContextCompat.getColor(
+                        context!!,
+                        if(visibility == View.INVISIBLE) R.color.viewFinderMaskColor else android.R.color.transparent
+                )
+        )
+    }
+
+    private fun switchAdvancedUIVisibility(visibility: Int){
+        copyright.visibility = visibility
+        scanBarcodeHint.visibility = visibility
+    }
+
+    private val actionFragmentTag = "actionFragment"
+
+    private fun removeCurActionFragment() {
+        val curActionFragment = childFragmentManager!!.findFragmentByTag(actionFragmentTag)
+        if(curActionFragment != null) {
+            val ft = childFragmentManager!!.beginTransaction()
+            ft.remove(curActionFragment)
+            ft.commit()
+        }
+    }
+
+    private fun performAction(fragment: Fragment) {
+        removeCurActionFragment()
+        val ft = childFragmentManager!!.beginTransaction()
+        ft.add(0, fragment, actionFragmentTag)
+        ft.commit()
     }
 
     private fun displayAsset(asset: Entity) {
