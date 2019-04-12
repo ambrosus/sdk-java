@@ -38,6 +38,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
+import com.journeyapps.barcodescanner.ViewfinderView
 import kotlinx.android.synthetic.main.fragment_main_scanner.*
 import kotlinx.android.synthetic.main.view_finder.*
 
@@ -91,6 +92,12 @@ class MainScannerFragment :
         super.onResume()
         TitleHelper.ensureTitle(this, "Scanner")
         displayAuthorizationState()
+
+        //executing all pending transactions, making view finder visible if there are no any status fragments
+        //(we leave it invisible when switching to AssetActivity in order to get rid of UI flashing)
+        childFragmentManager.executePendingTransactions()
+        if(childFragmentManager.findFragmentById(R.id.statusContainer) == null)
+            switchViewFinderVisibility(View.VISIBLE)
     }
 
     private fun displayAuthorizationState() {
@@ -227,7 +234,7 @@ class MainScannerFragment :
         statusContainer.setBackgroundColor(
                 ContextCompat.getColor(
                         context!!,
-                        if(visibility == View.INVISIBLE) R.color.viewFinderMaskColor else android.R.color.transparent
+                        if (visibility == View.INVISIBLE) R.color.viewFinderMaskColor else android.R.color.transparent
                 )
         )
     }
@@ -262,6 +269,7 @@ class MainScannerFragment :
             else -> throw IllegalStateException("Can't display $asset")
         }
         removeCurStatusFragment()
+        switchViewFinderVisibility(View.INVISIBLE) // doing this to get rid of flashing before switching to asset activity
     }
 
     override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}
