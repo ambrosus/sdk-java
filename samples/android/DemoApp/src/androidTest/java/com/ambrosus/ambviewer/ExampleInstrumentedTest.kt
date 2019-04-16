@@ -1,4 +1,4 @@
-package com.ambrosus.ambviewer
+package com.ambrosus.demoapp
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

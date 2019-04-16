@@ -18,45 +18,46 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.ambrosus.sdk.*
-import com.ambrosus.sdk.model.AMBAssetInfo
+import com.ambrosus.sdk.Asset
+import com.ambrosus.sdk.Network
+import com.ambrosus.sdk.NetworkCall
+import com.ambrosus.sdk.NetworkCallback
 import com.ambrosus.sdk.model.AMBNetwork
 
-class SingleSearchResultViewModel (
-        private val network: Network,
-        private val query: Query<*>
+class AssetViewModel(
+        private val assetID: String,
+        private val network: AMBNetwork
 ) : ViewModel() {
 
-    private val searchResult = MutableLiveData<LoadResult<SearchResult<out Entity>>>()
+    private val _asset = MutableLiveData<LoadResult<Asset>>()
 
     init {
-        reQuery()
+        loadAsset()
     }
 
-    fun getResults(): LiveData<LoadResult<SearchResult<out Entity>>> = searchResult
+    val asset: LiveData<LoadResult<Asset>>
+        get() = _asset
 
-    fun reQuery() {
-        network.find(query).enqueue(
-                object : NetworkCallback<SearchResult<out Entity>> {
-                    override fun onSuccess(call: NetworkCall<SearchResult<out Entity>>, result: SearchResult<out Entity>) {
-                        searchResult.value = LoadResult(result)
+    fun loadAsset() {
+        network.getAsset(assetID).enqueue(
+                object : NetworkCallback<Asset> {
+                    override fun onSuccess(call: NetworkCall<Asset>, result: Asset) {
+                        LoadResult.passResult(_asset, result)
                     }
 
-                    override fun onFailure(call: NetworkCall<SearchResult<out Entity>>, t: Throwable) {
-                        searchResult.value = LoadResult(t)
+                    override fun onFailure(call: NetworkCall<Asset>, t: Throwable) {
+                        LoadResult.passError(_asset, t)
                     }
-
                 }
         )
     }
-
-    class Factory(private val network: Network, private val query: Query<*>) : ViewModelProvider.Factory {
-
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            return SingleSearchResultViewModel(network, query) as T
-        }
-
-    }
 }
 
+class AssetViewModelFactory(private val assetID: String, private val network: Network) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return AssetViewModel(assetID, AMBSampleApp.network) as T
+    }
+
+}
