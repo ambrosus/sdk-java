@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import com.google.zxing.BarcodeFormat
 
 
 private val identifiersDisplayPrefix = mapOf(
@@ -30,7 +29,14 @@ private val identifiersDisplayPrefix = mapOf(
         "EAN8" to "EAN-8"
 )
 
-fun getUserFriendlyIdentifierText(identifier: Identifier) = "${identifiersDisplayPrefix[identifier.type] ?: identifier.type}: ${identifier.value}"
+fun getUserFriendlyIdentifiersText(identifiers: List<Identifier>, context: Context): String {
+    return if(identifiers.size == 1) {
+        getUserFriendlyIdentifierText(identifiers[0])
+    } else
+        context.getString(R.string.txtLoadingAssetParamsCount, identifiers.size);
+}
+
+fun getUserFriendlyIdentifierText(identifier: Identifier) = "${identifiersDisplayPrefix[identifier.type] ?: identifier.type}: ${identifier.value}";
 
 fun addSection(dataSetBuilder: RepresentationAdapter.DataSetBuilder, title: String, data: Map<String, JsonElement>) {
     if(!data.isEmpty()) {

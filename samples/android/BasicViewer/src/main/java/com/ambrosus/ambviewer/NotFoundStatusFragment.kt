@@ -20,14 +20,14 @@ class NotFoundStatusFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        identifier.text = getUserFriendlyIdentifierText(ARG_IDENTIFIER.get(this))
+        val identifiers = getIdentifiers()
+        identifier.text = getUserFriendlyIdentifiersText(identifiers, context!!)
         bottomText.setOnClickListener {
             val intent = Intent(Intent.ACTION_WEB_SEARCH)
+
             intent.putExtra(
                     SearchManager.QUERY,
-                    getUserFriendlyIdentifierText(
-                            ARG_IDENTIFIER.get(this)
-                    )
+                    getSearchRequestFor(identifiers)
             )
             try {
                 startActivity(intent)
@@ -40,9 +40,22 @@ class NotFoundStatusFragment: Fragment() {
         }
     }
 
+    private fun getIdentifiers() = ARG_IDENTIFIERS.get(this).asList()
+
+    private fun getSearchRequestFor(identifiers: List<Identifier>): String {
+        val searchRequest = StringBuilder()
+        for (identifier in identifiers) {
+            searchRequest.append(
+                    getUserFriendlyIdentifierText(identifier)
+            )
+            searchRequest.append(' ')
+        }
+        return searchRequest.toString()
+    }
+
     companion object {
-        fun createFor(identifier: Identifier): NotFoundStatusFragment {
-            return ARG_IDENTIFIER.putTo(NotFoundStatusFragment(), identifier)
+        fun createFor(identifiers: List<Identifier>): NotFoundStatusFragment {
+            return ARG_IDENTIFIERS.putTo(NotFoundStatusFragment(), identifiers.toTypedArray())
         }
     }
 }

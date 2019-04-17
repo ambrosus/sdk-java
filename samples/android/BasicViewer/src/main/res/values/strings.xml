@@ -29,4 +29,6 @@
 
     <string name="txtGoogleSearch">Search in Google</string>
 
+    <string name="txtLoadingAssetParamsCount">%d parameters</string>
+
 </resources>

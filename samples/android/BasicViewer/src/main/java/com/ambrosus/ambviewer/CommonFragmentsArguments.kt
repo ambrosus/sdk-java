@@ -18,3 +18,4 @@ import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.sdk.model.Identifier
 
 val ARG_IDENTIFIER = BundleArgument<Identifier>("KEY_ARG_IDENTIFIER", Identifier::class.java)
+val ARG_IDENTIFIERS = BundleArgument<Array<Identifier>>("KEY_ARG_IDENTIFIERS", Array<Identifier>::class.java)

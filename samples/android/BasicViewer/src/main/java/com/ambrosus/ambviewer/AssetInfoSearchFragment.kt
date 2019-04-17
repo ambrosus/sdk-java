@@ -18,21 +18,19 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.Query
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.AssetInfoQueryBuilder
 import com.ambrosus.sdk.model.Identifier
-import java.io.Serializable
 
 class AssetInfoSearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getViewModel().getResults().observe(this, Observer {
-            getListener()?.onSearchResult(it!!, getIdentifier())
+            getListener()?.onSearchResult(it!!, getIdentifiers())
         });
     }
 
@@ -49,32 +47,35 @@ class AssetInfoSearchFragment : Fragment() {
 //
 //    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
-//        loadingMessage.text = "Searching for AMBAssetInfo (${getIdentifier()})"
+//        loadingMessage.text = "Searching for AMBAssetInfo (${getIdentifiers()})"
 //    }
 
     private fun getQuery() : Query<AMBAssetInfo> {
-        val identifier = getIdentifier()
+        val identifiers = getIdentifiers()
         val queryBuilder = AssetInfoQueryBuilder();
-        when(identifier) {
-            is Id -> queryBuilder.forAsset(identifier.value)
-            else -> queryBuilder.byIdentifier(identifier)
+        if(identifiers.size == 1 && identifiers[0] is Id) {
+            queryBuilder.forAsset(identifiers[0].value)
+        } else {
+            for (identifier in identifiers) {
+                queryBuilder.byIdentifier(identifier)
+            }
         }
         return queryBuilder.build();
     }
 
     private fun getListener() = parentFragment as? SearchResultListener
 
-    private fun getIdentifier() = ARG_IDENTIFIER.get(this)
+    private fun getIdentifiers() = ARG_IDENTIFIERS.get(this).asList()
 
     interface SearchResultListener {
 
-        fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Identifier)
+        fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: List<Identifier>)
 
     }
 
     companion object {
-        fun createFor(identifier: Identifier): AssetInfoSearchFragment =
-                ARG_IDENTIFIER.putTo(AssetInfoSearchFragment(), identifier)
+        fun createFor(identifiers: List<Identifier>): AssetInfoSearchFragment =
+                ARG_IDENTIFIERS.putTo(AssetInfoSearchFragment(), identifiers.toTypedArray())
     }
 
 }

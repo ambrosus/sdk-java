@@ -16,12 +16,12 @@ class LoadingStatusFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        detailsDescription.text = getUserFriendlyIdentifierText(ARG_IDENTIFIER.get(this))
+        detailsDescription.text = getUserFriendlyIdentifiersText(ARG_IDENTIFIERS.get(this).asList(), context!!)
     }
 
     companion object {
-        fun createFor(identifier: Identifier): LoadingStatusFragment {
-            return ARG_IDENTIFIER.putTo(LoadingStatusFragment(), identifier)
+        fun createFor(identifiers: List<Identifier>): LoadingStatusFragment {
+            return ARG_IDENTIFIERS.putTo(LoadingStatusFragment(), identifiers.toTypedArray())
         }
     }
 }

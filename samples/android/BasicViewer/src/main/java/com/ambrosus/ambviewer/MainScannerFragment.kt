@@ -34,13 +34,15 @@ import com.ambrosus.sdk.Query
 import com.ambrosus.sdk.SearchResult
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Identifier
+import com.ambrosus.sdk.utils.AmbrosusLinkParser
+import com.ambrosus.sdk.utils.GS1DataMatrixHelper
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
-import com.journeyapps.barcodescanner.ViewfinderView
 import kotlinx.android.synthetic.main.fragment_main_scanner.*
 import kotlinx.android.synthetic.main.view_finder.*
+import java.net.URISyntaxException
 
 class MainScannerFragment :
         Fragment(),
@@ -117,43 +119,79 @@ class MainScannerFragment :
     }
 
     private val barcodeFormatsIdentifierTypes = mapOf(
-            BarcodeFormat.EAN_13 to "EAN13",
-            BarcodeFormat.EAN_8 to "EAN8",
-            BarcodeFormat.CODE_128 to "GTIN"
+            BarcodeFormat.EAN_13 to Identifier.EAN13,
+            BarcodeFormat.EAN_8 to Identifier.EAN8,
+            BarcodeFormat.CODE_128 to Identifier.GTIN
     )
 
     override fun barcodeResult(code: BarcodeResult?) {
         val barcodeFormat = code!!.barcodeFormat
         val barcodeText = code.text
 
-        var supportedIdentifier: Identifier? =
-        if (barcodeFormat == BarcodeFormat.QR_CODE && barcodeText.startsWith("https://amb.to/0x")) {
-            Id(barcodeText.replace("https://amb.to/", ""))
-        } else if (barcodeFormatsIdentifierTypes.contains(barcodeFormat)) {
-            Identifier(barcodeFormatsIdentifierTypes[barcodeFormat], barcodeText)
-        } else null
+        val assetIdentifiers = ArrayList<Identifier>()
 
-        if(supportedIdentifier != null) {
-            searchFor(supportedIdentifier)
+        if (barcodeFormat == BarcodeFormat.QR_CODE) {
+            try {
+                assetIdentifiers.add(Id(AmbrosusLinkParser.getAssetID(barcodeText)))
+            } catch (extractIDException: URISyntaxException) {
+                try {
+                    assetIdentifiers.addAll(AmbrosusLinkParser.extractIdentifiers(barcodeText))
+                } catch (extractIdentifiersException: URISyntaxException) {
+                    Log.e(TAG, "Can't parse QRCode data", extractIDException)
+                    Log.e(TAG, "Can't parse QRCode data", extractIdentifiersException)
+                }
+            }
+        } else if (barcodeFormat == BarcodeFormat.DATA_MATRIX) {
+            try {
+                assetIdentifiers.addAll(GS1DataMatrixHelper.extractIdentifiers(barcodeText))
+            } catch (e: GS1DataMatrixHelper.IllegalDataFormatException) {
+                Log.e(TAG, "Can't parse data matrix data", e)
+            }
+        } else if (barcodeFormatsIdentifierTypes.contains(barcodeFormat)) {
+            assetIdentifiers.add(Identifier(barcodeFormatsIdentifierTypes[barcodeFormat], barcodeText))
+        }
+
+        if(assetIdentifiers.size != 0) {
+            searchFor(convertToDemoStandDataFormat(assetIdentifiers))
         } else {
-            displayNotFound(Identifier(barcodeFormat.toString(), barcodeText));
+            displayNotFound(listOf(Identifier(barcodeFormat.toString(), barcodeText)))
         }
     }
 
-    private fun searchFor(assetIdentifier: Identifier) {
-        displayLoadingStatus(assetIdentifier)
-        performAction(AssetInfoSearchFragment.createFor(assetIdentifier))
+    private fun convertToDemoStandDataFormat(sdkIdentifiers: List<Identifier>) : List<Identifier> {
+        val demoDataTypesMap = mapOf(
+            Identifier.EAN13 to Identifier.EAN13.toUpperCase(),
+            Identifier.EAN8 to Identifier.EAN8.toUpperCase(),
+            Identifier.GTIN to Identifier.GTIN.toUpperCase(),
+            Identifier.LOT to "Lot",
+            Identifier.SERIAL to "Serial Number"
+        )
+
+        val result = ArrayList<Identifier>()
+        for (sdkIdentifier in sdkIdentifiers) {
+            val demoDataIdentifierType = demoDataTypesMap[sdkIdentifier.type]
+            if (demoDataIdentifierType != null)
+                result.add(Identifier(demoDataIdentifierType, sdkIdentifier.value))
+            else
+                result.add(sdkIdentifier)
+        }
+        return result
     }
 
-    private fun displayLoadingStatus(assetIdentifier: Identifier){
+    private fun searchFor(assetIdentifiers: List<Identifier>) {
+        displayLoadingStatus(assetIdentifiers)
+        performAction(AssetInfoSearchFragment.createFor(assetIdentifiers))
+    }
+
+    private fun displayLoadingStatus(assetIdentifiers: List<Identifier>){
         displayStatusFragment(
-                LoadingStatusFragment.createFor(assetIdentifier)
+                LoadingStatusFragment.createFor(assetIdentifiers)
         )
     }
 
-    private fun displayNotFound(assetIdentifier: Identifier) {
+    private fun displayNotFound(assetIdentifiers: List<Identifier>) {
         displayStatusFragment(
-                NotFoundStatusFragment.createFor(assetIdentifier)
+                NotFoundStatusFragment.createFor(assetIdentifiers)
         )
     }
 
@@ -162,14 +200,14 @@ class MainScannerFragment :
         displayStatusFragment(ErrorStatusFragment())
     }
 
-    override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: Identifier) {
+    override fun onSearchResult(result: LoadResult<SearchResult<out Entity>>, searchCriteria: List<Identifier>) {
         removeCurActionFragment() //removing fragment which performed search
         if(!processError(result, searchCriteria)) {
             val searchResult = result.data
             val resultsList = result.data.items
             if(resultsList.isEmpty()) {
-                if(searchCriteria is Id)
-                    loadAsset(searchCriteria)
+                if(searchCriteria[0] is Id)
+                    loadAsset(searchCriteria[0] as Id)
                 else
                     displayNotFound(searchCriteria)
             } else if(resultsList.size > 0) {
@@ -182,13 +220,13 @@ class MainScannerFragment :
     }
 
 
-    private fun processError(result: LoadResult<*>, assetIdentifier: Identifier): Boolean {
+    private fun processError(result: LoadResult<*>, assetIdentifiers: List<Identifier>): Boolean {
         if(!result.isSuccessful()) {
             if(result.error !is EntityNotFoundException) {
                 Log.e(TAG, "Can't perform request due to: ", result.error)
                 displayError(AMBSampleApp.errorHandler.getErrorDescription(result.error))
             } else {
-                displayNotFound(assetIdentifier)
+                displayNotFound(assetIdentifiers)
             }
         }
         return !result.isSuccessful()
@@ -201,7 +239,7 @@ class MainScannerFragment :
 
     override fun onLoadResult(result: LoadResult<Asset>, assetIdentifier: Id) {
         removeCurActionFragment() //removing fragment which performed loading
-        if(!processError(result, assetIdentifier)) {
+        if(!processError(result, listOf(assetIdentifier))) {
             displayAsset(result.data)
         }
     }
