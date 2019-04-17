@@ -19,9 +19,9 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.ambrosus.ambviewer.R
-import com.ambrosus.ambviewer.utils.Representation
-import com.ambrosus.ambviewer.utils.RepresentationFactory
+import com.ambrosus.demoapp.R
+import com.ambrosus.demoapp.utils.Representation
+import com.ambrosus.demoapp.utils.RepresentationFactory
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.SearchResult
 import java.lang.IllegalArgumentException
