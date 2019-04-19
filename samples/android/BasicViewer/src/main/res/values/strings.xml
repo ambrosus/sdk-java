@@ -30,5 +30,6 @@
     <string name="txtGoogleSearch">Search in Google</string>
 
     <string name="txtLoadingAssetParamsCount">%d parameters</string>
+    <string name="lblList">List</string>
 
 </resources>
