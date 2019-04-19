@@ -79,6 +79,8 @@
         android:fitsSystemWindows="true">
 
         <TextView
+            android:id="@+id/btnHistory"
+
             android:layout_width="wrap_content"
             android:layout_height="56dp"
 

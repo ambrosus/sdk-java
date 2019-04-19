@@ -17,4 +17,6 @@
     <color name="textColorLightGray">#A8A8A8</color>
 
     <color name="viewFinderMaskColor">@color/zxing_viewfinder_mask</color>
+
+    <color name="blueTextColor">#1667FC</color>
 </resources>
