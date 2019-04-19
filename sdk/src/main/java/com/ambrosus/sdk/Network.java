@@ -18,11 +18,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ambrosus.sdk.utils.Assert;
-import com.ambrosus.sdk.utils.GsonUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,52 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  */
 
-//TODO it would be nice to add toJson() method
 public class Network {
-
-    static final Gson GSON;
-    static {
-        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, typeOfSrc, context) -> {
-            Number resultNumber;
-            resultNumber = Math.ceil(src) == Math.floor(src) ? new PlainLong(src.longValue()) : src;
-            return new JsonPrimitive(resultNumber);
-        });
-        GSON = gsonBuilder.create();
-    }
-
-    private static class PlainLong extends Number {
-
-        private final Long value;
-
-        private PlainLong(Long value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return value.toString();
-        }
-
-        @Override
-        public int intValue() {
-            return value.intValue();
-        }
-
-        @Override
-        public long longValue() {
-            return value;
-        }
-
-        @Override
-        public float floatValue() {
-            return value.floatValue();
-        }
-
-        @Override
-        public double doubleValue() {
-            return value.doubleValue();
-        }
-    }
 
     private final Service service;
 
@@ -119,7 +69,7 @@ public class Network {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(conf.url)
-                .addConverterFactory(GsonConverterFactory.create(GSON))
+                .addConverterFactory(GsonConverterFactory.create(Json.GSON))
                 .client(client)
                 .build();
 
@@ -271,7 +221,6 @@ public class Network {
         return authToken;
     }
 
-
     private String getOptionalAMBTokenAuthHeader() {
         return authToken != null ? getAMBTokenAuthHeader(authToken) : null;
     }
@@ -281,11 +230,11 @@ public class Network {
     }
 
     static String getObjectHash(Object object){
-        return Ethereum.computeHashString(GsonUtil.getLexNormalizedJsonStr(object, GSON));
+        return Ethereum.computeHashString(Json.getLexNormalizedJsonStr(object));
     }
 
     static String getObjectSignature(Object object, String privateKey){
-        return Ethereum.computeSignature(GsonUtil.getLexNormalizedJsonStr(object, GSON), Ethereum.getEcKeyPair(privateKey));
+        return Ethereum.computeSignature(Json.getLexNormalizedJsonStr(object), Ethereum.getEcKeyPair(privateKey));
     }
 
 }

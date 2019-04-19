@@ -17,7 +17,6 @@ package com.ambrosus.sdk.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ambrosus.sdk.Asset;
 import com.ambrosus.sdk.Event;
 import com.ambrosus.sdk.RestrictedDataAccessException;
 import com.ambrosus.sdk.utils.Assert;
@@ -51,14 +50,9 @@ public class AMBEvent extends Event {
     private static final String DATA_OBJECT_ATTR_DOCUMENTS = "documents";
     private static final String DATA_OBJECT_ATTR_NAME = "name";
 
-    private final String type;
-    private final String name;
 
-    private final Map<String, JsonObject> images;
-    private final Map<String, JsonObject> documents;
-    private final Map<String, JsonElement> attributes;
-
-    private final Location location;
+    //TODO It might be a nice idea to add support for custom attributes for Even model implementation. I think it will allow to create custom data models in a very simple way
+    private transient AMBEventAttributes attributes;
 
     /**
      *
@@ -66,96 +60,56 @@ public class AMBEvent extends Event {
      */
     public AMBEvent(Event source) throws RestrictedDataAccessException {
         super(source);
+        try {
+            getAMBAttributes();
+        } catch (RuntimeException e) {
+            if(e.getCause() instanceof RestrictedDataAccessException)
+                throw (RestrictedDataAccessException) e.getCause();
+            else throw e;
+        }
+    }
 
-        List<String> ambrosusDataTypes = getAmbrosusDataTypes(source);
-
-        Assert.assertTrue(!ambrosusDataTypes.isEmpty(), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
-        type = ambrosusDataTypes.get(0);
-
-        JsonObject mainDataObject = getDataObject(type);
-
-        name = getEventName(mainDataObject);
-
-        images = Collections.unmodifiableMap(getEntityMap(DATA_OBJECT_ATTR_IMAGES, mainDataObject));
-        documents = Collections.unmodifiableMap(getEntityMap(DATA_OBJECT_ATTR_DOCUMENTS, mainDataObject));
-        attributes = Collections.unmodifiableMap(getAttributesMap(mainDataObject));
-
-        JsonObject locationDataJson = getDataObject("ambrosus.event.location");
-        location = locationDataJson != null ? Location.createFrom(locationDataJson) : null;
+    private AMBEventAttributes getAMBAttributes() {
+        if(attributes == null) {
+            try {
+                attributes = new AMBEventAttributes(this);
+            } catch (RestrictedDataAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return attributes;
     }
 
     @NonNull
     public String getType(){
-        return type;
+        return getAMBAttributes().type;
     }
 
     @Nullable
     public String getName() {
-        return name;
+        return getAMBAttributes().name;
     }
 
     public Map<String, JsonObject> getImages() {
-        return images;
+        return getAMBAttributes().images;
     }
 
     public Map<String, JsonObject> getDocuments() {
-        return documents;
+        return getAMBAttributes().documents;
     }
 
     public Map<String, JsonElement> getAttributes() {
-        return attributes;
+        return getAMBAttributes().otherAttributes;
     }
 
     @Nullable
     public Location getLocation() {
-        return location;
+        return getAMBAttributes().location;
     }
 
     @Override
     public String toString() {
         return Strings.defaultToString(this) + String.format(Locale.US, "(name: %s, type: %s)", getName() != null ? getName() : getType(), getType());
-    }
-
-    private static String getEventName(JsonObject dataObject) {
-        JsonElement jsonElement = dataObject.get(DATA_OBJECT_ATTR_NAME);
-        return jsonElement != null ? jsonElement.getAsString() : null;
-    }
-
-    @NonNull
-    //package-local for tests
-    static Map<String, JsonObject> getEntityMap(String entityName, JsonObject dataObject){
-        Map<String, JsonObject> result = new LinkedHashMap<>();
-        try {
-            JsonObject entityJson = dataObject.getAsJsonObject(entityName);
-            if(entityJson != null) { //if we have this section
-                for (String imageKey : entityJson.keySet()) {
-                    JsonElement imageAttrsElement = entityJson.get(imageKey);
-                    if(imageAttrsElement.isJsonObject()) {
-                        result.put(imageKey, imageAttrsElement.getAsJsonObject());
-                    }
-                }
-            }
-        } catch(RuntimeException e) {
-            Platform.get().log(Platform.WARN, "Can't parse Ambrosus event images", e);
-        }
-        return result;
-    }
-
-    //package-local for tests
-    static Map<String, JsonElement> getAttributesMap(JsonObject dataObject){
-        HashSet<String> reservedAttrs = new HashSet<>();
-
-        reservedAttrs.add(DATA_OBJECT_ATTR_TYPE);
-        reservedAttrs.add(DATA_OBJECT_ATTR_IMAGES);
-        reservedAttrs.add(DATA_OBJECT_ATTR_DOCUMENTS);
-
-        Map<String, JsonElement> result = new LinkedHashMap<>();
-        for (String key : dataObject.keySet()) {
-            if(!reservedAttrs.contains(key))
-                result.put(key, dataObject.get(key));
-        }
-
-        return result;
     }
 
     @NonNull
@@ -168,4 +122,81 @@ public class AMBEvent extends Event {
         result.removeAll(AMBROSUS_SERVICE_TYPES);
         return result;
     }
+
+    private static class AMBEventAttributes {
+
+        private final String type;
+        private final String name;
+
+        private final Map<String, JsonObject> images;
+        private final Map<String, JsonObject> documents;
+        private final Map<String, JsonElement> otherAttributes;
+
+        private final Location location;
+
+        AMBEventAttributes(Event event) throws RestrictedDataAccessException {
+            List<String> ambrosusDataTypes = getAmbrosusDataTypes(event);
+
+            Assert.assertTrue(!ambrosusDataTypes.isEmpty(), IllegalArgumentException.class, "Source event is not valid Ambrosus event.");
+            type = ambrosusDataTypes.get(0);
+
+            JsonObject mainDataObject = event.getDataObject(type);
+
+            name = getEventName(mainDataObject);
+
+            images = Collections.unmodifiableMap(getEntityMap(DATA_OBJECT_ATTR_IMAGES, mainDataObject));
+            documents = Collections.unmodifiableMap(getEntityMap(DATA_OBJECT_ATTR_DOCUMENTS, mainDataObject));
+            otherAttributes = Collections.unmodifiableMap(getAttributesMap(mainDataObject));
+
+            JsonObject locationDataJson = event.getDataObject("ambrosus.event.location");
+            location = locationDataJson != null ? Location.createFrom(locationDataJson) : null;
+        }
+
+
+        @NonNull
+        //package-local for tests
+        static Map<String, JsonObject> getEntityMap(String entityName, JsonObject dataObject){
+            Map<String, JsonObject> result = new LinkedHashMap<>();
+            try {
+                JsonObject entityJson = dataObject.getAsJsonObject(entityName);
+                if(entityJson != null) { //if we have this section
+                    for (String imageKey : entityJson.keySet()) {
+                        JsonElement imageAttrsElement = entityJson.get(imageKey);
+                        if(imageAttrsElement.isJsonObject()) {
+                            result.put(imageKey, imageAttrsElement.getAsJsonObject());
+                        }
+                    }
+                }
+            } catch(RuntimeException e) {
+                Platform.get().log(Platform.WARN, "Can't parse Ambrosus event images", e);
+            }
+            return result;
+        }
+
+        //package-local for tests
+        static Map<String, JsonElement> getAttributesMap(JsonObject dataObject){
+            HashSet<String> reservedAttrs = new HashSet<>();
+
+            reservedAttrs.add(DATA_OBJECT_ATTR_TYPE);
+            reservedAttrs.add(DATA_OBJECT_ATTR_IMAGES);
+            reservedAttrs.add(DATA_OBJECT_ATTR_DOCUMENTS);
+
+            Map<String, JsonElement> result = new LinkedHashMap<>();
+            for (String key : dataObject.keySet()) {
+                if(!reservedAttrs.contains(key))
+                    result.put(key, dataObject.get(key));
+            }
+
+            return result;
+        }
+
+
+        private static String getEventName(JsonObject dataObject) {
+            JsonElement jsonElement = dataObject.get(DATA_OBJECT_ATTR_NAME);
+            return jsonElement != null ? jsonElement.getAsString() : null;
+        }
+
+    }
+
+
 }

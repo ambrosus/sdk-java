@@ -33,8 +33,6 @@ public class TestData {
     public static final String UNREGISTERED_PRIVATE_KEY = "0x864ab5c99a14dc9adeaa06d1621855849aaa37c70012d544475a9862c9460515";
     public static final String UNREGISTERED_ACCOUNT_ADDRESS = Ethereum.getAddress(UNREGISTERED_PRIVATE_KEY);
 
-    private static final Gson gson = new Gson();
-
     private static InputStream getTestResource(Class callerClass, String resourceName){
         return callerClass.getResourceAsStream(resourceName);
     }
@@ -45,7 +43,7 @@ public class TestData {
 
     static <T> T getFromJson(Class callerClass, Class<T> resultType, String jsonResource) {
         try(InputStreamReader in = getTestResourceReader(callerClass, jsonResource)) {
-            return gson.fromJson(in, resultType);
+            return Json.fromJson(in, resultType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -14,7 +14,6 @@
 
 package com.ambrosus.sdk.model;
 
-import com.ambrosus.sdk.utils.GsonUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -63,9 +62,9 @@ public class Location {
             JsonObject geoJson = locationJson.getAsJsonObject("location");
             JsonArray coords = geoJson.getAsJsonObject("geometry").getAsJsonArray("coordinates");
 
-            String name = GsonUtil.getStringValue(locationJson, "name");
-            String city = GsonUtil.getStringValue(locationJson, "city");
-            String country = GsonUtil.getStringValue(locationJson, "country");
+            String name = getStringValue(locationJson, "name");
+            String city = getStringValue(locationJson, "city");
+            String country = getStringValue(locationJson, "country");
 
             return new Location(
                     coords.get(0).getAsDouble(),
@@ -77,5 +76,9 @@ public class Location {
         } catch(RuntimeException e) {
             throw new JsonParseException("Can't deserialize event", e);
         }
+    }
+
+    private static String getStringValue(JsonObject jsonObject, String key) {
+        return jsonObject.has(key) ? jsonObject.get(key).getAsString() : null;
     }
 }

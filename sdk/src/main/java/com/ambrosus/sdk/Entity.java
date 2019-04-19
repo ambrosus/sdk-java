@@ -16,12 +16,13 @@ package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Super class for data models supported by a {@link Network} implementation.
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable {
 
     /**
      * @return Content-addressable identifier of the Entity.

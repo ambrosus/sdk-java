@@ -1,22 +1,8 @@
-/*
- * Copyright: Ambrosus Inc.
- * Email: tech@ambrosus.com
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
- * (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-package com.ambrosus.sdk.utils;
+package com.ambrosus.sdk;
 
 import android.support.annotation.NonNull;
 
-import com.ambrosus.sdk.Network;
+import com.ambrosus.sdk.utils.Assert;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -36,29 +22,46 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Deprecated
-abstract public class GsonUtil {
+public abstract class Json {
 
-    private static final Gson GSON;
+    static final Gson GSON;
 
     static {
-        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, typeOfSrc, context) -> {
-            Number resultNumber;
-            resultNumber = Math.ceil(src) == Math.floor(src) ? new PlainLong(src.longValue()) : src;
-            return new JsonPrimitive(resultNumber);
-        });
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, typeOfSrc, context) -> {
+                    Number resultNumber;
+                    resultNumber = Math.ceil(src) == Math.floor(src) ? new PlainLong(src.longValue()) : src;
+                    return new JsonPrimitive(resultNumber);
+                })
+                .addDeserializationExclusionStrategy(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.hasModifier(Modifier.TRANSIENT) && (
+                                f.getAnnotation(Expose.class) == null || !f.getAnnotation(Expose.class).deserialize());
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
+                .addSerializationExclusionStrategy(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.hasModifier(Modifier.TRANSIENT) && (
+                                f.getAnnotation(Expose.class) == null || !f.getAnnotation(Expose.class).serialize());
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
+                .excludeFieldsWithModifiers(Modifier.STATIC);
         GSON = gsonBuilder.create();
     }
 
-
-    public static String getStringValue(JsonObject jsonObject, String key) {
-        return jsonObject.has(key) ? jsonObject.get(key).getAsString() : null;
-    }
-    public static String getLexNormalizedJsonStr(@NonNull Object src, Gson gson) {
-        return getLexNormalizedJsonStr(src);
-    }
-
-    public static String getLexNormalizedJsonStr(@NonNull Object src) {
+    static String getLexNormalizedJsonStr(@NonNull Object src) {
         Assert.assertNotNull(src, "src == null");
         return getLexNormalizedJson(GSON.toJsonTree(src)).toString();
     }
@@ -90,12 +93,24 @@ abstract public class GsonUtil {
         return result;
     }
 
-    public static List<JsonObject> getAsObjectsList(JsonArray array) {
+    static List<JsonObject> getAsObjectsList(JsonArray array) {
         ArrayList<JsonObject> result = new ArrayList<>();
         for (JsonElement dataObject : array) {
             result.add(dataObject.getAsJsonObject());
         }
         return result;
+    }
+
+    public static String toJson(Object object) {
+        return GSON.toJson(object);
+    }
+
+    public static <T> T fromJson(String json, Type type){
+        return GSON.fromJson(json, type);
+    }
+
+    public static <T> T fromJson(InputStreamReader in, Type type){
+        return GSON.fromJson(in, type);
     }
 
     private static class PlainLong extends Number {
@@ -131,6 +146,5 @@ abstract public class GsonUtil {
             return value.doubleValue();
         }
     }
-
 
 }

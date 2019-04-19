@@ -18,7 +18,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class MetaData {
+public class MetaData implements Serializable {
 
     private String bundleTransactionHash;
     private long bundleUploadTimestamp;
