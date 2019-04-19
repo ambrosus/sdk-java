@@ -36,8 +36,6 @@ public class AMBAssetInfo extends AMBEvent {
 
     private static final String DATA_OBJECT_TYPE_ASSET_IDENTIFIERS = "ambrosus.asset.identifiers";
 
-    private final Set<Identifier> identifiers;
-
     /**
      *
      * @param source - source event which contains data objects with DATA_OBJECT_TYPE_ASSET_IDENTIFIERS and DATA_OBJECT_TYPE_ASSET_INFO types
@@ -51,27 +49,9 @@ public class AMBAssetInfo extends AMBEvent {
                         DATA_OBJECT_TYPE_ASSET_INFO,
                         DATA_OBJECT_TYPE_ASSET_IDENTIFIERS)
         );
-        identifiers = Collections.unmodifiableSet(extractIdentifiers());
     }
 
     public Set<Identifier> getIdentifiers() {
-        return identifiers;
-    }
-
-    public Map<String, List<String>> getIdentifiersMap() {
-        Map<String, List<String>> result = new LinkedHashMap<>();
-        for (Identifier identifier : identifiers) {
-            List<String> listOfType = result.get(identifier.type);
-            if(listOfType == null) {
-                listOfType = new ArrayList<>();
-                result.put(identifier.type, listOfType);
-            }
-            listOfType.add(identifier.value);
-        }
-        return result;
-    }
-
-    private Set<Identifier> extractIdentifiers(){
         Set<Identifier> result = new LinkedHashSet<>();
         JsonObject identifiersDataObject = getIdentifiersData();
         JsonObject identifiersJson = identifiersDataObject.getAsJsonObject("identifiers");
@@ -85,6 +65,19 @@ public class AMBAssetInfo extends AMBEvent {
             } else {
                 result.add(new Identifier(identifierType, identifiersItem.getAsString()));
             }
+        }
+        return result;
+    }
+
+    public Map<String, List<String>> getIdentifiersMap() {
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        for (Identifier identifier : getIdentifiers()) {
+            List<String> listOfType = result.get(identifier.type);
+            if(listOfType == null) {
+                listOfType = new ArrayList<>();
+                result.put(identifier.type, listOfType);
+            }
+            listOfType.add(identifier.value);
         }
         return result;
     }

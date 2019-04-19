@@ -15,7 +15,6 @@
 package com.ambrosus.sdk;
 
 import com.ambrosus.sdk.utils.Assert;
-import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.UnixTime;
 import com.google.gson.JsonSyntaxException;
 
@@ -40,7 +39,7 @@ public class AuthToken extends SignedContent<AuthToken.AuthTokenIdData> implemen
     }
 
     public String getAsString() {
-        return ByteString.encodeUtf8(GsonUtil.getLexNormalizedJsonStr(this, Network.GSON)).base64();
+        return ByteString.encodeUtf8(Json.getLexNormalizedJsonStr(this)).base64();
     }
 
     public static AuthToken create(String privateKey, long duration, TimeUnit durationUnit) throws NumberFormatException {
@@ -56,7 +55,7 @@ public class AuthToken extends SignedContent<AuthToken.AuthTokenIdData> implemen
         Assert.assertNotNull(byteString, IllegalArgumentException.class, "tokenString is not a valid Base64 encoded string");
         String s = byteString.utf8();
         try {
-            AuthToken authToken = Network.GSON.fromJson(s, AuthToken.class);
+            AuthToken authToken = Json.fromJson(s, AuthToken.class);
             Assert.assertTrue(authToken.matchesSignature(), IllegalArgumentException.class, "authToken content doesn't matches it's signature");
             return authToken;
         } catch (JsonSyntaxException e) {

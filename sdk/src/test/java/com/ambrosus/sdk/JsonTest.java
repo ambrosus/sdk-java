@@ -14,32 +14,11 @@
 
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.utils.GsonUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.internal.Streams;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
 import org.junit.Test;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class GsonUtilTest {
+public class JsonTest {
 
     private static class TestObject {
 
@@ -52,9 +31,7 @@ public class GsonUtilTest {
     @Test
     public void testGetLexNormalizedJson(){
         String expected = "{\"testField0\":\"zero test field\",\"testField1\":\"first test field\",\"testField2\":\"second test field\"}";
-        String actual = GsonUtil.getLexNormalizedJsonStr(new TestObject(), Network.GSON);
+        String actual = Json.getLexNormalizedJsonStr(new TestObject());
         assertEquals(expected, actual);
     }
-
-
 }

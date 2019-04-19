@@ -19,9 +19,10 @@ package com.ambrosus.sdk;
 import com.ambrosus.sdk.utils.Assert;
 import com.ambrosus.sdk.utils.UnixTime;
 
+import java.io.Serializable;
 import java.util.Date;
 
-class AccountData {
+class AccountData implements Serializable {
 
     private String createdBy;
 

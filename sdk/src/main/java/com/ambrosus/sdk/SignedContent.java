@@ -14,9 +14,9 @@
 
 package com.ambrosus.sdk;
 
-import com.ambrosus.sdk.utils.GsonUtil;
+import java.io.Serializable;
 
-class SignedContent<T extends AccountData> {
+class SignedContent<T extends AccountData> implements Serializable {
 
     private String signature;
     T idData;
@@ -32,7 +32,7 @@ class SignedContent<T extends AccountData> {
     boolean matchesSignature() {
         if(idData == null || signature == null) return false;
         return Ethereum.signatureMatches(
-                GsonUtil.getLexNormalizedJsonStr(idData, Network.GSON),
+                Json.getLexNormalizedJsonStr(idData),
                 idData.getAccountAddress(),
                 signature
         );
