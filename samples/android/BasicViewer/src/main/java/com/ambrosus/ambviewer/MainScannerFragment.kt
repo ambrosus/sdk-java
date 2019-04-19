@@ -87,7 +87,7 @@ class MainScannerFragment :
             R.id.menu_item_logout -> {
                 AMBSampleApp.network.authorize(null)
                 activity!!.invalidateOptionsMenu()
-                displayAuthorizationState()
+                //displayAuthorizationState()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -97,7 +97,7 @@ class MainScannerFragment :
     override fun onResume() {
         super.onResume()
         TitleHelper.ensureTitle(this, "Scanner")
-        displayAuthorizationState()
+        //displayAuthorizationState()
 
         //executing all pending transactions, making view finder visible if there are no any status fragments
         //(we leave it invisible when switching to AssetActivity in order to get rid of UI flashing)
@@ -106,16 +106,16 @@ class MainScannerFragment :
             switchViewFinderVisibility(View.VISIBLE)
     }
 
-    private fun displayAuthorizationState() {
-        val authToken = AMBSampleApp.network.authToken
-        when (authToken) {
-            null -> authorizationMessage.visibility = View.GONE
-            else -> {
-                authorizationMessage.visibility = View.VISIBLE
-                authorizationMessage.setText("Authorized as ${authToken.accountAddress}");
-            }
-        }
-    }
+//    private fun displayAuthorizationState() {
+//        val authToken = AMBSampleApp.network.authToken
+//        when (authToken) {
+//            null -> authorizationMessage.visibility = View.GONE
+//            else -> {
+//                authorizationMessage.visibility = View.VISIBLE
+//                authorizationMessage.setText("Authorized as ${authToken.accountAddress}");
+//            }
+//        }
+//    }
 
     override fun handleBackKey(): Boolean {
         removeCurActionFragment()
