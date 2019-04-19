@@ -53,6 +53,10 @@ class MainScannerFragment :
 
     private val TAG = javaClass.name
 
+    val history by lazy {
+        History(context!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -211,7 +215,7 @@ class MainScannerFragment :
                 else
                     displayNotFound(searchCriteria)
             } else if(resultsList.size > 0) {
-                displayAsset(searchResult.items[0])
+                displayAsset(searchResult.items[0], searchCriteria)
             }
 //            else {
 //                displayResultsList(searchResult.query)
@@ -240,7 +244,7 @@ class MainScannerFragment :
     override fun onLoadResult(result: LoadResult<Asset>, assetIdentifier: Id) {
         removeCurActionFragment() //removing fragment which performed loading
         if(!processError(result, listOf(assetIdentifier))) {
-            displayAsset(result.data)
+            displayAsset(result.data, listOf<Identifier>(assetIdentifier))
         }
     }
 
@@ -300,12 +304,20 @@ class MainScannerFragment :
         ft.commit()
     }
 
-    private fun displayAsset(asset: Entity) {
+    private fun displayAsset(asset: Entity, identifiers: List<Identifier>) {
+
         when(asset) {
-            is AMBAssetInfo -> AssetActivity.startFor(asset, activity!!)
-            is Asset -> AssetActivity.startFor(asset, activity!!)
+            is AMBAssetInfo -> {
+                history.addAssetInfo(asset, identifiers)
+                AssetActivity.startFor(asset, activity!!)
+            }
+            is Asset -> {
+                history.addAsset(asset, identifiers)
+                AssetActivity.startFor(asset, activity!!)
+            }
             else -> throw IllegalStateException("Can't display $asset")
         }
+        val items = history.getItems()
         removeCurStatusFragment()
         switchViewFinderVisibility(View.INVISIBLE) // doing this to get rid of flashing before switching to asset activity
     }
