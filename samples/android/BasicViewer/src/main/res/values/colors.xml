@@ -19,4 +19,5 @@
     <color name="viewFinderMaskColor">@color/zxing_viewfinder_mask</color>
 
     <color name="blueTextColor">#1667FC</color>
+    <color name="mainBackgroundColor">@android:color/white</color>
 </resources>

@@ -2,11 +2,14 @@
 
     <style name="HistoryActivityTheme" parent="Theme.AppCompat.Light">
         <item name="actionBarStyle">@style/HistoryActionBarStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/mainBackgroundColor</item>
     </style>
 
     <style name="HistoryActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="android:background">@android:color/holo_red_dark</item>
+        <item name="background">@color/mainBackgroundColor</item>
         <item name="titleTextStyle">@style/HistoryTitleTextStyle</item>
+        <item name="elevation">0dp</item>
     </style>
 
     <style name="HistoryTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
