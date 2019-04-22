@@ -57,7 +57,9 @@
         <activity
             android:name=".HistoryActivity"
             android:theme="@style/HistoryActivityTheme"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+
 
         <activity
             android:name=".AssetActivity"

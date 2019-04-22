@@ -69,6 +69,7 @@ class History(context: Context) {
             storage.edit().clear().apply()
         }
         result.sortBy { it.scanTimeStamp }
+        result.reverse()
         return result
     }
 

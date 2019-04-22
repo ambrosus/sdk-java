@@ -33,4 +33,8 @@
     <string name="lblList">List</string>
 
     <string name="titleHistory">Scan History</string>
+
+    <string name="txtNoName">No name</string>
+    <string name="txtToday">Today</string>
+    <string name="txtYesterday">Yesterday</string>
 </resources>
