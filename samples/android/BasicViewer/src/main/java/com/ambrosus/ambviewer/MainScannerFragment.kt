@@ -70,9 +70,14 @@ class MainScannerFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        updateHistoryVisibility()
         btnHistory.setOnClickListener {
             startActivity(Intent(context!!, HistoryActivity::class.java))
         }
+    }
+
+    private fun updateHistoryVisibility() {
+        btnHistory.visibility = if (history.getItems().size > 0) View.VISIBLE else View.INVISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -325,9 +330,9 @@ class MainScannerFragment :
             }
             else -> throw IllegalStateException("Can't display $asset")
         }
-        val items = history.getItems()
         removeCurStatusFragment()
         switchViewFinderVisibility(View.INVISIBLE) // doing this to get rid of flashing before switching to asset activity
+        updateHistoryVisibility()
     }
 
     override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}
