@@ -29,11 +29,13 @@ class AssetDetailsFragment : Fragment() {
 
         val asset = ARG_ASSET_DATA.get(this)
         if(asset is AMBAssetInfo) {
-            GlideApp.with(this)
-                    //TODO add Image type to SDK
-                    .load(asset.images.entries.iterator().next().value.get("url").asString)
-                    .placeholder(R.drawable.placeholder_logo)
-                    .into(assetImage)
+            //TODO add Image type to SDK
+            asset.images["default"]?.get("url")?.asString?.let {
+                GlideApp.with(this)
+                        .load(it)
+                        .placeholder(R.drawable.placeholder_logo)
+                        .into(assetImage)
+            }
         }
     }
 
