@@ -16,6 +16,8 @@
         android:background="#FF853B">
 
         <ImageView
+            android:id="@+id/assetImage"
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
 

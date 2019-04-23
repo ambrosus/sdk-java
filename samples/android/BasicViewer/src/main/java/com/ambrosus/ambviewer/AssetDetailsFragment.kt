@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.ambrosus.sdk.model.AMBAssetInfo
+import kotlinx.android.synthetic.main.activity_asset.*
 import kotlinx.android.synthetic.main.fragment_asset_details.*
 import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
@@ -21,8 +23,18 @@ class AssetDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         tabLayout.setupWithViewPager(viewPager)
         viewPager.adapter = PagerAdapter(arguments, childFragmentManager, context!!)
+
+        val asset = ARG_ASSET_DATA.get(this)
+        if(asset is AMBAssetInfo) {
+            GlideApp.with(this)
+                    //TODO add Image type to SDK
+                    .load(asset.images.entries.iterator().next().value.get("url").asString)
+                    .placeholder(R.drawable.placeholder_logo)
+                    .into(assetImage)
+        }
     }
 
     class PagerAdapter(
