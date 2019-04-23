@@ -17,4 +17,6 @@
     <!-- eliminate crossHair by default  -->
     <dimen name="crossHairSize">0dp</dimen>
     <dimen name="laserLineHeight">4dp</dimen>
+
+    <dimen name="additionalDataTextSize">12sp</dimen>
 </resources>

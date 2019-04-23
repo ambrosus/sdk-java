@@ -30,9 +30,9 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
 
+        style="@style/AdditionalDataTextStyle"
+
         android:fontFamily="@font/roboto_medium"
-        android:textSize="12sp"
-        android:textColor="#8492A6"
 
         tools:text="Yesterday"/>
 
@@ -48,14 +48,12 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
 
+        style="@style/AdditionalDataTextStyle"
+
         android:ellipsize="middle"
         android:singleLine="true"
 
         android:textAllCaps="true"
-        android:fontFamily="@font/roboto_regular"
-        android:textSize="12sp"
-        android:textColor="#8492A6"
-
         tools:text="EAN-13: 42354543542532"/>
 
     <ImageView
@@ -73,8 +71,6 @@
 
         android:src="@drawable/verification_passed"/>
 
-
-
     <TextView
         android:id="@+id/assetName"
 
@@ -87,12 +83,9 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@id/rightGuideLine"
 
-        android:lineSpacingExtra="2sp"
+        style="@style/AssetNameStyle"
 
-        android:fontFamily="@font/roboto_medium"
         android:textSize="16sp"
-        android:textColor="#1F2D3D"
-
         tools:text="Asset name"/>
 
     <TextView
@@ -105,12 +98,7 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@id/rightGuideLine"
 
-        android:ellipsize="end"
-        android:lines="1"
-
-        android:fontFamily="@font/roboto_regular"
-        android:textSize="12sp"
-        android:textColor="@color/blueTextColor"
+        style="@style/AssetIDStyle"
 
         tools:text="0x34075238759379857933497298573984"/>
 

@@ -20,4 +20,6 @@
 
     <color name="blueTextColor">#1667FC</color>
     <color name="mainBackgroundColor">@android:color/white</color>
+
+    <color name="assetNameColor">#1F2D3D</color>
 </resources>
