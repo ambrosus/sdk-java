@@ -1,5 +1,12 @@
 <resources>
 
+    <style name="AssetDetailsActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowBackground">@color/mainBackgroundColor</item>
+    </style>
+
     <style name="HistoryActivityTheme" parent="Theme.AppCompat.Light">
         <item name="actionBarStyle">@style/HistoryActionBarStyle</item>
         <item name="android:windowContentOverlay">@null</item>

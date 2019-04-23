@@ -322,11 +322,11 @@ class MainScannerFragment :
         when(asset) {
             is AMBAssetInfo -> {
                 history.addAssetInfo(asset, identifiers)
-                AssetActivity.startFor(asset, activity!!)
+                AssetDetailsActivity.startFor(asset, activity!!)
             }
             is Asset -> {
                 history.addAsset(asset, identifiers)
-                AssetActivity.startFor(asset, activity!!)
+                AssetDetailsActivity.startFor(asset, activity!!)
             }
             else -> throw IllegalStateException("Can't display $asset")
         }

@@ -9,10 +9,9 @@ apply plugin: 'kotlin-kapt'
 // single point of project variables e.g. compile versions
 ext {
     _minSdkVersion = 19
-    _targetSdkVersion = 27
-    _compileSdkVersion = 27
-    _buildToolsVersion = "27.0.3"
-    _supportLibVersion = "27.1.1"
+    _targetSdkVersion = 28
+    _compileSdkVersion = 28
+    _supportLibVersion = "28.0.0"
 }
 kapt {
     generateStubs = true

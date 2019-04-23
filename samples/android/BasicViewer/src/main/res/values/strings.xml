@@ -37,4 +37,8 @@
     <string name="txtNoName">No name</string>
     <string name="txtToday">Today</string>
     <string name="txtYesterday">Yesterday</string>
+
+    <string name="titleInfo">INFO</string>
+    <string name="titleIdentifiers">IDENTIFIERS</string>
+    <string name="titleEvents">EVENTS</string>
 </resources>
