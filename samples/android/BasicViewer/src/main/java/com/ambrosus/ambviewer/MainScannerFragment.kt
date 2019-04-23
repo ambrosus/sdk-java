@@ -289,7 +289,7 @@ class MainScannerFragment :
         statusContainer.setBackgroundColor(
                 ContextCompat.getColor(
                         context!!,
-                        if (visibility == View.INVISIBLE) R.color.viewFinderMaskColor else android.R.color.transparent
+                        if (visibility == View.INVISIBLE) R.color.viewFinderMask else android.R.color.transparent
                 )
         )
     }

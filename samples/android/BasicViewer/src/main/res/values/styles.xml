@@ -4,23 +4,23 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowBackground">@color/mainBackgroundColor</item>
+        <item name="android:windowBackground">@color/mainBackground</item>
     </style>
 
     <style name="HistoryActivityTheme" parent="Theme.AppCompat.Light">
         <item name="actionBarStyle">@style/HistoryActionBarStyle</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@color/mainBackgroundColor</item>
+        <item name="android:windowBackground">@color/mainBackground</item>
     </style>
 
     <style name="HistoryActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="background">@color/mainBackgroundColor</item>
+        <item name="background">@color/mainBackground</item>
         <item name="titleTextStyle">@style/HistoryTitleTextStyle</item>
         <item name="elevation">0dp</item>
     </style>
 
     <style name="HistoryTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/blueTextColor</item>
+        <item name="android:textColor">@color/blueText</item>
     </style>
 
     <!-- Base application theme. -->
@@ -110,14 +110,14 @@
     <style name="BottomBlueText" parent="@style/TextAppearance.AppCompat.Small">>
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/blueTextColor</item>
+        <item name="android:textColor">@color/blueText</item>
         <item name="android:textSize">15sp</item>
     </style>
 
     <style name="AssetNameStyle">
         <item name="android:lineSpacingExtra">2sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textColor">@color/assetNameColor</item>
+        <item name="android:textColor">@color/assetName</item>
     </style>
 
     <style name="AssetIDStyle">
@@ -125,7 +125,7 @@
         <item name="android:lines">1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/additionalDataTextSize</item>
-        <item name="android:textColor">@color/blueTextColor</item>
+        <item name="android:textColor">@color/blueText</item>
     </style>
 
     <style name="AdditionalDataTextStyle">
