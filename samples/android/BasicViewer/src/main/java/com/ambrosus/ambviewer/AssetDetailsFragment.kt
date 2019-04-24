@@ -26,6 +26,7 @@ class AssetDetailsFragment : Fragment() {
 
         tabLayout.setupWithViewPager(viewPager)
         viewPager.adapter = PagerAdapter(arguments, childFragmentManager, context!!)
+        viewPager.pageMargin = resources.getDimensionPixelSize(R.dimen.pageMargings)
 
         val asset = ARG_ASSET_DATA.get(this)
         if(asset is AMBAssetInfo) {

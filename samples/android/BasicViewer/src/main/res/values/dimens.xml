@@ -19,4 +19,6 @@
     <dimen name="laserLineHeight">4dp</dimen>
 
     <dimen name="additionalDataTextSize">12sp</dimen>
+
+    <dimen name="pageMargings">40dp</dimen>
 </resources>
