@@ -30,7 +30,7 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
 
-        style="@style/AdditionalDataTextStyle"
+        style="@style/AdditionalDataText"
 
         android:fontFamily="@font/roboto_medium"
 
@@ -48,7 +48,7 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
 
-        style="@style/AdditionalDataTextStyle"
+        style="@style/AdditionalDataText"
 
         android:ellipsize="middle"
         android:singleLine="true"
@@ -83,7 +83,7 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@id/rightGuideLine"
 
-        style="@style/AssetNameStyle"
+        style="@style/Caption"
 
         android:textSize="16sp"
         tools:text="Asset name"/>
@@ -98,7 +98,7 @@
         app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
         app:layout_constraintRight_toRightOf="@id/rightGuideLine"
 
-        style="@style/AssetIDStyle"
+        style="@style/AssetID"
 
         tools:text="0x34075238759379857933497298573984"/>
 

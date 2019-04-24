@@ -114,13 +114,13 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="AssetNameStyle">
+    <style name="Caption">
         <item name="android:lineSpacingExtra">2sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textColor">@color/assetName</item>
+        <item name="android:textColor">@color/caption</item>
     </style>
 
-    <style name="AssetIDStyle">
+    <style name="AssetID">
         <item name="android:ellipsize">end</item>
         <item name="android:lines">1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
@@ -128,7 +128,7 @@
         <item name="android:textColor">@color/blueText</item>
     </style>
 
-    <style name="AdditionalDataTextStyle">
+    <style name="AdditionalDataText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/additionalDataTextSize</item>
         <item name="android:textColor">#8492A6</item>
