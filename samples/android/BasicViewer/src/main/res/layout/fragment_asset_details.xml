@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="228dp"
 
-        android:background="#FF853B">
+        android:background="#FF853B"
+
+        android:elevation="8dp">
 
         <ImageView
             android:id="@+id/assetImage"
