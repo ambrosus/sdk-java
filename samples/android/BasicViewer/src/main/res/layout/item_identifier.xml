@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingBottom="8dp"
+
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/identifierType"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        style="@style/AdditionalDataText"
+
+        tools:text="RFID"/>
+
+    <TextView
+        android:id="@+id/identifierValue"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/caption"
+        android:textSize="15sp"
+
+        tools:text="E2001AC16987B6305024DED8"/>
+</LinearLayout>

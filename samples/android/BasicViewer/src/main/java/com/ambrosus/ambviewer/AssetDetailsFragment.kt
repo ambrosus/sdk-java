@@ -48,7 +48,7 @@ class AssetDetailsFragment : Fragment() {
 
         private val fragments = arrayOf(
                         Pair(AssetInfoFragment::class.java, R.string.titleInfo),
-                        Pair(AssetIdentifiersFragment::class.java, R.string.titleIdentifiers),
+                        Pair(IdentifiersFragment::class.java, R.string.titleIdentifiers),
                         Pair(AssetEventsFragment::class.java, R.string.titleEvents)
         )
 

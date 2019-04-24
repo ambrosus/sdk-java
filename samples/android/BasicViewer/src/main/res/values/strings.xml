@@ -41,4 +41,5 @@
     <string name="titleInfo">INFO</string>
     <string name="titleIdentifiers">IDENTIFIERS</string>
     <string name="titleEvents">EVENTS</string>
+    <string name="txtIdentifiers">Identifiers</string>
 </resources>
