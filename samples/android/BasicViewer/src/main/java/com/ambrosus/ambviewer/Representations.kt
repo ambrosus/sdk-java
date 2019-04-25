@@ -103,7 +103,7 @@ class SectionRepresentation(private val inflater: LayoutInflater, parent: ViewGr
     }
 }
 
-class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.item_event, inflater, parent) {
+class ShortEventRepresentation(inflater: LayoutInflater, parent: ViewGroup) : Representation<Event>(R.layout.item_event_old, inflater, parent) {
 
     override fun display(event: Event?) {
         ViewUtils.setText(itemView, R.id.eventTitle, if (event is com.ambrosus.sdk.model.AMBEvent) event.name ?: event.type else event!!.systemId)

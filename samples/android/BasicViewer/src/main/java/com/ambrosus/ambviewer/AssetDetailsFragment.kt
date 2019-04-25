@@ -8,12 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.ambrosus.sdk.model.AMBAssetInfo
-import kotlinx.android.synthetic.main.activity_asset.*
 import kotlinx.android.synthetic.main.fragment_asset_details.*
-import java.lang.IllegalArgumentException
-import kotlin.reflect.KClass
 
 class AssetDetailsFragment : Fragment() {
 
@@ -49,7 +45,7 @@ class AssetDetailsFragment : Fragment() {
         private val fragments = arrayOf(
                         Pair(AssetInfoFragment::class.java, R.string.titleInfo),
                         Pair(IdentifiersFragment::class.java, R.string.titleIdentifiers),
-                        Pair(AssetEventsFragment::class.java, R.string.titleEvents)
+                        Pair(EventsFragment::class.java, R.string.titleEvents)
         )
 
         override fun getCount(): Int = fragments.size

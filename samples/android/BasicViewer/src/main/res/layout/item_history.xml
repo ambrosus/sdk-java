@@ -69,7 +69,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/assetID"
 
-        android:src="@drawable/verification_passed"/>
+        android:src="@drawable/icon_verification_passed"/>
 
     <TextView
         android:id="@+id/assetName"
@@ -104,7 +104,7 @@
 
     <View
         android:layout_width="0dp"
-        android:layout_height="1px"
+        android:layout_height="@dimen/separatorHeight"
 
         android:layout_marginTop="15dp"
         android:layout_marginBottom="5dp"

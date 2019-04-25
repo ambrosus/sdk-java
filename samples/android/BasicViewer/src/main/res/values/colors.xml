@@ -22,4 +22,8 @@
     <color name="mainBackground">@android:color/white</color>
 
     <color name="caption">#1F2D3D</color>
+    <color name="additionalDataText">#8492A6</color>
+    <color name="lessImportantTextColor">#C0CCDA</color>
+    <color name="timeLineColor">@color/caption</color>
+
 </resources>

@@ -41,5 +41,9 @@
     <string name="titleInfo">INFO</string>
     <string name="titleIdentifiers">IDENTIFIERS</string>
     <string name="titleEvents">EVENTS</string>
+
     <string name="txtIdentifiers">Identifiers</string>
+    <string name="txtPublicEvents">Public events</string>
+
+    <string name="txtCreatedBy">Created by %s</string>
 </resources>

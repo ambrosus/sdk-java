@@ -3,6 +3,7 @@
     <style name="AssetDetailsActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowBackground">@color/mainBackground</item>
     </style>
@@ -100,7 +101,7 @@
     </style>
 
     <style name="SFProTextRegular" parent="@android:style/Widget.Holo.Light.TextView">
-        <item name="android:textColor">#C0CCDA</item>
+        <item name="android:textColor">@color/lessImportantTextColor</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/san_francisco_pro_text_regular</item>
         <item name="android:lines">1</item>
@@ -120,6 +121,12 @@
         <item name="android:textColor">@color/caption</item>
     </style>
 
+    <style name="SubCaption">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/caption</item>
+    </style>
+
     <style name="AssetID">
         <item name="android:ellipsize">end</item>
         <item name="android:lines">1</item>
@@ -131,8 +138,7 @@
     <style name="AdditionalDataText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/additionalDataTextSize</item>
-        <item name="android:textColor">#8492A6</item>
+        <item name="android:textColor">@color/additionalDataText</item>
     </style>
-
 
 </resources>

@@ -1,88 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardView"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:layout_marginLeft="0dp"
-    android:outlineProvider="bounds"
-    app:cardCornerRadius="5sp"
-    app:cardElevation="4dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    android:orientation="vertical">
 
-        <LinearLayout
+    <ImageView
+        android:id="@+id/timeLinePoint"
+
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+
+        app:layout_constraintTop_toTopOf="@+id/eventName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/eventName"
+
+        android:src="@drawable/icon_time_line_point"/>
+
+    <View
+        android:id="@+id/topTimeLine"
+
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/timeLinePoint"
+        app:layout_constraintRight_toRightOf="@+id/timeLinePoint"
+        app:layout_constraintBottom_toTopOf="@+id/timeLinePoint"
+
+        android:background="@color/timeLineColor"/>
+
+    <View
+        android:id="@+id/bottomTimeLine"
+
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/timeLinePoint"
+        app:layout_constraintLeft_toLeftOf="@+id/timeLinePoint"
+        app:layout_constraintRight_toRightOf="@+id/timeLinePoint"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:background="@color/timeLineColor"/>
+
+
+    <TextView
+        android:id="@+id/eventName"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/timeLinePoint"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="11dp"
+
+        android:textSize="13sp"
+        android:textAllCaps="true"
+        android:textColor="@color/blueText"
+        android:fontFamily="@font/roboto_medium"
+
+        tools:text="Displayed in Shop"/>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/creationDateContainer"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="4dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/eventName"
+        app:layout_constraintLeft_toLeftOf="@+id/eventName"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/creationDate"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
+
+            style="@style/SubCaption"
+
+            tools:text="Tue, Mar 20    02:22:48    GMT+3"/>
+
+        <ImageView
+            android:id="@+id/verificationIcon"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/rightLayout"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/eventTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/colorPrimaryLight"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+            app:layout_constraintTop_toTopOf="@+id/creationDate"
+            app:layout_constraintLeft_toRightOf="@+id/creationDate"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/creationDate"
 
-            <TextView
-                android:id="@+id/eventSubTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/textColorLightGray"
-                android:textSize="12sp" />
+            android:src="@drawable/icon_verification_passed"/>
 
-        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
-        <LinearLayout
-            android:id="@+id/rightLayout"
+    <TextView
+        android:id="@+id/createdBy"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@+id/creationDateContainer"
+        app:layout_constraintLeft_toLeftOf="@+id/eventName"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:layout_marginTop="4dp"
+
+        android:ellipsize="end"
+        android:lines="1"
+
+        style="@style/SubCaption"
+
+        tools:text="by 0xB544BF489f00c177fa1B05e80ED5C"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/locationContainer"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/createdBy"
+        app:layout_constraintLeft_toLeftOf="@+id/eventName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/locationText"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/locationIcon"
+            app:layout_constraintRight_toRightOf="parent"
+
+            style="@style/AdditionalDataText"
+
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/lessImportantTextColor"
+
+            tools:text="Frutigenstrasse 60, 3604 Thun, Switzerland"/>
+
+        <ImageView
+            android:id="@+id/locationIcon"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/eventDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingBottom="5dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:paddingLeft="5dp"
-                android:textColor="@color/textColorLightGray"
-                android:textSize="12sp"
-                tools:text="some date"/>
+            app:layout_constraintTop_toTopOf="@+id/locationText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/locationText"
+            app:layout_constraintBottom_toBottomOf="@+id/locationText"
 
-            <TextView
-                android:id="@+id/eventVisibility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingBottom="5dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:paddingLeft="5dp"
-                android:textColor="@color/textColorLightGray"
-                android:textSize="12sp"
-                tools:text="public"/>
+            android:src="@drawable/icon_location"/>
 
-        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

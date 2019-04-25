@@ -14,7 +14,7 @@ import com.ambrosus.ambviewer.utils.ViewUtils
 import com.ambrosus.sdk.Asset
 import com.ambrosus.sdk.model.AMBAssetInfo
 import com.ambrosus.sdk.model.Identifier
-import kotlinx.android.synthetic.main.fragment_identifiers.*
+import kotlinx.android.synthetic.main.fragment_list_with_caption.*
 import java.lang.IllegalArgumentException
 
 
@@ -22,12 +22,13 @@ class IdentifiersFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_identifiers, container, false)
+        = inflater.inflate(R.layout.fragment_list_with_caption, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        identifiersList.layoutManager = LinearLayoutManager(context!!)
-        identifiersList.adapter =
+        caption.setText(R.string.txtIdentifiers)
+        list.layoutManager = LinearLayoutManager(context!!)
+        list.adapter =
                 RepresentationAdapter.DataSetBuilder()
                         .addAll(getIdentifiers(), IdentifierRepresentation.factory)
                         .createAdapter(context!!)
