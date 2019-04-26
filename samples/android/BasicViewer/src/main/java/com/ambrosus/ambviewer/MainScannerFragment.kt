@@ -25,6 +25,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
 import com.ambrosus.ambviewer.utils.TitleHelper
 import com.ambrosus.apps.SearchResultsListFragment
@@ -73,6 +74,17 @@ class MainScannerFragment :
         updateHistoryVisibility()
         btnHistory.setOnClickListener {
             startActivity(Intent(context!!, HistoryActivity::class.java))
+        }
+        flashLightStatus.setOnClickListener {
+            val newTextRes =
+                    if((it as TextView).text == getText(R.string.lblOff)) R.string.lblOn
+                    else R.string.lblOff
+
+            when(newTextRes) {
+                R.string.lblOff -> BarcodeScannerFragment.get(this).setTorchOff()
+                R.string.lblOn -> BarcodeScannerFragment.get(this).setTorchOn()
+            }
+            flashLightStatus.setText(newTextRes)
         }
     }
 

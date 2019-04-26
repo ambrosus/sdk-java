@@ -96,5 +96,26 @@
 
             android:text="@string/lblList"/>
 
+        <TextView
+            android:id="@+id/flashLightStatus"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+
+            android:layout_gravity="left|center_vertical"
+
+            android:drawableLeft="@drawable/icon_flashlight"
+            android:drawablePadding="15dp"
+
+            android:textAllCaps="true"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="14sp"
+            android:textColor="@color/additionalDataText"
+
+            android:text="@string/lblOff"/>
+
     </FrameLayout>
 </FrameLayout>

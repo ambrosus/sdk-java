@@ -46,4 +46,6 @@
     <string name="txtPublicEvents">Public events</string>
 
     <string name="txtCreatedBy">Created by %s</string>
+    <string name="lblOff">off</string>
+    <string name="lblOn">on</string>
 </resources>

@@ -151,6 +151,14 @@ class BarcodeScannerFragment : Fragment() {
         pauseScanning()
     }
 
+    fun setTorchOn() {
+        barcodePicker.setTorchOn()
+    }
+
+    fun setTorchOff() {
+        barcodePicker.setTorchOff()
+    }
+
     companion object {
         fun addAsChild(root: Fragment, containerID: Int) {
             FragmentSwitchHelper.addChild(root, BarcodeScannerFragment(), containerID)
