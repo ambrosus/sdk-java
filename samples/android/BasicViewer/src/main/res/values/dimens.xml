@@ -22,4 +22,7 @@
 
     <dimen name="pageMargings">40dp</dimen>
     <dimen name="separatorHeight">1px</dimen>
+
+    <dimen name="assetInfoPadding">23dp</dimen>
+
 </resources>

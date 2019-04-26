@@ -59,11 +59,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-
-        android:paddingTop="24dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="26dp"/>
+        android:layout_weight="1"/>
 </LinearLayout>
 
 

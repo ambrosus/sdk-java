@@ -6,11 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
+    android:paddingLeft="@dimen/assetInfoPadding"
+    android:paddingRight="@dimen/assetInfoPadding"
+
     tools:context=".IdentifiersFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:paddingTop="@dimen/assetInfoPadding"
 
         android:orientation="vertical">
 
@@ -34,7 +39,9 @@
 
             android:layout_marginTop="16dp"
 
-            tools:listitem="@layout/item_identifier"/>
+            tools:listitem="@layout/item_identifier"
+
+            tools:itemCount="150"/>
 
     </LinearLayout>
 
