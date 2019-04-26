@@ -69,46 +69,55 @@
         tools:text="Displayed in Shop"/>
 
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/creationDateContainer"
+    <View
+        android:id="@+id/dateTopBarrier"
 
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
 
         android:layout_marginTop="4dp"
 
         app:layout_constraintTop_toBottomOf="@+id/eventName"
+        app:layout_constraintLeft_toLeftOf="@id/eventName"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/creationDate"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@+id/dateTopBarrier"
         app:layout_constraintLeft_toLeftOf="@+id/eventName"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
+        app:layout_constraintBottom_toTopOf="@+id/dateBottomBarrier"
 
-        <TextView
-            android:id="@+id/creationDate"
+        style="@style/SubCaption"
 
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        tools:text="Tue, Mar 20    02:22:48    GMT+3"/>
 
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
+    <ImageView
+        android:id="@+id/verificationIcon"
 
-            style="@style/SubCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-            tools:text="Tue, Mar 20    02:22:48    GMT+3"/>
+        app:layout_constraintTop_toTopOf="@+id/dateTopBarrier"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/dateBottomBarrier"
 
-        <ImageView
-            android:id="@+id/verificationIcon"
+        android:src="@drawable/icon_verification_passed"/>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <android.support.constraint.Barrier
+        android:id="@+id/dateBottomBarrier"
 
-            app:layout_constraintTop_toTopOf="@+id/creationDate"
-            app:layout_constraintLeft_toRightOf="@+id/creationDate"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/creationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-            android:src="@drawable/icon_verification_passed"/>
+        app:barrierDirection="bottom"
 
-    </android.support.constraint.ConstraintLayout>
+        app:constraint_referenced_ids="creationDate,verificationIcon"/>
 
     <TextView
         android:id="@+id/createdBy"
@@ -116,9 +125,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@+id/creationDateContainer"
+        app:layout_constraintTop_toBottomOf="@+id/dateBottomBarrier"
         app:layout_constraintLeft_toLeftOf="@+id/eventName"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
 
         android:layout_marginTop="4dp"
 
@@ -140,7 +149,7 @@
 
         app:layout_constraintTop_toBottomOf="@+id/createdBy"
         app:layout_constraintLeft_toLeftOf="@+id/eventName"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
