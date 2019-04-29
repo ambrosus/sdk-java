@@ -1,9 +1,12 @@
 package com.ambrosus.ambviewer
 
 
+import android.content.ActivityNotFoundException
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -121,5 +124,13 @@ private class EventViewHolder(inflater: LayoutInflater, root: ViewGroup)
         ViewUtils.changeVisibilityVisible(itemView, R.id.topTimeLine, !firstItem)
         ViewUtils.changeVisibilityVisible(itemView, R.id.bottomTimeLine, !lastItem)
 
+        itemView.findViewById<View>(R.id.verificationIcon).setOnClickListener {
+            val url = "https://ambrosus.github.io/app-checker/?eventId=${event.systemId}"
+            try {
+                itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            } catch (e: ActivityNotFoundException) {
+                AMBSampleApp.errorHandler.handleError("Cant find browser app", e)
+            }
+        }
     }
 }
