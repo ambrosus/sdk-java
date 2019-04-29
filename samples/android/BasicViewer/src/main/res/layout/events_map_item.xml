@@ -18,7 +18,7 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -32,5 +32,5 @@
             android:layout_height="250dp"
             android:layout_weight="1"></com.google.android.gms.maps.MapView>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>

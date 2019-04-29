@@ -1,13 +1,13 @@
 package com.ambrosus.ambviewer
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,7 +76,7 @@ class EventsFragment : Fragment() {
 private class EventsAdapter(
         private val events: List<Event>,
         context: Context)
-    : RecyclerView.Adapter<EventViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<EventViewHolder>() {
 
     private val layoutInflater = LayoutInflater.from(context)
 
@@ -92,7 +92,7 @@ private class EventsAdapter(
 
 
 private class EventViewHolder(inflater: LayoutInflater, root: ViewGroup)
-    : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_event, root, false)) {
+    : androidx.recyclerview.widget.RecyclerView.ViewHolder(inflater.inflate(R.layout.item_event, root, false)) {
 
     fun update(event: Event, firstItem: Boolean, lastItem: Boolean) {
         ViewUtils.setText(itemView, R.id.eventName, if (event is AMBEvent) event.name ?: event.type else event!!.systemId)

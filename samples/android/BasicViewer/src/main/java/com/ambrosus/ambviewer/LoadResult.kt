@@ -14,8 +14,8 @@
 
 package com.ambrosus.ambviewer
 
-import android.arch.lifecycle.ComputableLiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.ComputableLiveData
+import androidx.lifecycle.MutableLiveData
 import android.util.Log
 import com.ambrosus.sdk.utils.Strings
 import java.lang.IllegalStateException

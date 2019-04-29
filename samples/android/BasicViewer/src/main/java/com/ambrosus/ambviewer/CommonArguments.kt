@@ -15,7 +15,7 @@
 package com.ambrosus.ambviewer
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.model.Identifier
@@ -24,7 +24,7 @@ val ARG_IDENTIFIER = BundleArgument<Identifier>("KEY_ARG_IDENTIFIER", Identifier
 val ARG_IDENTIFIERS = BundleArgument<Array<Identifier>>("KEY_ARG_IDENTIFIERS", Array<Identifier>::class.java)
 val ARG_ASSET_DATA = BundleArgument<Entity>("KEY_ASSET_DATA", Entity::class.java)
 
-fun setArguments(args: Bundle?, destination: Fragment) : Fragment {
+fun setArguments(args: Bundle?, destination: androidx.fragment.app.Fragment) : androidx.fragment.app.Fragment {
     destination.arguments = args
     return destination
 }

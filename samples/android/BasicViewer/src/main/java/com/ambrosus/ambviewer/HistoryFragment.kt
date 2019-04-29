@@ -3,9 +3,9 @@ package com.ambrosus.ambviewer
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +33,7 @@ class HistoryFragment : Fragment() {
     }
 
     class HistoryViewHolder(inflater: LayoutInflater, parent: ViewGroup)
-        : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_history, parent, false)) {
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(inflater.inflate(R.layout.item_history, parent, false)) {
 
         private val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
         private val calendar = Calendar.getInstance()
@@ -89,7 +89,7 @@ class HistoryFragment : Fragment() {
 
     }
 
-    class HistoryAdapter(context: Context) : RecyclerView.Adapter<HistoryViewHolder>() {
+    class HistoryAdapter(context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<HistoryViewHolder>() {
 
         val items = History(context).getItems()
         val inflater = LayoutInflater.from(context)

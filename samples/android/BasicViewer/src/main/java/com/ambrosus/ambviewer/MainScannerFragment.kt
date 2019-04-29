@@ -16,8 +16,8 @@ package com.ambrosus.ambviewer
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -277,7 +277,7 @@ class MainScannerFragment :
         performAction(LoadAssetFragment.createFor(assetIdentifier))
     }
 
-    private fun displayStatusFragment(fragment: Fragment) {
+    private fun displayStatusFragment(fragment: androidx.fragment.app.Fragment) {
         removeCurStatusFragment()
         switchViewFinderVisibility(View.INVISIBLE)
         if(fragment is NotFoundStatusFragment || fragment is ErrorStatusFragment) {
@@ -322,7 +322,7 @@ class MainScannerFragment :
         }
     }
 
-    private fun performAction(fragment: Fragment) {
+    private fun performAction(fragment: androidx.fragment.app.Fragment) {
         removeCurActionFragment()
         val ft = childFragmentManager!!.beginTransaction()
         ft.add(0, fragment, actionFragmentTag)

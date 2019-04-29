@@ -19,7 +19,7 @@ import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +37,7 @@ import java.util.*
  * Activities that contain this fragment must implement the [OnTopLevelFragmentInteractionListener]
  * interface to handle interaction events.
  */
-class BarcodeScannerFragment : Fragment() {
+class BarcodeScannerFragment : androidx.fragment.app.Fragment() {
     private val CAMERA_PERMISSION_REQUEST = 0
 
     private var mDeniedCameraAccess = false
@@ -153,11 +153,11 @@ class BarcodeScannerFragment : Fragment() {
     }
 
     companion object {
-        fun addAsChild(root: Fragment, containerID: Int) {
+        fun addAsChild(root: androidx.fragment.app.Fragment, containerID: Int) {
             FragmentSwitchHelper.addChild(root, BarcodeScannerFragment(), containerID)
         }
 
-        fun get(root: Fragment): BarcodeScannerFragment {
+        fun get(root: androidx.fragment.app.Fragment): BarcodeScannerFragment {
             for (fragment in root.childFragmentManager!!.fragments) {
                 if(fragment is BarcodeScannerFragment)
                     return fragment

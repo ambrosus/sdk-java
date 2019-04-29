@@ -15,12 +15,12 @@
 package com.ambrosus.apps
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
@@ -92,8 +92,8 @@ class SearchResultsListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        recyclerView.addOnScrollListener(object: androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 if(dy != 0) {
                     scrollingToTheEnd = dy > 0
 
@@ -122,7 +122,7 @@ class SearchResultsListFragment : Fragment() {
     }
 
     private fun cachedItemsLeft(beforeEndOfTheList: Boolean): Int {
-        val layoutManager = recyclerView!!.layoutManager as LinearLayoutManager
+        val layoutManager = recyclerView!!.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val position = layoutManager.findFirstVisibleItemPosition() +
                 (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
         return Math.abs(
@@ -130,7 +130,7 @@ class SearchResultsListFragment : Fragment() {
         )
     }
 
-    private class AssetInfoRepresentation(inflater: LayoutInflater, parent: ViewGroup, private val fragment: Fragment) : Representation<Entity>(R.layout.item_asset_info, inflater, parent) {
+    private class AssetInfoRepresentation(inflater: LayoutInflater, parent: ViewGroup, private val fragment: androidx.fragment.app.Fragment) : Representation<Entity>(R.layout.item_asset_info, inflater, parent) {
 
         override fun display(data: Entity?) {
             val assetInfo = data as AMBAssetInfo
@@ -152,7 +152,7 @@ class SearchResultsListFragment : Fragment() {
             }
         }
 
-        class AssetInfoRepresentationFactory(private val fragment: Fragment) : RepresentationFactory<Entity>(){
+        class AssetInfoRepresentationFactory(private val fragment: androidx.fragment.app.Fragment) : RepresentationFactory<Entity>(){
 
             override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Entity> {
                 return AssetInfoRepresentation(inflater, parent, fragment)

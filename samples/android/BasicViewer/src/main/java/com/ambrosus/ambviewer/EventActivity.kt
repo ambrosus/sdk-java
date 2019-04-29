@@ -17,8 +17,8 @@ package com.ambrosus.ambviewer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.DateAdapter
 import com.ambrosus.ambviewer.utils.RepresentationAdapter
