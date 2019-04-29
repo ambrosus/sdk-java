@@ -54,6 +54,22 @@
                 android:layout_height="wrap_content"
 
                 android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/errorMessage"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="40dp"
+
+                android:visibility="invisible"
+
+                style="@style/SubCaption"
+
+                android:gravity="center"
+
+                android:text="@string/txtError"/>
         </FrameLayout>
     </LinearLayout>
 
