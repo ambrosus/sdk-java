@@ -27,6 +27,7 @@ class IdentifiersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         caption.setText(R.string.txtIdentifiers)
+        loadingIndicator.visibility = View.INVISIBLE
         list.layoutManager = LinearLayoutManager(context!!)
         list.adapter =
                 RepresentationAdapter.DataSetBuilder()

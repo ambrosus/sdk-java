@@ -51,6 +51,7 @@ class EventsFragment : Fragment() {
     private fun display(loadResult: LoadResult<SearchResult<out Entity>>) {
         if(loadResult.isSuccessful()) {
             list.adapter = EventsAdapter(loadResult.data.items as List<Event>, context!!)
+            loadingIndicator.visibility = View.INVISIBLE
         } else {
 
         }

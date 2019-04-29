@@ -31,18 +31,30 @@
 
             android:text="@string/txtIdentifiers"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content">
 
-            android:layout_marginTop="16dp"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
 
-            tools:listitem="@layout/item_identifier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            tools:itemCount="150"/>
+                android:layout_marginTop="16dp"
 
+                tools:listitem="@layout/item_identifier"
+
+                tools:itemCount="150"/>
+
+            <ProgressBar
+                android:id="@+id/loadingIndicator"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"/>
+        </FrameLayout>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
