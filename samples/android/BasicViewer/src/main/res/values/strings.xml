@@ -49,4 +49,6 @@
 
     <string name="lblOff">off</string>
     <string name="lblOn">on</string>
+
+    <string name="txtXDaysAgo">%d days ago</string>
 </resources>

@@ -1,7 +1,5 @@
 package com.ambrosus.ambviewer
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,7 +10,7 @@ import com.ambrosus.sdk.model.AMBAssetInfo
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.fragment_asset_info.*
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.concurrent.TimeUnit
 
 
 class AssetInfoFragment : Fragment() {
@@ -25,8 +23,16 @@ class AssetInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val asset = ARG_ASSET_DATA.get(this)
-        //TODO: change to X days ago
-        creationDate.text = SimpleDateFormat("D, MMM").format(asset.timestamp)
+        val curTimeStamp = System.currentTimeMillis()
+        val assetTimeStamp = asset.timestamp.time
+
+        val dateText =
+                if(curTimeStamp > assetTimeStamp)
+                    getString(R.string.txtXDaysAgo, TimeUnit.MILLISECONDS.toDays(curTimeStamp - assetTimeStamp))
+                else
+                    SimpleDateFormat("D, MMM").format(asset.timestamp)
+
+        creationDate.text = dateText
         createdBy.text = asset.accountAddress
         when(asset) {
             is AMBAssetInfo -> {
