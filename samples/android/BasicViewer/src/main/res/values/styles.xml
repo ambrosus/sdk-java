@@ -101,7 +101,7 @@
     </style>
 
     <style name="SFProTextRegular" parent="@android:style/Widget.Holo.Light.TextView">
-        <item name="android:textColor">@color/lessImportantTextColor</item>
+        <item name="android:textColor">@color/lessImportantText</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/san_francisco_pro_text_regular</item>
         <item name="android:lines">1</item>

@@ -6,6 +6,6 @@
         android:width="7dp"
         android:height="7dp"/>
     <stroke
-        android:color="@color/timeLineColor"
+        android:color="@color/timeLine"
         android:width="1dp"/>
 </shape>

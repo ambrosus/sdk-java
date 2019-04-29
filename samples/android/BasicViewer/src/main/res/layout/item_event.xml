@@ -32,7 +32,7 @@
         app:layout_constraintRight_toRightOf="@+id/timeLinePoint"
         app:layout_constraintBottom_toTopOf="@+id/timeLinePoint"
 
-        android:background="@color/timeLineColor"/>
+        android:background="@color/timeLine"/>
 
     <View
         android:id="@+id/bottomTimeLine"
@@ -45,7 +45,7 @@
         app:layout_constraintRight_toRightOf="@+id/timeLinePoint"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        android:background="@color/timeLineColor"/>
+        android:background="@color/timeLine"/>
 
 
     <TextView
@@ -166,7 +166,7 @@
 
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="@color/lessImportantTextColor"
+            android:textColor="@color/lessImportantText"
 
             tools:text="Frutigenstrasse 60, 3604 Thun, Switzerland"/>
 

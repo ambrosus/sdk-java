@@ -63,7 +63,7 @@
 
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="@color/lessImportantTextColor"
+            android:textColor="@color/lessImportantText"
 
             tools:text="by 0x1c341453252345432d80592808sd908503820834985038953080fdsa90"/>
 
