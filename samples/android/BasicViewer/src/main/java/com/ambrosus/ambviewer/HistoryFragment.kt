@@ -77,10 +77,16 @@ class HistoryFragment : Fragment() {
                 is AMBAssetInfo -> {
                     ViewUtils.setText(itemView, R.id.assetName, getAssetDisplayName(historyItem.asset.name))
                     ViewUtils.setText(itemView, R.id.assetID, historyItem.asset.assetId)
+                    itemView.setOnClickListener {
+                        AssetDetailsActivity.startFor(historyItem.asset, itemView.context)
+                    }
                 }
                 is Asset -> {
                     ViewUtils.setText(itemView, R.id.assetName, getAssetDisplayName(null))
                     ViewUtils.setText(itemView, R.id.assetID, historyItem.asset.systemId)
+                    itemView.setOnClickListener {
+                        AssetDetailsActivity.startFor(historyItem.asset, itemView.context)
+                    }
                 }
             }
         }

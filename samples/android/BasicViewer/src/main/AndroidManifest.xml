@@ -32,7 +32,6 @@
             android:name=".AssetDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AssetDetailsActivityTheme"
-            android:parentActivityName=".MainActivity"
             android:label=""/>
 
         <activity

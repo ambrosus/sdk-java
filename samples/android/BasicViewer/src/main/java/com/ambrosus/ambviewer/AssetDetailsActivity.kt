@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import com.ambrosus.ambviewer.utils.BundleArgument
 import com.ambrosus.ambviewer.utils.FragmentSwitchHelper
 import com.ambrosus.sdk.Asset
@@ -26,6 +27,16 @@ class AssetDetailsActivity : AppCompatActivity() {
                 setArguments(intent.extras, AssetDetailsFragment()),
                 R.id.contentContainer
         )
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item!!.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     companion object {
