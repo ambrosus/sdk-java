@@ -27,10 +27,10 @@ import java.lang.IllegalArgumentException
 
 class EventsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         getViewModel().getResults().observe(
-                this,
+                viewLifecycleOwner,
                 Observer {
                     display(it!!)
                 }
@@ -92,7 +92,7 @@ private class EventsAdapter(
 
 
 private class EventViewHolder(inflater: LayoutInflater, root: ViewGroup)
-    : androidx.recyclerview.widget.RecyclerView.ViewHolder(inflater.inflate(R.layout.item_event, root, false)) {
+    : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_event, root, false)) {
 
     fun update(event: Event, firstItem: Boolean, lastItem: Boolean) {
         ViewUtils.setText(itemView, R.id.eventName, if (event is AMBEvent) event.name ?: event.type else event!!.systemId)
