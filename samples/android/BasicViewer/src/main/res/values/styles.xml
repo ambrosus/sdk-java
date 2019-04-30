@@ -9,6 +9,8 @@
     </style>
 
     <style name="HistoryActivityTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="actionBarStyle">@style/HistoryActionBarStyle</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/mainBackground</item>
