@@ -21,7 +21,7 @@ kapt {
 android {
     compileSdkVersion _compileSdkVersion
     defaultConfig {
-        applicationId "com.ambrosus.ambviewer"
+        applicationId "com.ambrosus.demoapp"
         minSdkVersion _minSdkVersion
         targetSdkVersion _targetSdkVersion
         versionCode 1
