@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_above="@+id/laserLine"
+        android:layout_marginBottom="210dp"
+
+        style="@style/SFProTextRegular"
+
+        android:text="@string/txtTapForNewScan"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginBottom="20dp"
+
+        android:src="@drawable/not_found_mark"
+
+        android:layout_above="@+id/laserLine"/>
+
+    <include
+        android:id="@+id/laserLine"
+        layout="@layout/view_error_laser_line"/>
+
+    <TextView
+        android:id="@+id/mainText"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="28dp"
+
+        android:layout_below="@+id/laserLine"
+        android:layout_centerHorizontal="true"
+
+        android:textAppearance="@style/SFProDisplayBold"
+
+        android:text="@string/txtHmm"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/mainText"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="4dp"
+
+        style="@style/SFProTextRegular"
+
+        android:text="@string/txtFoundNothing"/>
+
+    <TextView
+        android:id="@+id/identifier"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/bottomText"
+
+        android:layout_marginBottom="12dp"
+
+        style="@style/SFProTextRegular"
+        android:textColor="@android:color/white"
+
+        tools:text="EAN-13: 3452352345423452"/>
+
+    <TextView
+        android:id="@+id/bottomText"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginBottom="40dp"
+
+        android:textAppearance="@style/BottomBlueText"
+        android:text="@string/txtGoogleSearch"/>
+
+</RelativeLayout>

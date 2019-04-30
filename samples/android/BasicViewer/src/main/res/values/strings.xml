@@ -1,0 +1,54 @@
+<resources>
+    <!--dialogs-->
+    <string name="dialog_title_quit_app">Quit application? </string>
+    <string name="dialog_quit">Quit</string>
+    <string name="dialog_cancel">Cancel</string>
+
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="permission_title">Requested permission</string>
+
+    <string name="no_required_permission">Permission denied.</string>
+    <string name="app_name">Viewer</string>
+
+    <string name="assetCreator"><font color='#9198BB'>by </font><font color='#0143BA'>%s</font></string>
+
+    <string name="txtScanBarcode">Scan a product barcode</string>
+    <string name="txtCopyright">\u00A9 2018 Ambrosus. All rights reserved.</string>
+
+    <string name="txtLoadingAsset">Loading asset…</string>
+    <string name="txtHmm">Hmm…</string>
+
+    <string name="txtFoundNothing">Not sure we know anything about that.</string>
+    <string name="txtTapForNewScan">Tap anywhere for a new scan</string>
+
+    <string name="txtHuh">Huh</string>
+    <string name="txtError">Unfortunately something went wrong…</string>
+    <string name="txtRetry">Try again</string>
+
+    <string name="txtGoogleSearch">Search in Google</string>
+
+    <string name="txtLoadingAssetParamsCount">%d parameters</string>
+    <string name="lblList">List</string>
+
+    <string name="titleHistory">Scan History</string>
+
+    <string name="txtNoName">No name</string>
+    <string name="txtToday">Today</string>
+    <string name="txtYesterday">Yesterday</string>
+
+    <string name="titleInfo">INFO</string>
+    <string name="titleIdentifiers">IDENTIFIERS</string>
+    <string name="titleEvents">EVENTS</string>
+
+    <string name="txtIdentifiers">Identifiers</string>
+    <string name="txtPublicEvents">Public events</string>
+
+    <string name="txtCreatedBy">by %s</string>
+
+    <string name="lblOff">off</string>
+    <string name="lblOn">on</string>
+
+    <string name="txtXDaysAgo">%d days ago</string>
+</resources>

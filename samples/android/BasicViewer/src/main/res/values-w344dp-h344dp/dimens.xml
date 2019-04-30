@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- set view finder and crosshair size if we have at least 344dp for width and height -->
+    <dimen name="viewFinderSize">330dp</dimen>
+    <dimen name="crossHairSize">344dp</dimen>
+</resources>

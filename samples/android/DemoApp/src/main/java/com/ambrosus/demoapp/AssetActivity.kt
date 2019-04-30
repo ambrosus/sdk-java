@@ -14,13 +14,13 @@
 
 package com.ambrosus.demoapp
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.TextView
 import com.ambrosus.demoapp.utils.BundleArgument
@@ -42,7 +42,7 @@ class AssetActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_asset)
 
-        rvAssetList.layoutManager = LinearLayoutManager(this)
+        rvAssetList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
 
         assetToolbar.setTitleTextColor(resources.getColor(R.color.colorTextPrimary))
         setSupportActionBar(assetToolbar)

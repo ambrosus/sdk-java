@@ -15,7 +15,7 @@
 package com.ambrosus.demoapp
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.Menu
@@ -40,7 +40,7 @@ import kotlinx.android.synthetic.main.fragment_main_scanner.*
 import java.io.Serializable
 
 class MainScannerFragment :
-        Fragment(),
+        androidx.fragment.app.Fragment(),
         FragmentSwitchHelper.BackListener,
         BarcodeCallback,
         AssetInfoSearchFragment.SearchResultListener,
@@ -184,7 +184,7 @@ class MainScannerFragment :
         return FragmentSwitchHelper.goBack(this, R.id.statusContainer)
     }
 
-    private fun displayStatusFragment(fragment: Fragment) {
+    private fun displayStatusFragment(fragment: androidx.fragment.app.Fragment) {
         removeCurStatusFragment()
         BarcodeScannerFragment.get(this).stopScanning()
         FragmentSwitchHelper.addChild(this, fragment, R.id.statusContainer, true, true)

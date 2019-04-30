@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/timeLinePoint"
+
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+
+        app:layout_constraintTop_toTopOf="@+id/eventName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/eventName"
+
+        android:src="@drawable/icon_time_line_point"/>
+
+    <View
+        android:id="@+id/topTimeLine"
+
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/timeLinePoint"
+        app:layout_constraintRight_toRightOf="@+id/timeLinePoint"
+        app:layout_constraintBottom_toTopOf="@+id/timeLinePoint"
+
+        android:background="@color/timeLine"/>
+
+    <View
+        android:id="@+id/bottomTimeLine"
+
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/timeLinePoint"
+        app:layout_constraintLeft_toLeftOf="@+id/timeLinePoint"
+        app:layout_constraintRight_toRightOf="@+id/timeLinePoint"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:background="@color/timeLine"/>
+
+
+    <TextView
+        android:id="@+id/eventName"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/timeLinePoint"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="11dp"
+
+        android:textSize="13sp"
+        android:textAllCaps="true"
+        android:textColor="@color/blueText"
+        android:fontFamily="@font/roboto_medium"
+
+        tools:text="Displayed in Shop"/>
+
+
+    <View
+        android:id="@+id/dateTopBarrier"
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        android:layout_marginTop="4dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/eventName"
+        app:layout_constraintLeft_toLeftOf="@id/eventName"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/creationDate"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@+id/dateTopBarrier"
+        app:layout_constraintLeft_toLeftOf="@+id/eventName"
+        app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
+        app:layout_constraintBottom_toTopOf="@+id/dateBottomBarrier"
+
+        style="@style/SubCaption"
+
+        tools:text="Tue, Mar 20    02:22:48    GMT+3"/>
+
+    <ImageView
+        android:id="@+id/verificationIcon"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="@+id/dateTopBarrier"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/dateBottomBarrier"
+
+        android:src="@drawable/icon_verification_passed"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/dateBottomBarrier"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:barrierDirection="bottom"
+
+        app:constraint_referenced_ids="creationDate,verificationIcon"/>
+
+    <TextView
+        android:id="@+id/createdBy"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@+id/dateBottomBarrier"
+        app:layout_constraintLeft_toLeftOf="@+id/eventName"
+        app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
+
+        android:layout_marginTop="4dp"
+
+        android:ellipsize="end"
+        android:lines="1"
+
+        style="@style/SubCaption"
+
+        tools:text="by 0xB544BF489f00c177fa1B05e80ED5C"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/locationContainer"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/createdBy"
+        app:layout_constraintLeft_toLeftOf="@+id/eventName"
+        app:layout_constraintRight_toLeftOf="@+id/verificationIcon"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/locationText"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/locationIcon"
+            app:layout_constraintRight_toRightOf="parent"
+
+            style="@style/AdditionalDataText"
+
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/lessImportantText"
+
+            tools:text="Frutigenstrasse 60, 3604 Thun, Switzerland"/>
+
+        <ImageView
+            android:id="@+id/locationIcon"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="@+id/locationText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/locationText"
+            app:layout_constraintBottom_toBottomOf="@+id/locationText"
+
+            android:src="@drawable/icon_location"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

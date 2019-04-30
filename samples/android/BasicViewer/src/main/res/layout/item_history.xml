@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingRight="22dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideLine"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintGuide_end="15dp"
+
+        android:orientation="vertical"/>
+
+    <TextView
+        android:id="@+id/creationDate"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
+        app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+
+        style="@style/AdditionalDataText"
+
+        android:fontFamily="@font/roboto_medium"
+
+        tools:text="Yesterday"/>
+
+    <TextView
+        android:id="@+id/identifier"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="12dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/creationDate"
+        app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
+        app:layout_constraintRight_toRightOf="@+id/rightGuideLine"
+
+        style="@style/AdditionalDataText"
+
+        android:ellipsize="middle"
+        android:singleLine="true"
+
+        android:textAllCaps="true"
+        tools:text="EAN-13: 42354543542532"/>
+
+    <ImageView
+        android:id="@+id/verificationIcon"
+
+        android:visibility="invisible"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+
+        app:layout_constraintTop_toTopOf="@+id/assetName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/assetID"
+
+        android:src="@drawable/icon_verification_passed"/>
+
+    <TextView
+        android:id="@+id/assetName"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="4dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/identifier"
+        app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
+        app:layout_constraintRight_toRightOf="@id/rightGuideLine"
+
+        style="@style/Caption"
+
+        android:textSize="16sp"
+        tools:text="Asset name"/>
+
+    <TextView
+        android:id="@+id/assetID"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@+id/assetName"
+        app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
+        app:layout_constraintRight_toRightOf="@id/rightGuideLine"
+
+        style="@style/AssetID"
+
+        tools:text="0x34075238759379857933497298573984"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/separatorHeight"
+
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/assetID"
+        app:layout_constraintLeft_toRightOf="@+id/verificationIcon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:background="#E5E9F2"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

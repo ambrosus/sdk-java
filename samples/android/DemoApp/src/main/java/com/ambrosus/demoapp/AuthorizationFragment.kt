@@ -16,7 +16,7 @@ package com.ambrosus.demoapp
 
 import android.os.Bundle
 import android.renderscript.Sampler
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +31,7 @@ import java.lang.NumberFormatException
 import java.util.Scanner
 import java.util.concurrent.TimeUnit
 
-class AuthorizationFragment : Fragment(), BarcodeCallback {
+class AuthorizationFragment : androidx.fragment.app.Fragment(), BarcodeCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

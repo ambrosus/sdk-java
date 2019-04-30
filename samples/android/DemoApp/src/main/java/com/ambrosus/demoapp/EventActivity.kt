@@ -17,8 +17,8 @@ package com.ambrosus.demoapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ambrosus.demoapp.utils.BundleArgument
 import com.ambrosus.demoapp.utils.DateAdapter
 import com.ambrosus.demoapp.utils.RepresentationAdapter
@@ -39,7 +39,7 @@ class EventActivity : AppCompatActivity() {
         setSupportActionBar(eventAssetToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true);
 
-        eventDetails.layoutManager = LinearLayoutManager(this)
+        eventDetails.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
 
         displayEventData(ARG_EVENT.get(intent.extras))
     }
