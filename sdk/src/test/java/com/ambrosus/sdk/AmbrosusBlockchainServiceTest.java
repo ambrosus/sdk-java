@@ -22,8 +22,18 @@ public class AmbrosusBlockchainServiceTest {
 
     @Test
     public void getBalanceTest() throws ExecutionException, InterruptedException {
-        Future<BigInteger> futureBalance = service.getBalance("0x377d71a0a2e044c4fce7e3a59ebeb736da055be3");
+        Future<BigInteger> futureBalance = service.getBalance("0xFF1E60D7e4fe21C1817B8249C8cB8E52D1912665");
         BigInteger balance = futureBalance.get();
         System.out.println(balance);
+    }
+
+    public void sendAmberTest() throws ExecutionException, InterruptedException {
+        String privateKey = "PutYourKey";
+        String hash = service.send(
+                privateKey,
+                "0x8105455eab3616fed1e3fe1c2d006efa52e98c3a",
+                BigInteger.valueOf(1000000000000L)
+        ).get();
+        System.out.println(hash);
     }
 }

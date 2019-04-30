@@ -5,10 +5,14 @@ import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.Transfer;
+import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -40,6 +44,21 @@ public class AmbrosusBlockchainService {
         );
     }
 
+    public Future<String> send(final String privateKey, final String toAddress, final BigInteger value){
+        return perform(
+                () -> {
+                    BigInteger nonce = getNonce(Ethereum.getAddress(privateKey)).get();
+                    BigInteger gasPrice = web3j.ethGasPrice().send().getGasPrice();
+                    gasPrice = gasPrice.add(gasPrice.divide(BigInteger.valueOf(10)));
+
+                    RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
+                            nonce, gasPrice, Transfer.GAS_LIMIT, toAddress, value);
+
+                    return sendTransaction(rawTransaction, privateKey).get();
+                }
+        );
+    }
+
     public static String signTransaction(RawTransaction rawTransaction, final String privateKey) {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, Credentials.create(privateKey));
         return Numeric.toHexString(signedMessage);
@@ -59,12 +78,27 @@ public class AmbrosusBlockchainService {
         );
     }
 
-    public Future<BigInteger> getNonce(String privateKey) {
+    public Future<BigInteger> getNonce(String address) {
         return perform(
                 () -> web3j
-                        .ethGetTransactionCount(Ethereum.getAddress(privateKey), DefaultBlockParameterName.LATEST)
+                        .ethGetTransactionCount(address, DefaultBlockParameterName.LATEST)
                         .send()
                         .getTransactionCount()
+        );
+    }
+
+    public Future<Transaction> loadContract(final String address, BigInteger value, String abi) {
+        return perform(
+                () -> {
+                    BigInteger nonce = getNonce(address).get();
+                    return Transaction.createContractTransaction(
+                            address,
+                            nonce,
+                            BigInteger.valueOf(4700000),
+                            Convert.toWei(BigDecimal.valueOf(5), Convert.Unit.GWEI).toBigInteger(),
+                            value,
+                            abi);
+                }
         );
     }
 
