@@ -106,6 +106,7 @@
         <item name="android:fontFamily">@font/san_francisco_pro_text_regular</item>
         <item name="android:lines">1</item>
         <item name="android:ellipsize">middle</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="BottomBlueText" parent="@style/TextAppearance.AppCompat.Small">>
@@ -130,6 +131,7 @@
     <style name="AssetID">
         <item name="android:ellipsize">end</item>
         <item name="android:lines">1</item>
+        <item name="android:singleLine">true</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/additionalDataTextSize</item>
         <item name="android:textColor">@color/blueText</item>
