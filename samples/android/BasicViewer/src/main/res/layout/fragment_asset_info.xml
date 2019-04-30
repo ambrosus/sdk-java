@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:paddingLeft="@dimen/assetInfoPadding"
+    android:paddingRight="@dimen/assetInfoPadding"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:paddingTop="@dimen/assetInfoPadding"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/assetName"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/Caption"
+
+            android:textSize="20sp"
+
+            tools:text="Asset Name"/>
+
+        <TextView
+            android:id="@+id/assetID"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/AssetID"
+
+            tools:text="0x345237542389754237478957439275423789547923857987329"/>
+
+        <TextView
+            android:id="@+id/creationDate"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+
+            style="@style/AdditionalDataText"
+            android:textColor="@color/caption"
+
+            tools:text="4 days ago"/>
+
+        <TextView
+            android:id="@+id/createdBy"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/AdditionalDataText"
+
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/lessImportantText"
+
+            tools:text="by 0x1c341453252345432d80592808sd908503820834985038953080fdsa90"/>
+
+        <TextView
+            android:id="@+id/detailsDescription"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="12dp"
+
+            style="@style/AdditionalDataText"
+
+            tools:text="Inspired by this forward-looking spirit, Veuve Clicquot invites you to a special Clicquot Journey this summer. ... Since its founding in 1772, the House of Veuve Clicquot has exported its wines, first throughout Europe then all over the world."/>
+
+    </LinearLayout>
+
+</ScrollView>

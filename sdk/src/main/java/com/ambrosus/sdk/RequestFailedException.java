@@ -15,6 +15,7 @@
 package com.ambrosus.sdk;
 
 import java.lang.Exception;
+import java.util.Locale;
 
 /**
  * Indicates that request to Ambrosus Node API had failed with some HTTP error.
@@ -32,7 +33,7 @@ public class RequestFailedException extends RuntimeException {
     public final int code;
 
     public RequestFailedException(int code, String message) {
-        super(message);
+        super(message != null ? message : String.format(Locale.US, "Request failed with %d status code.", code));
         this.code = code;
     }
 

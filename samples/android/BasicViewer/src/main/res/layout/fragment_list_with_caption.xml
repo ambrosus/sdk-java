@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:paddingLeft="@dimen/assetInfoPadding"
+    android:paddingRight="@dimen/assetInfoPadding"
+
+    tools:context=".IdentifiersFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:paddingTop="@dimen/assetInfoPadding"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/caption"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/Caption"
+
+            android:textSize="17sp"
+
+            android:text="@string/txtIdentifiers"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="16dp"
+
+                tools:listitem="@layout/item_identifier"
+
+                tools:itemCount="150"/>
+
+            <ProgressBar
+                android:id="@+id/loadingIndicator"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/errorMessage"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="40dp"
+
+                android:visibility="invisible"
+
+                style="@style/SubCaption"
+
+                android:gravity="center"
+
+                android:text="@string/txtError"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+
+

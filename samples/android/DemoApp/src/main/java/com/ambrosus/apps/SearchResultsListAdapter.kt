@@ -15,13 +15,13 @@
 package com.ambrosus.apps
 
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.ambrosus.ambviewer.R
-import com.ambrosus.ambviewer.utils.Representation
-import com.ambrosus.ambviewer.utils.RepresentationFactory
+import com.ambrosus.demoapp.R
+import com.ambrosus.demoapp.utils.Representation
+import com.ambrosus.demoapp.utils.RepresentationFactory
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.SearchResult
 import java.lang.IllegalArgumentException
@@ -32,14 +32,14 @@ class SearchResultsListAdapter(
         context: Context,
         private var pages: List<SearchResult<out Entity>>,
         private val representationFactory: RepresentationFactory<Entity>)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return when(viewType) {
             0 -> representationFactory.createRepresentation(inflater, parent)
-            1 -> object: RecyclerView.ViewHolder(inflater.inflate(R.layout.item_loading_indicator, parent, false)){}
+            1 -> object: androidx.recyclerview.widget.RecyclerView.ViewHolder(inflater.inflate(R.layout.item_loading_indicator, parent, false)){}
             else -> throw IllegalArgumentException("Unknown view type: $viewType")
         }
     }
@@ -49,7 +49,7 @@ class SearchResultsListAdapter(
         return if(objectIndex != -1) 0 else 1
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         val objectIndex = getObjectIndex(position)
         if(objectIndex != -1)
             (holder as Representation<Entity>).display(getObject(objectIndex))

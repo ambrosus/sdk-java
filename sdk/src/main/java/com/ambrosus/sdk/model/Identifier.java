@@ -25,6 +25,9 @@ public class Identifier implements Serializable {
     public static final String GTIN = "gtin";
     public static final String EAN13 = "ean13";
     public static final String EAN8 = "ean8";
+    public static final String LOT = "lot";
+    public static final String SERIAL = "ser";
+    public static final String BATCH_ID = "batchId";
 
     public final String type;
     public final String value;

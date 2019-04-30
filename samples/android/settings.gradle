@@ -1,1 +1,1 @@
-include ':DemoApp'
+include ':DemoApp', 'BasicViewer'

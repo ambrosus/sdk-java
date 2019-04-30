@@ -14,6 +14,9 @@
 
 package com.ambrosus.sdk.model;
 
+import com.ambrosus.sdk.Event;
+import com.ambrosus.sdk.RestrictedDataAccessException;
+import com.ambrosus.sdk.TestData;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,14 +30,19 @@ import java.util.Map;
 
 public class AMBEventTest {
 
-    private static JsonObject dataObject;
+    private static AMBEvent ambEvent;
 
     @BeforeClass
-    public static void setupInput(){
+    public static void setupInput() throws RestrictedDataAccessException {
         InputStreamReader in = new InputStreamReader(AMBEventTest.class.getResourceAsStream("AMBEventMainDataObject.json"));
         if(in != null) {
             try {
-                dataObject = new Gson().fromJson(in, JsonObject.class);
+                Event basicEvent = new Event.Builder("")
+                        .addData(
+                                "ambrosus.asset.shipped",
+                                new Gson().fromJson(in, JsonObject.class)
+                        ).createEvent(TestData.UNREGISTERED_PRIVATE_KEY);
+                ambEvent = new AMBEvent(basicEvent);
             } finally {
                 try {
                     in.close();
@@ -46,13 +54,13 @@ public class AMBEventTest {
 
     @Test
     public void getEntityMapTest(){
-        Map<String, JsonObject> images = AMBEvent.getEntityMap("images", dataObject);
+        Map<String, JsonObject> images = ambEvent.getImages();
         System.out.println();
     }
 
     @Test
     public void getAttributesMapTest(){
-        Map<String, JsonElement> attributesMap = AMBEvent.getAttributesMap(dataObject);
+        Map<String, JsonElement> attributesMap = ambEvent.getAttributes();
         System.out.println();
     }
 

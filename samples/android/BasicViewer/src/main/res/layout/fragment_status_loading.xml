@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="208dp"
+        android:layout_height="208dp"
+
+        android:layout_centerInParent="true"
+
+        android:padding="5dp"
+
+        android:background="@drawable/success_square">
+
+        <TextView
+            android:id="@+id/mainText"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="4dp"
+
+            android:layout_above="@+id/detailsDescription"
+            android:layout_centerHorizontal="true"
+
+            style="@style/SFProDisplayBold"
+
+            android:text="@string/txtLoadingAsset"/>
+
+        <TextView
+            android:id="@+id/detailsDescription"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+
+            android:layout_marginBottom="22dp"
+
+            style="@style/SFProTextRegular"
+
+            tools:text="EAN-13: 34134134214321"/>
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginBottom="20dp"
+
+        android:src="@drawable/success_mark"
+
+        android:layout_above="@+id/laserLine"/>
+
+
+    <include
+        android:id="@+id/laserLine"
+        layout="@layout/view_success_laser_line"/>
+
+
+
+</RelativeLayout>

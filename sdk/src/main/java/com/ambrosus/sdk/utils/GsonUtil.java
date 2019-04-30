@@ -16,25 +16,51 @@ package com.ambrosus.sdk.utils;
 
 import android.support.annotation.NonNull;
 
+import com.ambrosus.sdk.Network;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
 
+import java.io.InputStreamReader;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 abstract public class GsonUtil {
+
+    private static final Gson GSON;
+
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, typeOfSrc, context) -> {
+            Number resultNumber;
+            resultNumber = Math.ceil(src) == Math.floor(src) ? new PlainLong(src.longValue()) : src;
+            return new JsonPrimitive(resultNumber);
+        });
+        GSON = gsonBuilder.create();
+    }
+
 
     public static String getStringValue(JsonObject jsonObject, String key) {
         return jsonObject.has(key) ? jsonObject.get(key).getAsString() : null;
     }
-
     public static String getLexNormalizedJsonStr(@NonNull Object src, Gson gson) {
+        return getLexNormalizedJsonStr(src);
+    }
+
+    public static String getLexNormalizedJsonStr(@NonNull Object src) {
         Assert.assertNotNull(src, "src == null");
-        return getLexNormalizedJson(gson.toJsonTree(src)).toString();
+        return getLexNormalizedJson(GSON.toJsonTree(src)).toString();
     }
 
     private static JsonElement getLexNormalizedJson(JsonElement json) {
@@ -72,6 +98,39 @@ abstract public class GsonUtil {
         return result;
     }
 
+    private static class PlainLong extends Number {
+
+        private final Long value;
+
+        private PlainLong(Long value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value.toString();
+        }
+
+        @Override
+        public int intValue() {
+            return value.intValue();
+        }
+
+        @Override
+        public long longValue() {
+            return value;
+        }
+
+        @Override
+        public float floatValue() {
+            return value.floatValue();
+        }
+
+        @Override
+        public double doubleValue() {
+            return value.doubleValue();
+        }
+    }
 
 
 }

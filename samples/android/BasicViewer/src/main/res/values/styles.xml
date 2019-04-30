@@ -1,0 +1,148 @@
+<resources>
+
+    <style name="AssetDetailsActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowBackground">@color/mainBackground</item>
+    </style>
+
+    <style name="HistoryActivityTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="actionBarStyle">@style/HistoryActionBarStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/mainBackground</item>
+    </style>
+
+    <style name="HistoryActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="background">@color/mainBackground</item>
+        <item name="titleTextStyle">@style/HistoryTitleTextStyle</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="HistoryTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/blueText</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ToolbarColoredBackArrow" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorSecondary">@color/colorTextPrimary</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="actionMenuTextColor">@color/colorTextPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorTextPrimary</item>
+
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="android:textColorPrimary">@color/colorTextSecondary</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="MainActivityTheme" parent="@style/AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="BrightActivityTheme" parent="@style/AppTheme">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="SplashActivityTheme" parent="BrightActivityTheme">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <!--<style name="FullscreenTheme" parent="AppTheme">-->
+    <!--<item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>-->
+    <!--<item name="android:windowActionBarOverlay">true</item>-->
+    <!--<item name="android:windowBackground">@null</item>-->
+    <!--<item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>-->
+    <!--<item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>-->
+    <!--</style>-->
+
+    <!--<style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">-->
+    <!--<item name="android:background">@color/black_overlay</item>-->
+    <!--</style>-->
+
+    <style name="SFProDisplayBold" parent="@android:style/Widget.Holo.Light.TextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/san_francisco_pro_display_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="SFProTextRegular" parent="@android:style/Widget.Holo.Light.TextView">
+        <item name="android:textColor">@color/lessImportantText</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/san_francisco_pro_text_regular</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="BottomBlueText" parent="@style/TextAppearance.AppCompat.Small">>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/blueText</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Caption">
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/caption</item>
+    </style>
+
+    <style name="SubCaption">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/caption</item>
+    </style>
+
+    <style name="AssetID">
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/additionalDataTextSize</item>
+        <item name="android:textColor">@color/blueText</item>
+    </style>
+
+    <style name="AdditionalDataText">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/additionalDataTextSize</item>
+        <item name="android:textColor">@color/additionalDataText</item>
+    </style>
+
+</resources>

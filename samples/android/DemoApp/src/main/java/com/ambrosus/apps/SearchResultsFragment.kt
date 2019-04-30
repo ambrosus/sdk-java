@@ -15,31 +15,31 @@
 package com.ambrosus.apps
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ambrosus.ambviewer.AMBSampleApp
-import com.ambrosus.ambviewer.AssetActivity
-import com.ambrosus.ambviewer.GlideApp
-import com.ambrosus.ambviewer.R
-import com.ambrosus.ambviewer.utils.BundleArgument
-import com.ambrosus.ambviewer.utils.Representation
-import com.ambrosus.ambviewer.utils.RepresentationFactory
-import com.ambrosus.ambviewer.utils.ViewUtils
+import com.ambrosus.demoapp.AMBSampleApp
+import com.ambrosus.demoapp.AssetActivity
+import com.ambrosus.demoapp.GlideApp
+import com.ambrosus.demoapp.R
+import com.ambrosus.demoapp.utils.BundleArgument
+import com.ambrosus.demoapp.utils.Representation
+import com.ambrosus.demoapp.utils.RepresentationFactory
+import com.ambrosus.demoapp.utils.ViewUtils
 import com.ambrosus.sdk.Entity
 import com.ambrosus.sdk.GenericEventQueryBuilder
 import com.ambrosus.sdk.Query
 import com.ambrosus.sdk.model.AMBAssetInfo
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 
-class SearchResultsListFragment : Fragment() {
+class SearchResultsListFragment : androidx.fragment.app.Fragment() {
 
     private var scrollingToTheEnd: Boolean = true
 
@@ -91,9 +91,9 @@ class SearchResultsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        recyclerView.addOnScrollListener(object: androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 if(dy != 0) {
                     scrollingToTheEnd = dy > 0
 
@@ -122,7 +122,7 @@ class SearchResultsListFragment : Fragment() {
     }
 
     private fun cachedItemsLeft(beforeEndOfTheList: Boolean): Int {
-        val layoutManager = recyclerView!!.layoutManager as LinearLayoutManager
+        val layoutManager = recyclerView!!.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val position = layoutManager.findFirstVisibleItemPosition() +
                 (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
         return Math.abs(
@@ -130,7 +130,7 @@ class SearchResultsListFragment : Fragment() {
         )
     }
 
-    private class AssetInfoRepresentation(inflater: LayoutInflater, parent: ViewGroup, private val fragment: Fragment) : Representation<Entity>(R.layout.item_asset_info, inflater, parent) {
+    private class AssetInfoRepresentation(inflater: LayoutInflater, parent: ViewGroup, private val fragment: androidx.fragment.app.Fragment) : Representation<Entity>(R.layout.item_asset_info, inflater, parent) {
 
         override fun display(data: Entity?) {
             val assetInfo = data as AMBAssetInfo
@@ -152,7 +152,7 @@ class SearchResultsListFragment : Fragment() {
             }
         }
 
-        class AssetInfoRepresentationFactory(private val fragment: Fragment) : RepresentationFactory<Entity>(){
+        class AssetInfoRepresentationFactory(private val fragment: androidx.fragment.app.Fragment) : RepresentationFactory<Entity>(){
 
             override fun createRepresentation(inflater: LayoutInflater, parent: ViewGroup): Representation<Entity> {
                 return AssetInfoRepresentation(inflater, parent, fragment)

@@ -1,4 +1,4 @@
-package com.ambrosus.ambviewer
+package com.ambrosus.demoapp
 
 import org.junit.Test
 

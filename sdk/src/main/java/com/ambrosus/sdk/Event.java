@@ -18,12 +18,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ambrosus.sdk.utils.Assert;
-import com.ambrosus.sdk.utils.GsonUtil;
 import com.ambrosus.sdk.utils.UnixTime;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -246,7 +250,8 @@ public class Event extends Entity {
 
     static class EventContent extends SignedContent<EventIdData> {
 
-        private List<JsonObject> data;
+        @Expose(deserialize = true)
+        private transient List<JsonObject> data;
 
         //no-args constructor for GSON
         private EventContent(){}
@@ -263,7 +268,7 @@ public class Event extends Entity {
                     privateKey
             );
             Assert.assertTrue(data.size() > 0, IllegalStateException.class, "You have to add at least 1 data object to build a valid Event");
-            this.data = Collections.unmodifiableList(GsonUtil.getAsObjectsList(data));
+            this.data = Collections.unmodifiableList(Json.getAsObjectsList(data));
         }
 
         //for tests
@@ -274,6 +279,16 @@ public class Event extends Entity {
         //for tests
         List<JsonObject> getData() {
             return data;
+        }
+
+        private void readObject(ObjectInputStream stream) throws ClassNotFoundException, IOException {
+            stream.defaultReadObject();
+            data = Json.fromJson(stream.readUTF(), new TypeToken<List<JsonObject>>() {}.getType());
+        }
+
+        private void writeObject(ObjectOutputStream stream) throws IOException {
+            stream.defaultWriteObject();
+            stream.writeUTF(Json.toJson(data));
         }
     }
 
